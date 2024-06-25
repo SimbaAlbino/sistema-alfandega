@@ -5,18 +5,18 @@ import reserva.Estoque;
 public class DadosProduto extends Estoque {
 	
 	private int idProduto;
-	private Cliente individuoDados;
+	private int cpf;
 	private String cep;
 	private boolean documentos;
 	private Produto tipoItem;
 	private int quantidade;
 	private Double precoUni;
 	
-	public DadosProduto(int idProduto, Cliente individuoDados, String cep, boolean documentos, Produto tipoItem,
-			int quantidade, Double precoUni) {
+	public DadosProduto(int idProduto, int cpf, String cep, boolean documentos, Produto tipoItem, int quantidade,
+			Double precoUni) {
 		super();
 		this.idProduto = idProduto;
-		this.individuoDados = individuoDados;
+		this.cpf = cpf;
 		this.cep = cep;
 		this.documentos = documentos;
 		this.tipoItem = tipoItem;
@@ -32,12 +32,12 @@ public class DadosProduto extends Estoque {
 		this.idProduto = idProduto;
 	}
 
-	public Cliente getIndividuoDados() {
-		return individuoDados;
+	public int getCpf() {
+		return cpf;
 	}
 
-	public void setIndividuoDados(Cliente individuoDados) {
-		this.individuoDados = individuoDados;
+	public void setCpf(int cpf) {
+		this.cpf = cpf;
 	}
 
 	public String getCep() {
