@@ -42,8 +42,8 @@ public class Cliente implements Usuario {
 	
 	@Override
 	public boolean rastrearProdutos() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return ;
 	}
 
 	@Override

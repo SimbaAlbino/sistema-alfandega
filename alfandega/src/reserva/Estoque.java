@@ -7,6 +7,8 @@ import entidades.DadosProduto;
 
 public class Estoque {
 	
+	private int idLista;
+	
 	protected ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
 
 	public ArrayList<DadosProduto> getEstoqueGeral() {
