@@ -1,13 +1,19 @@
 package reserva;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import entidades.DadosProduto;
 
-public class Estoque {
+public class Estoque implements Serializable {
 	
-	private int idLista;
+	private static final long serialVersionUID = 1L;
 	
 	protected ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
 
@@ -15,13 +21,15 @@ public class Estoque {
 		return estoqueGeral;
 	}
 	
+	public void addProduto(DadosProduto produto) {
+		this.estoqueGeral.add(produto);
+	}
 
-	public void verificarRemessa() {
-		
+	public Double subtotalRemessa(DadosProduto produto) {
+		return produto.getPrecoUni() * produto.getQuantidade();
 	}
 	
-	public void subtotalRemessa() {
-		ArrayList<DadosProduto> valorProd = new ArrayList<>();
+	public void verificarRemessa() {
 		
 	}
 	
@@ -33,9 +41,6 @@ public class Estoque {
 		
 	}
 	
-	public void addProduto(ArrayList<DadosProduto> lista) {
-		
-	}
 	
 	public void buscarProdutosID(ArrayList<DadosProduto> lista) {
 		
@@ -45,7 +50,25 @@ public class Estoque {
 		
 	}
 	
-	
+	public void serializar(String caminhoFile) {
+		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
+			oos.writeObject(this);
+		} catch (IOException er) {
+			System.out.println("Arquivo não encontrado na serialização: " + er.getMessage());
+		} 
+	}
+
+	public Estoque desserializar(String caminhoFile) throws ClassNotFoundException {
+		Estoque listaRetorno = null;
+		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
+			listaRetorno = (Estoque) ois.readObject();
+		} catch (IOException er) {
+			System.out.println("Arquivo não encontrado na desserialização: " + er.getMessage());
+		} catch (ClassNotFoundException er) {
+			System.out.println("Exceção de Classe não encontrada na desserialização: " + er.getMessage());
+		}
+		return listaRetorno;
+	}
 	
 	@Override
 	public int hashCode() {

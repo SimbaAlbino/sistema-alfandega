@@ -8,4 +8,7 @@ public interface Usuario {
 	
 	}
 	void listarProdutos(); // arrumar
+	void apagarUser();
+	void adicionarUser();
+	void listarUser();
 }
