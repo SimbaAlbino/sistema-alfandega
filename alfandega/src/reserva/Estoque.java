@@ -42,8 +42,9 @@ public class Estoque implements Serializable {
 	}
 	
 	
-	public void buscarProdutosID(ArrayList<DadosProduto> lista, String code) {
-		//usar o binarySearch do collectors
+	public ArrayList<DadosProduto> buscarProdutosID(ArrayList<DadosProduto> lista, int code) {
+		ArrayList<DadosProduto> produdtosUser;
+		produtosUser = lista.stream().filter(x -> x.get)
 	}
 	
 	public void buscarProdutosCPF(ArrayList<DadosProduto> lista) {
