@@ -1,19 +1,22 @@
 package entidades;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-import reserva.Produto;
+import tiposProduto.Produto;
 
-public class DadosProduto {
+public class DadosProduto implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private int idRastreio;
 	private Cliente cliente;
 	private Vendedor vendedor;
 	private Produto tipoItem;
 	private boolean documentos;
-	private String cep;
-	private String endereço;
+	private Endereco endereco;
 	private LocalDate dataChegada;
+	private StatusProduto status;
 
 	// add construtor e getters
 

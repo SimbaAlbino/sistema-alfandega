@@ -1,4 +1,4 @@
-package reserva;
+package tiposProduto;
 
 public class Acessorios extends Produto {
 

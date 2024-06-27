@@ -1,25 +1,30 @@
 package entidades;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import utilidade.ModelagemFile;
 
 public interface Usuario <T> {
 
 	void listarProdutos();
-	void avisosCanal();
+	void avisosCanal(DadosProduto produto);
 
-	default void apagarUser(ArrayList<? extends T> pessoas, T classChamada) {
-		//utilidade.desserializar();
+	default void apagarUser(String caminho, T classChamada) {
+		ArrayList<?> pessoas = new ArrayList<>();
+		try {
+			pessoas = (ArrayList<?>) ModelagemFile.desserializar(caminho);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 		if (pessoas.contains(classChamada)) {
-			int idpessoa = pessoas.indexOf(classChamada);
-			pessoas.remove(idpessoa);
+			pessoas.remove(classChamada);
 		}
 		// ver como faz para remover uma linha do arquivo
 		//act.serializar();
+		// fazer em cada classe usuario, vendedor e funcionario umaa arraylist e chamar esse método apagarUser
 	}
 
 	default boolean podeAdicionarUser(ArrayList<? extends T> pessoas, T classChamada) {

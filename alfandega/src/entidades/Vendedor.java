@@ -11,6 +11,8 @@ public class Vendedor extends Utilizador implements Usuario<Vendedor>, Serializa
 	private Cliente cliente;
 	private String nomeVendedor;
 	private String emailVendedor;
+	private String senha;
+	private String caminhoVendedoresFile = "";
 
 	public void cadastrarProduto(Cliente cliente) {
 		DadosProduto produto = new DadosProduto();
@@ -25,7 +27,7 @@ public class Vendedor extends Utilizador implements Usuario<Vendedor>, Serializa
 
 	}
 
-	public boolean verifPagamento(Cliente cliente) {
+	public void verifPagamento(Cliente cliente) {
 
 	}
 
@@ -36,13 +38,13 @@ public class Vendedor extends Utilizador implements Usuario<Vendedor>, Serializa
 	}
 
 	@Override
-	public void avisosCanal() {
+	protected void pagamento() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected void pagamento() {
+	public void avisosCanal(DadosProduto produto) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -13,6 +13,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	protected String email;
 	protected String cpf;
 
+	private String caminhoClientesFile = "";
 	public Cliente(String nomeCliente, String email, String cpf) {
 		this.nomeCliente = nomeCliente;
 		this.email = email;
@@ -43,23 +44,31 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		this.cpf = cpf;
 	}
 
+	public String getCaminhoClientesFile() {
+		return caminhoClientesFile;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void listarProdutos() {
-		ArrayList<DadosProduto> produtosDoCliente = ModelagemFile.lerArquivo("caminhotal");
-		// o modelagem file.lerarquivo vai retornar uma array de itens lidos
-		
-		for (DadosProduto produto : produtosDoCliente) {
-			// se não estiver no estoque, estará no despache
-			if (produto.getClient().equals(this)) {
-				System.out.println(produto);
-			}
+		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
+		try {
+			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(getCaminhoClientesFile()); // CASTING DO CURINGA
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
 
+		for (DadosProduto dadoProduto : listaProdutos) {
+			// se não estiver no estoque, estará no despache
+			if (dadoProduto.getClient().equals(this)) {
+				System.out.println(dadoProduto);
+			}
+		}
 	}
 
 	@Override
 	public void avisosCanal(DadosProduto produto) {
-		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), );
+		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), produto.getStatus().name());
 		//usar enum
 	}
 

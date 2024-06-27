@@ -1,4 +1,4 @@
-package reserva;
+package tiposProduto;
 
 public class Eletrodomesticos extends Produto {
 
