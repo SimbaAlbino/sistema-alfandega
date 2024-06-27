@@ -16,9 +16,7 @@ public abstract class Utilizador {
 			//Estoque.buscarProdutosCPF
 		}
 		//enum.codRastreio para saber onde está localizado em destaque no enum
-		
-		
-		
-		
 	}
+	
+	protected abstract void cadastrarUser();
 }

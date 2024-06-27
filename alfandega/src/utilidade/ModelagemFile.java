@@ -31,6 +31,21 @@ public class ModelagemFile {
 		return listaRetorno;
 	}
 	
+	public static void existenciaArquivo() {
+		
+	}
+	
+	public static void deletarArquivo() {
+		
+	}
+
+	public static void moverArquivo() {
+		
+	}
+	
+	public static void limparArquivo() {
+		
+	}
 	
 	
 	

@@ -2,21 +2,32 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
 
 import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	protected String nomeCliente;
-	protected String email;
-	protected String cpf;
+	private String nomeCliente;
+	private String email;
+	private String senha;
+	private String cpf;
+	
 
 	private String caminhoClientesFile = "";
-	public Cliente(String nomeCliente, String email, String cpf) {
+	
+	
+	//construtor de cadastro
+	public Cliente(String nomeCliente, String email, String senha, String cpf) {
 		this.nomeCliente = nomeCliente;
 		this.email = email;
+		this.senha = senha;
+		this.cpf = cpf;
+	}
+
+	//gerando construtor de uso para o Vendedor
+	public Cliente(String nomeCliente, String cpf) {
+		this.nomeCliente = nomeCliente;
 		this.cpf = cpf;
 	}
 
@@ -60,7 +71,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 
 		for (DadosProduto dadoProduto : listaProdutos) {
 			// se não estiver no estoque, estará no despache
-			if (dadoProduto.getClient().equals(this)) {
+			if (dadoProduto.getCliente().equals(this)) {
 				System.out.println(dadoProduto);
 			}
 		}
@@ -68,14 +79,8 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 
 	@Override
 	public void avisosCanal(DadosProduto produto) {
-		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), produto.getStatus().name());
-		//usar enum
-	}
-
-	@Override
-	public void avisosCanal() {
-		// TODO Auto-generated method stub
-
+		System.out.printf("O produto: %s está %s", produto.getTipoItem(), produto.getStatus().name());
+		//Se o produto tiver no estoque e com a coloção amarela, verificar com o funcionario, mensagem;
 	}
 
 	@Override
@@ -83,6 +88,6 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		// TODO Auto-generated method stub
 
 	}
-	
+	// ao validar o cpf do cliente, apenas considerar os números, se vier uma letra, faz um while.
 	//usar o equals e hashCode de acordo com a necessidade no futuro. em listar produtos precisamos encontrar por Cliente
 }

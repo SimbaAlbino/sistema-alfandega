@@ -64,6 +64,10 @@ public interface Usuario <T> {
 		}
 		//utilidade.serializar()
 	}
+	
+	default void loginUser() {
+		
+	}
 }
 	
 /*
