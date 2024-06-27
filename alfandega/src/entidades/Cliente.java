@@ -2,8 +2,6 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Objects;
-
 import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
@@ -14,6 +12,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	protected String cpf;
 
 	private String caminhoClientesFile = "";
+
 	public Cliente(String nomeCliente, String email, String cpf) {
 		this.nomeCliente = nomeCliente;
 		this.email = email;
@@ -47,13 +46,20 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	public String getCaminhoClientesFile() {
 		return caminhoClientesFile;
 	}
+	
+	
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void listarProdutos() {
 		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
 		try {
-			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(getCaminhoClientesFile()); // CASTING DO CURINGA
+			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(getCaminhoClientesFile()); // CASTING
+																												// DO
+																												// CURINGA
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -69,7 +75,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	@Override
 	public void avisosCanal(DadosProduto produto) {
 		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), produto.getStatus().name());
-		//usar enum
+		// usar enum
 	}
 
 	@Override
@@ -83,6 +89,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		// TODO Auto-generated method stub
 
 	}
-	
-	//usar o equals e hashCode de acordo com a necessidade no futuro. em listar produtos precisamos encontrar por Cliente
+
+	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
+	// produtos precisamos encontrar por Cliente
 }

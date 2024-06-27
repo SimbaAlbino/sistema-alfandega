@@ -24,5 +24,7 @@ public class Endereco {
 	public void setNumeroResidencia(short numeroResidencia) {
 		this.numeroResidencia = numeroResidencia;
 	}
+	
+	
 
 }
