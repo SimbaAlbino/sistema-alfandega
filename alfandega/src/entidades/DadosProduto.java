@@ -2,57 +2,24 @@ package entidades;
 
 import java.time.LocalDate;
 
+import reserva.Produto;
+
 public class DadosProduto {
 
 	private int idRastreio;
 	private Cliente cliente;
+	private Vendedor vendedor;
 	private Produto tipoItem;
 	private boolean documentos;
 	private String cep;
 	private String endereço;
 	private LocalDate dataChegada;
 
-	public DadosProduto(int idRastreio, Cliente cliente, Produto tipoItem, boolean documentos, String cep,
-			String endereço, LocalDate dataChegada) {
-		this.idRastreio = idRastreio;
-		this.cliente = cliente;
-		this.tipoItem = tipoItem;
-		this.documentos = documentos;
-		this.cep = cep;
-		this.endereço = endereço;
-		this.dataChegada = dataChegada;
-	}
-
-	public int getIdRastreio() {
-		return idRastreio;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public Produto getTipoItem() {
-		return tipoItem;
-	}
-
-	public boolean isDocumentos() {
-		return documentos;
-	}
-
-	public String getCep() {
-		return cep;
-	}
-
-	public String getEndereço() {
-		return endereço;
-	}
-
-	public LocalDate getDataChegada() {
-		return dataChegada;
-	}
+	// add construtor e getters
 
 	public void editarRemessa(int caso) {
-		
+		// aplicar switch case 
 	}
-
+	
+	//usar o equals e hashCode de acordo com a necessidade no futuro. em listar produtos precisamos encontrar por Cliente
 }

@@ -1,13 +1,14 @@
 package entidades;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Scanner;
 
-public class Cliente extends Utilizador implements Usuario, Serializable {
-	
+import utilidade.ModelagemFile;
+
+public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 	protected String nomeCliente;
 	protected String email;
 	protected String cpf;
@@ -17,7 +18,7 @@ public class Cliente extends Utilizador implements Usuario, Serializable {
 		this.email = email;
 		this.cpf = cpf;
 	}
-	
+
 	public String getNomeCliente() {
 		return nomeCliente;
 	}
@@ -41,41 +42,38 @@ public class Cliente extends Utilizador implements Usuario, Serializable {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	
-	
 
 	@Override
 	public void listarProdutos() {
-		for (DadosProduto produto : produtoUser) {
-			System.out.println(produto);
+		ArrayList<DadosProduto> produtosDoCliente = ModelagemFile.lerArquivo("caminhotal");
+		// o modelagem file.lerarquivo vai retornar uma array de itens lidos
+		
+		for (DadosProduto produto : produtosDoCliente) {
+			// se não estiver no estoque, estará no despache
+			if (produto.getClient().equals(this)) {
+				System.out.println(produto);
+			}
 		}
-		
-	}
 
-	
-	public void adicionarProduto(DadosProduto produto) {
-		
 	}
 
 	@Override
 	public void avisosCanal(DadosProduto produto) {
 		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), );
+		//usar enum
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(cpf);
+	public void avisosCanal() {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cliente other = (Cliente) obj;
-		return Objects.equals(cpf, other.cpf);
+	protected void pagamento() {
+		// TODO Auto-generated method stub
+
 	}
+	
+	//usar o equals e hashCode de acordo com a necessidade no futuro. em listar produtos precisamos encontrar por Cliente
 }

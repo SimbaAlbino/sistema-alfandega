@@ -34,7 +34,7 @@ public class Estoque implements Serializable {
 	}
 	
 	public void clienteSubtotal() {
-		
+		//subtotal de todos os produtos relacionados ao cliente, decidir se é subtotal de imposto ou quantidade x preço unico.
 	}
 	
 	public void verificarPagamento() {
@@ -42,15 +42,30 @@ public class Estoque implements Serializable {
 	}
 	
 	
-	public void buscarProdutosID(ArrayList<DadosProduto> lista) {
-		
+	public void buscarProdutosID(ArrayList<DadosProduto> lista, String code) {
+		//usar o binarySearch do collectors
 	}
 	
 	public void buscarProdutosCPF(ArrayList<DadosProduto> lista) {
-		
+		//aplicar o equals
 	}
 	
-	public void serializar(String caminhoFile) {
+	public void addStatusEnum() {
+		// gostaria de herdar esse Status para o canal, para classificar onde o produto está no despache
+	}
+	
+	public void limiteData() {
+		
+	}
+
+	
+	//aplicar o hascode e equals
+	
+}
+
+
+//como serializei e desserializei
+/*	public void serializar(String caminhoFile) {
 		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
 			oos.writeObject(this);
 		} catch (IOException er) {
@@ -69,22 +84,4 @@ public class Estoque implements Serializable {
 		}
 		return listaRetorno;
 	}
-	
-	@Override
-	public int hashCode() {
-		return Objects.hash(estoqueGeral);
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Estoque other = (Estoque) obj;
-		return Objects.equals(estoqueGeral, other.estoqueGeral);
-	}
-	
-}
+ */

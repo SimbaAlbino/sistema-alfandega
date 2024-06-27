@@ -6,10 +6,17 @@ public abstract class Utilizador {
 	
 	protected abstract void pagamento();
 	
-	protected abstract DadosProduto rastrearProdutos() {
+	protected DadosProduto rastrearProdutos() {
 		Scanner sc = new Scanner(System.in);
-		int codRastreio = sc.nextInt();
-		//enum.codRastreio
+		System.out.println("1 - Rastreio por CPF%n2 - Rastreio por Código");
+		int opcao = sc.nextInt();
+		if (opcao == 1) {
+			//Estoque.buscarProdutosID
+		} else {
+			//Estoque.buscarProdutosCPF
+		}
+		//enum.codRastreio para saber onde está localizado em destaque no enum
+		
 		
 		
 		
