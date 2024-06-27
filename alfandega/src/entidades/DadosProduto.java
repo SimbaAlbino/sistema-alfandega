@@ -18,6 +18,8 @@ public class DadosProduto implements Serializable {
 	private LocalDate dataChegada;
 	private StatusProduto status;
 
+	
+	
 	// add construtor e getters
 
 	public void editarRemessa(int caso) {
