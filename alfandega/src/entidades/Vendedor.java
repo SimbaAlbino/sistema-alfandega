@@ -1,8 +1,9 @@
 package entidades;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
-public class Vendedor implements Usuario {
+public class Vendedor extends Utilizador implements Usuario, Serializable {
 	private Cliente cliente;
 	private String nomeVendedor;
 	private String emailVendedor;
@@ -12,11 +13,15 @@ public class Vendedor implements Usuario {
 	}
 	
 	public void cadastrarProduto(Cliente cliente) {
-		Scanner sc = new Scanner(System.in);
+		DadosProduto produto = new DadosProduto();
 		
 	}
 	
 	public void atualizarProduto() {
+		
+	}
+	
+	public void arquivoVendedores() {
 		
 	}
 
@@ -28,6 +33,29 @@ public class Vendedor implements Usuario {
 
 	@Override
 	public void listarProdutos() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void apagarUser() {
+				
+	}
+
+	@Override
+	public void adicionarUser() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void listarUser() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void avisosCanal() {
 		// TODO Auto-generated method stub
 		
 	}

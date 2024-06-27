@@ -1,14 +1,16 @@
 package entidades;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Scanner;
 
-public class Cliente implements Usuario {
+public class Cliente extends Utilizador implements Usuario, Serializable {
 	
 	protected String nomeCliente;
 	protected String email;
 	protected String cpf;
-	
-	ArrayList<DadosProduto> produtoUser = new ArrayList<>();
 
 	public Cliente(String nomeCliente, String email, String cpf) {
 		this.nomeCliente = nomeCliente;
@@ -40,11 +42,7 @@ public class Cliente implements Usuario {
 		this.cpf = cpf;
 	}
 	
-	@Override
-	public boolean rastrearProdutos() {
-		
-		return ;
-	}
+	
 
 	@Override
 	public void listarProdutos() {
@@ -52,5 +50,32 @@ public class Cliente implements Usuario {
 			System.out.println(produto);
 		}
 		
+	}
+
+	
+	public void adicionarProduto(DadosProduto produto) {
+		
+	}
+
+	@Override
+	public void avisosCanal(DadosProduto produto) {
+		System.out.printf("O produto: %s está %s", produto.getProduto().getClass(), );
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cpf);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(cpf, other.cpf);
 	}
 }
