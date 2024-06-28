@@ -2,17 +2,25 @@ package sistemaInterno;
 
 import java.util.ArrayList;
 
-import tiposProduto.Produto;
-
 public abstract class Impostos {
-	private Produto objetoTaxa;
-	private float taxa;
-	
-	ArrayList<? extends Impostos> listaImposto = new ArrayList<>();
+	protected Produto objetoTaxa; // Produto ao qual o imposto será aplicado
+	protected ArrayList<Impostos> taxa = new ArrayList<>(); // Lista de impostos
 
-	public Double impostoTotal() {
-		
+	// Método abstrato que deve ser implementado pelas subclasses afim de clcular os
+	// impostos
+	public abstract double impostoTotal();
+
+	// Adiciona um imposto à lista de impostos
+	public void addImposto(Impostos imposto) {
+		taxa.add(imposto);
 	}
-	
-	public abstract boolean atualizCatalogo();
+
+	// Calcula o total de todos os impostos na lista
+	public double calcularTotalImpostos() {
+		double total = 0.0;
+		for (Impostos imposto : taxa) { // Itera sobre cada imposto na lista
+			total += imposto.impostoTotal(); // Soma o valor do imposto ao total
+		}
+		return total; // Retorna o total dos impostos
+	}
 }

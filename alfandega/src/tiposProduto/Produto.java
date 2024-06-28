@@ -1,24 +1,23 @@
 package tiposProduto;
 
-public class Produto {
+public abstract class Produto {
 
-	private String nome;
+	private double precoUnico;
 	private int quantidade;
-	private float taxaUnica;
 
-	public Produto(String nome, int quantidade, float taxaUnica) {
-		this.nome = nome;
+	public Produto(double precoUnico, int quantidade) {
+		super();
+		this.precoUnico = precoUnico;
 		this.quantidade = quantidade;
-		this.taxaUnica = taxaUnica;
 
 	}
 
-	public String getNome() {
-		return nome;
+	public double getPrecoUnico() {
+		return precoUnico;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setPrecoUnico(double precoUnico) {
+		this.precoUnico = precoUnico;
 	}
 
 	public int getQuantidade() {
@@ -29,18 +28,10 @@ public class Produto {
 		this.quantidade = quantidade;
 	}
 
-	public float getTaxaUnica() {
-		return taxaUnica;
+	public double getTotal() {
+		return precoUnico * quantidade;
 	}
 
-	public void setTaxaUnica(float taxaUnica) {
-		this.taxaUnica = taxaUnica;
-	}
-
-	@Override
-	public void listarProdutos() {
-		return
-		
-
-	}
+	// Método abstrato para obter a taxa única
+	public abstract float getTaxaUnica();
 }
