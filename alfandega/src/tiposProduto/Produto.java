@@ -32,4 +32,6 @@ public class Produto {
 		return precoUnico * quantidade;
 	}
 
+	// Método abstrato para obter a taxa única
+	public abstract float getTaxaUnica();
 }
