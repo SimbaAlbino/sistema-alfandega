@@ -1,6 +1,6 @@
 package tiposProduto;
 
-public class Produto {
+public abstract class Produto {
 
 	private double precoUnico;
 	private int quantidade;

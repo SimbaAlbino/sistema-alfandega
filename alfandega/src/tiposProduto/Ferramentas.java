@@ -1,11 +1,11 @@
 package tiposProduto;
 
-public class Ferramenta extends Produto {
+public class Ferramentas extends Produto {
 	private String peca; 
 	private float taxaUnica = 0.1f; 
 
 	// Construtor da classe Ferramenta que chama o construtor da classe base Produto
-	public Ferramenta(double precoUnico, int quantidade, String peca) {
+	public Ferramentas (double precoUnico, int quantidade, String peca) {
 		super(precoUnico, quantidade); // Chama o construtor da classe base Produto
 		this.peca = peca; // Inicializa a descrição da ferramenta com o valor recebido
 	}
