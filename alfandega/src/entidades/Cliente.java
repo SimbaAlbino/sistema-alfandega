@@ -2,6 +2,7 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import utilidade.ModelagemFile;
 
@@ -13,7 +14,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	private String senha;
 	private String cpf;
 
-	private String caminhoClientesFile = "";
+	private static String caminhoClientesFile = "";
 
 	// construtor de cadastro
 	public Cliente(String nomeCliente, String email, String senha, String cpf) {
@@ -41,20 +42,13 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		return cpf;
 	}
 
-	public String getCaminhoClientesFile() {
+	public static String getCaminhoClientesFile() {
 		return caminhoClientesFile;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void listarProdutos() {
-		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
-		try {
-			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(getCaminhoClientesFile()); // CASTING DO CURINGA
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		for (DadosProduto dadoProduto : listaProdutos) {
+	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
+		for (DadosProduto dadoProduto : produtosFiltrados) {
 			// se não estiver no estoque, estará no despache
 			if (dadoProduto.getCliente().equals(this)) {
 				System.out.println(dadoProduto);
@@ -65,21 +59,41 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	@Override
 	public void avisosCanal(DadosProduto produto) {
 		System.out.printf("O produto: %s está %s", produto.getTipoItem().getNome(), produto.getStatus());
-		// Se o produto tiver no estoque e com a coloção amarela, verificar com o funcionario, mensagem;
+		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
+		// funcionario, mensagem;
 	}
 
 	@Override
 	protected void cadastrarUser() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	protected void pagamento() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	// ao validar o cpf do cliente, apenas considerar os números, se vier uma letra faz um while.
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cpf, nomeCliente);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Cliente other = (Cliente) obj;
+		return Objects.equals(cpf, other.cpf) && Objects.equals(nomeCliente, other.nomeCliente);
+	}
+
+	// ao validar o cpf do cliente, apenas considerar os números, se vier uma letra
+	// faz um while.
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
 }

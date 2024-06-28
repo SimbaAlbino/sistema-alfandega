@@ -9,7 +9,7 @@ import utilidade.ModelagemFile;
 
 public interface Usuario <T> {
 
-	void listarProdutos();
+	void listarProdutos(ArrayList<DadosProduto> produtosFiltrados);
 	void avisosCanal(DadosProduto produto);
 
 	default void apagarUser(String caminho, T classChamada) {

@@ -19,4 +19,8 @@ public abstract class Utilizador {
 	}
 	
 	protected abstract void cadastrarUser();
+	
+	
 }
+
+
