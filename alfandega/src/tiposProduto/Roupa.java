@@ -2,13 +2,11 @@ package tiposProduto;
 
 public class Roupa extends Produto {
 
-	public Roupa(String nome, int quantidade, float taxaUnica) {
-		super(nome, quantidade, taxaUnica);
+	private float taxaUnica = 0.;
 
+	public float getTaxaUnica() {
+		return taxaUnica;
 	}
-
-	public void tamanho() {
-
-	}
-
+	
+	
 }
