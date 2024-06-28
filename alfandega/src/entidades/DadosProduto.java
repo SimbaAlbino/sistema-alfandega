@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import reserva.StatusProduto;
 import tiposProduto.Produto;
 
-public class DadosProduto implements Serializable {
+public class DadosProduto implements Serializable, Comparable<DadosProduto> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -16,20 +16,24 @@ public class DadosProduto implements Serializable {
 	private Produto tipoItem;
 	private boolean documentos;
 	private Endereco endereco;
-	private LocalDate dataChegada;
-	private StatusProduto status;
+	private LocalDate dataChegada = LocalDate.now();
+	private StatusProduto status = StatusProduto.valueOf("ESTOQUE"); // VALOR INICIAL
 
 	// add construtor e getters
 
-	public DadosProduto(Cliente cliente, Vendedor vendedor, Produto tipoItem, boolean documentos,
-			Endereco endereco, LocalDate dataChegada, StatusProduto status) {
+	public DadosProduto(Cliente cliente, Vendedor vendedor, Produto tipoItem, boolean documentos, Endereco endereco,
+			StatusProduto status) {
 		this.cliente = cliente;
 		this.vendedor = vendedor;
 		this.tipoItem = tipoItem;
 		this.documentos = documentos;
 		this.endereco = endereco;
-		this.dataChegada = dataChegada;
 		this.status = status;
+	}
+
+	//Construtor para instanciar um objeto na busca do binarySearch -> Estoque 
+	public DadosProduto(int idRastreio) {
+		this.idRastreio = idRastreio;
 	}
 
 	public int getIdRastreio() {
@@ -63,13 +67,18 @@ public class DadosProduto implements Serializable {
 	public StatusProduto getStatus() {
 		return status;
 	}
-	
+
 	public void gerarIdRastreio() {
-		
+
 	}
 
 	public void editarRemessa(int caso) {
 		// aplicar switch case
+	}
+
+	@Override
+	public int compareTo(DadosProduto dadoProduto) {
+		return Integer.compare(this.idRastreio, dadoProduto.getIdRastreio());
 	}
 
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
