@@ -56,9 +56,9 @@ public class Estoque implements Serializable {
 		return listaProdutos;
 	}
 	
-	public static DadosProduto buscarProdutosID(Integer code) {
+	public static DadosProduto buscarIDBinarySearch(Integer code) {
 		//desserializarDoEstoque ou do Despache
-		List<DadosProduto> produtosEstoque = new ArrayList<>();
+		List<DadosProduto> produtosEstoque = Estoque.listaProdutosEstoque();
 		produtosEstoque.sort((p1, p2) -> p1.getIdRastreio().compareTo(p2.getIdRastreio()));
 		//Collections.sort(produtosEstoque);
 		//Usar comparator para ter uma ordem de itens personalizada
@@ -67,20 +67,30 @@ public class Estoque implements Serializable {
 				//Também poderia usar o Comparator.comparingInt
 				//Comparator.comparing -> perguntar como usar essa serialização ao professor.
 				//Fazer um if para caso não encontre
+		if (indice == 0) {
+			// tentar buscar no despache
+			return null;
+		}
 		return produtosEstoque.get(indice);
 	}
 	
 	//Passando o método estático listaProdutosEstoque e um cliente
-	public static ArrayList<DadosProduto> buscarProdutosCpfNome(ArrayList<DadosProduto> lista, Cliente produtoCliente) {
+	public static ArrayList<DadosProduto> buscarClientEquals(Cliente produtoCliente) {
 		ArrayList<DadosProduto> produtosEncontrados = new ArrayList<>();
-		for (DadosProduto dadoProduto : lista) {
+		for (DadosProduto dadoProduto : Estoque.listaProdutosEstoque()) {
 			// se não estiver no estoque, estará no despache
 			if (dadoProduto.getCliente().equals(produtoCliente)) {
 				produtosEncontrados.add(dadoProduto);
 			}
 		}
+		if (produtosEncontrados.size() == 0) {
+			// tentar buscar no despache
+			return null;
+		}
 		return produtosEncontrados;
 	}
+	
+	//buscar produtos do fornecedor
 	
 	public void addStatusEnum() {
 		// SE ESTIVER CLASSIFICADO COMO 

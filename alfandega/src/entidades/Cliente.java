@@ -8,6 +8,8 @@ import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
 
+	//alterar os construtores usando this
+	
 	private static final long serialVersionUID = 1L;
 	private String nomeCliente;
 	private String email;
@@ -24,10 +26,13 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		this.cpf = cpf;
 	}
 
-	// gerando construtor de uso para o Vendedor
+	// gerando construtor de uso para o Vendedor e busca
 	public Cliente(String nomeCliente, String cpf) {
 		this.nomeCliente = nomeCliente;
 		this.cpf = cpf;
+	}
+	
+	public Cliente() {
 	}
 
 	public String getNomeCliente() {

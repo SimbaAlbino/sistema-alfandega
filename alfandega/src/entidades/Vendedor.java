@@ -73,12 +73,6 @@ public class Vendedor extends Utilizador implements Usuario<Vendedor>, Serializa
 	}
 
 	@Override
-	public void listarProdutos() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	protected void pagamento() {
 		// TODO Auto-generated method stub
 
@@ -88,6 +82,18 @@ public class Vendedor extends Utilizador implements Usuario<Vendedor>, Serializa
 	public void avisosCanal(DadosProduto produto) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void cadastrarUser() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

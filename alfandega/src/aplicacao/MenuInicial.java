@@ -1,15 +1,15 @@
 package aplicacao;
 
-public enum MenuOption {
-    // Declara o conteúdo do tipo enum
-    Cliente(1),
-    Funcionario(2),
-    Vendedor(3);
-
+public enum MenuInicial {
+	RASTREAR(1),
+	CADASTRAR(2),
+	LOGAR(3),
+	SAIR(4);
+	
     private final int value; // Opção atual de menu
 
     // Construtor
-    private MenuOption(int value) {
+    private MenuInicial(int value) {
         this.value = value;
     }
 
