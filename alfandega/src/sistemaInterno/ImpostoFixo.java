@@ -1,12 +1,17 @@
 package sistemaInterno;
 
 public class ImpostoFixo extends Impostos {
-	// Atributo final que representa a taxa de imposto fixo
-	private final float iFixo = 0.05f; // Exemplo de valor
+	public static final String TIPO_MONSTRO = "Imposto Fixo";
+	private static final double VALOR_IMPOSTO_FIXO = 15.0; // exemplo - alterar valor
 
-	// Implementação do cálculo de imposto fixo
-	@Override
-	public double impostoTotal() {
-		return iFixo;
+	public ImpostoFixo() {
+		super(TIPO_MONSTRO, VALOR_IMPOSTO_FIXO);
+
 	}
+
+	@Override
+	public double calcularImpostoTotal() {
+		return getValorImposto() * VALOR_IMPOSTO_FIXO;
+	}
+
 }

@@ -1,12 +1,30 @@
 package sistemaInterno;
 
 public abstract class Impostos {
-	// Atributo protegido que representa o produto associado à taxa
-	protected Produto ObjetoTaxa;
+	protected String tipoImposto;
+	protected double valorImposto;
 
-	// Atributo protegido que representa a taxa de impostos
-	protected Impostos taxa;
+	public Impostos(String tipoImposto, double valorImposto) {
+		this.tipoImposto = tipoImposto;
+		this.valorImposto = valorImposto;
+	}
 
-	// Método abstrato para calcular o imposto total
-	public abstract double impostoTotal();
+	public abstract double calcularImpostoTotal();
+
+	public String getTipoImposto() {
+		return tipoImposto;
+	}
+
+	public void setTipoImposto(String tipoImposto) {
+		this.tipoImposto = tipoImposto;
+	}
+
+	public double getValorImposto() {
+		return valorImposto;
+	}
+
+	public void setValorImposto(double valorImposto) {
+		this.valorImposto = valorImposto;
+	}
+
 }
