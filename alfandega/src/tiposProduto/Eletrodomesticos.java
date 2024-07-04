@@ -1,19 +1,14 @@
 package tiposProduto;
 
 public class Eletrodomesticos extends Produto {
-	private String tipoEletrodomestico; 
-	private float taxaUnica = 0.1f; 
+	private static final float TAXA_UNICA = 0.40f;
 
-	// Construtor da classe Eletrodomesticos que chama o construtor da classe base
-	// Produto
-	public Eletrodomesticos(double precoUnico, int quantidade, String tipoEletrodomestico) {
-		super(precoUnico, quantidade); // Chama o construtor da classe base Produto
-		this.tipoEletrodomestico = tipoEletrodomestico; // Inicializa o tipo de eletrodoméstico com o valor recebido
+	public Eletrodomesticos(double precoUnico, int quantidade) {
+		super(precoUnico, quantidade);
 	}
 
-	// Método para obter a taxa única do eletrodoméstico
 	@Override
-	public float getTaxaUnica() {
-		return taxaUnica; // Retorna a taxa única do eletrodoméstico
+	public double getTaxaUnica() {
+		return TAXA_UNICA;
 	}
 }

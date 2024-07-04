@@ -1,35 +1,68 @@
 package sistemaInterno;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Dividas {
-	// Atributo que representa o cliente associado à dívida
 	private Cliente clientela;
-
-	// Atributo que representa o montante da dívida
 	private double montante;
+	private List<Produto> produtos;
+	private List<Divida> dividas;
 
-	// Método privado para calcular a despesa
-	private double calcularDespesa(Object params) {
-		// Implementação do método calcularDespesa
-		return 0.0;
+	public Dividas(Cliente clientela) {
+		this.clientela = clientela;
+		this.produtos = new ArrayList<>();
+		this.dividas = new ArrayList<>();
+		this.montante = 0.0;
 	}
 
-	// Método privado para verificar se a dívida está pendente
-	private void dividaPendente(Object params) {
-		// Implementação do método dividaPendente
+	// Método para calcular a despesa total
+	private double calcularDespesa() {
+		double total = 0.0;
+		for (Produto produto : produtos) {
+			total += produto.getPreco();
+		}
+		return total;
 	}
 
-	// Método privado para selecionar um produto associado à dívida
-	private void selecionarProduto() {
-		// Implementação do método selecionarProduto
+	// Método para verificar se a dívida está pendente
+	private boolean dividaPendente() {
+		;
 	}
 
-	// Método privado para marcar a dívida como paga
+	// Método para selecionar um produto associado à dívida
+	private void selecionarProduto(Produto produto) {
+		
+	}
+
+	// Método para marcar a dívida como paga
 	private void dividaPaga() {
-		// Implementação do método dividaPaga
+		if (dividaPendente()) {
+			montante = 0;
+			produtos.clear();
+			System.out.println("Dívida paga com sucesso.");
+		} else {
+			System.out.println("Não há dívida pendente.");
+		}
 	}
 
-	// Método privado para adicionar a dívida a um arquivo
+	// Método para adicionar a dívida a um arquivo (simulação)
 	private void addDividaFile() {
-		// Implementação do método addDividaFile
+		Divida divida = new Divida(clientela, montante, produtos);
+		dividas.add(divida);
+		System.out.println("Dívida adicionada ao arquivo.");
+	}
+
+	// Classe interna para representar uma dívida
+	private class Divida {
+		private Cliente cliente;
+		private double valor;
+		private List<Produto> produtos;
+
+		public Divida(Cliente cliente, double valor, List<Produto> produtos) {
+			this.cliente = cliente;
+			this.valor = valor;
+			this.produtos = new ArrayList<>(produtos);
+		}
 	}
 }

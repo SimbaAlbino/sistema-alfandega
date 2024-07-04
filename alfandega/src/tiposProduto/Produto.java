@@ -6,7 +6,6 @@ public abstract class Produto {
 	private int quantidade;
 
 	public Produto(double precoUnico, int quantidade) {
-		super();
 		this.precoUnico = precoUnico;
 		this.quantidade = quantidade;
 
@@ -28,10 +27,11 @@ public abstract class Produto {
 		this.quantidade = quantidade;
 	}
 
-	public double getTotal() {
-		return precoUnico * quantidade;
-	}
+    // metodo abstrato da taxa unica
+	public abstract double getTaxaUnica();
 
-	// Método abstrato para obter a taxa única
-	public abstract float getTaxaUnica();
+	public double getTotal() {    // metodo para calcular o total dos produtos
+		double taxa = getTaxaUnica();
+		return (this.precoUnico * this.quantidade) * (1 + taxa);
+	}
 }
