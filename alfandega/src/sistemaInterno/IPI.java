@@ -1,12 +1,17 @@
 package sistemaInterno;
 
 public class IPI extends Impostos {
-	// Atributo final que representa a taxa de IPI
-	private final float ipi = 0.04f; // Exemplo de valor
+	private static final String TIPO_IMPOSTO = "IPI";
+	private static final double TAXA_IPI = 0.11;
 
-	// Implementação do cálculo de IPI
-	@Override
-	public double impostoTotal() {
-		return ipi;
+	public IPI(double valorImposto) {
+		super(TIPO_IMPOSTO, TAXA_IPI);
 	}
+
+	@Override
+	public double calcularImpostoTotal() {
+		return getValorImposto() * TAXA_IPI;
+
+	}
+
 }
