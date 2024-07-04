@@ -10,7 +10,7 @@ import utilidade.ModelagemFile;
 public interface Usuario <T> {
 
 	void listarProdutos(ArrayList<DadosProduto> produtosFiltrados);
-	void avisosCanal(DadosProduto produto);
+	boolean avisosCanal(DadosProduto produto);
 
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();

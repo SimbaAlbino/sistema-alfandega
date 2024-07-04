@@ -63,7 +63,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 
 	@Override
 	public void avisosCanal(DadosProduto produto) {
-		System.out.printf("O produto: %s está %s", produto.getTipoItem().getNome(), produto.getStatus());
+		System.out.printf("O produto: %s está %s", produto.getTipoItem(), produto.getStatus());
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
 	}

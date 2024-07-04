@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import despache.Canais;
 import entidades.Cliente;
 import entidades.DadosProduto;
 import utilidade.ModelagemFile;
@@ -26,7 +27,7 @@ public class Estoque implements Serializable {
 	}
 
 	public Double subtotalRemessa(DadosProduto produto) {
-		return produto.getPrecoUni() * produto.getQuantidade();
+		return produto.getTipoProduto().getPrecoUnico() * produto.getTipoProduto().getPrecoUnico();
 	}
 	
 	public void verificarRemessa() {
@@ -109,6 +110,22 @@ public class Estoque implements Serializable {
 		//se passar da data, chamar statusEnum
 	}
 
+	public void liberarProduto(DadosProduto produtoDado) {
+		// instancia o Canais
+		Canais canalProduto = new Canais(produtoDado);
+		switch (canalProduto.getCor()) {
+			case VERDE:
+				ModelagemFile.moverArquivo(produtoDado);
+			case AMARELO:
+				ModelagemFile.moverArquivo(produtoDado);
+			case VERMELHO:
+				ModelagemFile.moverArquivo(produtoDado);
+			case CINZA:
+				ModelagemFile.moverArquivo(produtoDado);
+
+		}
+			
+	}
 	
 	//aplicar o hascode e equals
 	
