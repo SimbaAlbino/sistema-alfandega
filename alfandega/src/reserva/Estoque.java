@@ -7,23 +7,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import despache.Canais;
 import entidades.Cliente;
 import entidades.DadosProduto;
+import filtradores.Canais;
 import utilidade.ModelagemFile;
 
 public class Estoque implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	protected ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
+	protected static ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
 
 	public ArrayList<DadosProduto> getEstoqueGeral() {
 		return estoqueGeral;
 	}
 	
-	public void addProduto(DadosProduto produto) {
-		this.estoqueGeral.add(produto);
+	public static void addProduto(DadosProduto produto) {
+		estoqueGeral.add(produto);
 	}
 
 	public Double subtotalRemessa(DadosProduto produto) {
@@ -76,11 +76,11 @@ public class Estoque implements Serializable {
 	}
 	
 	//Passando o método estático listaProdutosEstoque e um cliente
-	public static ArrayList<DadosProduto> buscarClientEquals(Cliente produtoCliente) {
+	public static ArrayList<DadosProduto> buscarClientEquals(Cliente clienteBusca) {
 		ArrayList<DadosProduto> produtosEncontrados = new ArrayList<>();
 		for (DadosProduto dadoProduto : Estoque.listaProdutosEstoque()) {
 			// se não estiver no estoque, estará no despache
-			if (dadoProduto.getCliente().equals(produtoCliente)) {
+			if (dadoProduto.getCliente().equals(clienteBusca)) {
 				produtosEncontrados.add(dadoProduto);
 			}
 		}

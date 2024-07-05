@@ -8,15 +8,15 @@ import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
 
-	//alterar os construtores usando this
-	
+	// alterar os construtores usando this
+
 	private static final long serialVersionUID = 1L;
 	private String nomeCliente;
 	private String email;
 	private String senha;
 	private String cpf;
 
-	private static String caminhoClientesFile = "";
+	private static String caminhoClientesFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileClientes.txt";
 
 	// construtor de cadastro
 	public Cliente(String nomeCliente, String email, String senha, String cpf) {
@@ -26,12 +26,17 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		this.cpf = cpf;
 	}
 
+	//para operações de login
+	public Cliente(String email, String senha) {
+		this.email = email;
+		this.senha = senha;
+	}
+
 	// gerando construtor de uso para o Vendedor e busca
-	public Cliente(String nomeCliente, String cpf) {
-		this.nomeCliente = nomeCliente;
+	public Cliente(String cpf) {
 		this.cpf = cpf;
 	}
-	
+
 	public Cliente() {
 	}
 
@@ -63,15 +68,22 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 
 	@Override
 	public void avisosCanal(DadosProduto produto) {
-		System.out.printf("O produto: %s está %s", produto.getTipoItem(), produto.getStatus());
+		System.out.printf("O produto: %s está %s", produto.getTipoProduto(), produto.getStatus());
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	protected void cadastrarUser() {
-		// TODO Auto-generated method stub
-
+	public ArrayList<Cliente> cadastroAttUser(String caminho){
+		ArrayList<Cliente> listaPessoas = null;
+		try {
+			listaPessoas = (ArrayList<Cliente>) ModelagemFile.desserializar(caminho);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		listaPessoas.add(this);
+		return listaPessoas;
 	}
 
 	@Override
@@ -82,7 +94,7 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(cpf, nomeCliente);
+		return Objects.hash(cpf);
 	}
 
 	@Override
@@ -94,11 +106,14 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 		if (getClass() != obj.getClass())
 			return false;
 		Cliente other = (Cliente) obj;
-		return Objects.equals(cpf, other.cpf) && Objects.equals(nomeCliente, other.nomeCliente);
+		return Objects.equals(cpf, other.cpf);
 	}
 
+	
 	// ao validar o cpf do cliente, apenas considerar os números, se vier uma letra
 	// faz um while.
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
 }
+
+

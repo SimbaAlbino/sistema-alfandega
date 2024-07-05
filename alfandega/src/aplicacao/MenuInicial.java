@@ -4,7 +4,7 @@ public enum MenuInicial {
 	RASTREAR(1),
 	CADASTRAR(2),
 	LOGAR(3),
-	SAIR(4);
+	VOLTAR(4);
 	
     private final int value; // Opção atual de menu
 

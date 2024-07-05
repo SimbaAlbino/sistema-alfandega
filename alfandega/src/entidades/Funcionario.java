@@ -11,10 +11,15 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	private String email;
 	private String senha;
 
-	private String caminhoFuncionariosFile = "";
+	private String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
 
 	private Funcionario(String nomeAdm, String email, String senha) {
 		this.nomeAdm = nomeAdm;
+		this.email = email;
+		this.senha = senha;
+	}
+	
+	public Funcionario(String email, String senha) {
 		this.email = email;
 		this.senha = senha;
 	}

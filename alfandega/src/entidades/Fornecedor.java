@@ -5,8 +5,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import reserva.Estoque;
 import tiposProduto.Acessorios;
+import tiposProduto.Automoveis;
+import tiposProduto.Eletrodomesticos;
+import tiposProduto.Ferramentas;
+import tiposProduto.Informatica;
+import tiposProduto.Mobilia;
 import tiposProduto.Produto;
+import tiposProduto.Roupa;
 
 public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Serializable {
 	/**
@@ -21,13 +28,23 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 	private String nomeFornecedor;
 	private String emailFornecedor;
 	private String senha;
-	private String caminhoFornecedoresFile = "";
+	private String cpf;
+	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 
 	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
 		this.senha = senha;
 	}
+	
+	
+	//Para login do fornecedor
+	public Fornecedor(String emailFornecedor, String senha) {
+		this.emailFornecedor = emailFornecedor;
+		this.senha = senha;
+	}
+
+
 
 	public String getNomeFornecedor() {
 		return nomeFornecedor;
@@ -38,7 +55,7 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 	}
 
 	public void cadastrarProduto() {
-		Produto categoriaProduto;
+		Produto categoriaProduto = null;
 		
 		System.out.print("Digite o nome do Cliente: ");
 		String nomeCliente = sc.nextLine();
@@ -47,14 +64,40 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		System.out.println();
 		System.out.print("Próxima etapa (Descrição do Produto): ");
 		System.out.print("Tipo de produto: ");
-		String tipoProduto = sc.next();
-		// printar os casos 7 tipos
-		//switch (tipo) 
-		// case
+		System.out.println("");
+		short tipoProduto = sc.nextShort();
 		System.out.print("Qual o preço da unidade? ");
 		double preco = sc.nextDouble();
 		System.out.print("Qual a quantidade? ");
 		int quantidade = sc.nextInt();
+		switch (tipoProduto) {
+		case 1:
+			categoriaProduto = new Acessorios(preco, quantidade);
+			break;
+		case 2:
+			categoriaProduto = new Automoveis(preco, quantidade);
+			break;
+		case 3:
+			categoriaProduto = new Eletrodomesticos(preco, quantidade);
+			break;
+		case 4:
+			categoriaProduto = new Ferramentas(preco, quantidade);
+			break;
+		case 5:
+			categoriaProduto = new Informatica(preco, quantidade);
+			break;
+		case 6:
+			categoriaProduto = new Mobilia(preco, quantidade);
+			break;
+		case 7:
+			categoriaProduto = new Roupa(preco, quantidade);
+			break;
+		default:
+			break;
+		}
+		// printar os casos 7 tipos
+				//switch (tipo) 
+				// case
 		System.out.println();
 		System.out.print("Você adicionou documentos ( S | N )? ");
 		Boolean temDoc = (sc.next().toUpperCase().charAt(0) == 'S' | sc.next().toUpperCase().charAt(0) == 'N') ? true : false;
@@ -68,10 +111,12 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		
 		//testando
 		DadosProduto produto = new DadosProduto(new Cliente(nomeCliente, cpfCliente), this, categoriaProduto, temDoc, new Endereco(cep, residencia));
-		
+		Estoque.addProduto(produto);
+		System.out.println("Produto cadastrado no estoque");
 	}
 
 	public ArrayList<Fornecedor> arquivoFornecedores() {
+		return null;
 		//ArrayList<Vendedores> vendedoresFile = ModelagemFile.desserializar(getCaminhoVendedoresFile());
 		/* 
 		 * for (vendedoresFile)
@@ -92,6 +137,7 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 
 	@Override
 	public boolean avisosCanal(DadosProduto produto) {
+		return false;
 		// emitirAviso()
 	}
 
@@ -102,7 +148,14 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 	}
 
 	@Override
-	protected void cadastrarUser() {
+	public void cadastrarUser() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void confirmarUser(String[] dadosEntrada) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,4 +1,4 @@
-package despache;
+package filtradores;
 
 import entidades.DadosProduto;
 import reserva.StatusProduto;
