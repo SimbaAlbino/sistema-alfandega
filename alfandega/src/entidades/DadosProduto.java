@@ -69,6 +69,10 @@ public class DadosProduto implements Serializable {
 		return status;
 	}
 
+	public String getRecado() {
+		return recado;
+	}
+
 	public void setStatus(StatusProduto status) {
 		this.status = status;
 	}

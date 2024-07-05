@@ -6,15 +6,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aplicacao.MenuUser;
 import utilidade.ModelagemFile;
 
 public interface Usuario<T> {
+	
+	static Scanner sc = new Scanner(System.in);
 
 	void listarProdutos(ArrayList<DadosProduto> produtosFiltrados);
 
 	boolean avisosCanal(DadosProduto produto);
 
-	void confirmarUser(String[] dadosEntrada);
+	T confirmarUser(String[] dadosEntrada);
 
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
@@ -32,20 +35,7 @@ public interface Usuario<T> {
 		// esse método apagarUser
 	}
 
-	default boolean existeUser(ArrayList<?> pessoas, T classChamada, String caminho) {
-		try {
-			pessoas = (ArrayList<?>) ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		if (pessoas.contains(classChamada)) {
-			return true;
-		}
-		else
-			return false;
-	}
-
-	default void listarUser(T classChamada, String caminho) {
+	default void printarUsers(T classChamada, String caminho) {
 		// utilidade. desserializar();
 		System.out.printf("Lista de todos os %s: %n", classChamada.getClass().getSimpleName());
 		try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
@@ -82,20 +72,55 @@ public interface Usuario<T> {
 		return dados;
 	}
 
-	//cadastrarUser chama existeUser.
-	//O método abaixo recebe uma lista atualizada para ser serializada, ele verifica se pode adicionar e assim o faz
-	default void cadastrarUser(ArrayList<T> , boolean existe, String caminho) {
-		if (existe) {
+	void cadastro();
+
+	// O método abaixo recebe uma lista atualizada para ser serializada, ele verifica se pode adicionar e assim o faz
+	@SuppressWarnings("unchecked")
+	default void condicaoCadastro(T classChamada, String caminho) {
+		ArrayList<T> listaUsers = null;
+		try {
+			listaUsers = (ArrayList<T>) ModelagemFile.desserializar(caminho);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		// Inicializa a lista se estiver nula
+		if (listaUsers == null) {
+			listaUsers = new ArrayList<>();
+		}
+		if (listaUsers.contains(classChamada)) {
 			System.out.println("Usuário já cadastrado no sistema.");
 		} else {
-			
-			
-			ModelagemFile.serializar(caminho, cadastroAttUser(caminho));
+			listaUsers.add(classChamada);
+			ModelagemFile.serializar(caminho, listaUsers);
 			System.out.println("Usuário cadastrado");
 		}
 	}
-
-	ArrayList<T> cadastroAttUser(String caminho);
+	
+	public static void identificarCadastro(MenuUser status) {
+		System.out.println("Cadastrar:");
+		System.out.println("Seu nome: ");
+		String nome = sc.nextLine();
+		System.out.println("Seu e-mail: ");
+		String email = sc.next();
+		System.out.println("Sua senha: ");
+		String senha = sc.next();
+		System.out.println("Seu cpf: ");
+		String cpf = sc.next();
+		
+		if (status.equals(MenuUser.CLIENTE)) {
+			Cliente pessoa = new Cliente(nome, email, senha, cpf);
+			pessoa.cadastro();
+		} else if (status.equals(MenuUser.FORNECEDOR)) {
+			Fornecedor pessoa = new Fornecedor(nome, email, senha, cpf);
+			pessoa.cadastro();
+		} else if (status.equals(MenuUser.FUNCIONARIO)) {
+			System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");
+		} else {
+			System.out.println("Operador não encontrado");
+		}
+		//chamar o método cadastrarUser
+	}
+	// ArrayList<T> cadastroAttUser();
 }
 //pesquisar o T e generics, e se interface pode ser considerada como extends
 /*

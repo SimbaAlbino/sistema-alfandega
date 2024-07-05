@@ -11,9 +11,7 @@ public abstract class Utilizador <T> {
 	
 	static Scanner sc = new Scanner(System.in);
 	protected abstract void pagamento();
-	
-	private static Scanner input = new Scanner(System.in);
-	
+		
 	public static ArrayList<DadosProduto> rastrearProdutos() {
 		System.out.println("1 - Rastreio por CPF\n2 - Rastreio por Código");
 		System.out.print("\n->");
@@ -39,21 +37,7 @@ public abstract class Utilizador <T> {
 	}
 	
 	//o identificar serve para saber a quem está se referindo entre os utilizadores: cliente 
-	public T identificar(MenuUser status) {
-		T pessoa = null;
-		System.out.println("Cadastrar:");
-		System.out.println("Seu nome: ");
-		System.out.println("Seu e-mail: ");
-		System.out.println("Sua senha: ");
-		System.out.println("Seu cpf: ");
-		
-		if (status.equals(MenuUser.Cliente)) {
-			pessoa = new Cliente
-		}
-		//chamar o método cadastrarUser
-	}
-	
-	public abstract void cadastrarUser();
+	//acho que coloca na interface
 	
 	
 }

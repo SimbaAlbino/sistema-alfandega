@@ -6,7 +6,7 @@ import java.util.Objects;
 
 import utilidade.ModelagemFile;
 
-public class Cliente extends Utilizador implements Usuario<Cliente>, Serializable {
+public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
 
 	// alterar os construtores usando this
 
@@ -67,29 +67,20 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	}
 
 	@Override
-	public void avisosCanal(DadosProduto produto) {
-		System.out.printf("O produto: %s está %s", produto.getTipoProduto(), produto.getStatus());
+	public boolean avisosCanal(DadosProduto produto) {
+		if (produto.getRecado().isEmpty()) {
+			return false;
+		} else {
+			System.out.printf("O produto: %s está %s", produto.getTipoProduto(), produto.getStatus());
+			return true;
+		}
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
 	}
-
-	@SuppressWarnings("unchecked")
+	
 	@Override
-	public ArrayList<Cliente> cadastroAttUser(String caminho){
-		ArrayList<Cliente> listaPessoas = null;
-		try {
-			listaPessoas = (ArrayList<Cliente>) ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		listaPessoas.add(this);
-		return listaPessoas;
-	}
-
-	@Override
-	protected void pagamento() {
-		// TODO Auto-generated method stub
-
+	public void cadastro() {
+		condicaoCadastro(this, caminhoClientesFile);
 	}
 
 	@Override
@@ -114,6 +105,24 @@ public class Cliente extends Utilizador implements Usuario<Cliente>, Serializabl
 	// faz um while.
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
+
+	@Override
+	public void confirmarUser(String[] dadosEntrada) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	protected void pagamento() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void cadastrarUser() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
 

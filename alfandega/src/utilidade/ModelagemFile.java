@@ -9,27 +9,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import java.io.*;
+import java.util.ArrayList;
+
 public class ModelagemFile {
 
-	public static void serializar(String caminhoFile, ArrayList<?> lista) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
-			oos.writeObject(lista);
-		} catch (IOException er) {
-			System.out.println("Arquivo não encontrado na serialização: " + er.getMessage());
-		} 
-	}
+    public static <T> void serializar(String caminhoFile, ArrayList<T> lista) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
+            oos.writeObject(lista);
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo não encontrado na serialização: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Erro de I/O na serialização: " + e.getMessage());
+        }
+    }
 
-	public static ArrayList<?> desserializar(String caminhoFile) throws ClassNotFoundException {
-		ArrayList<?> listaRetorno = null;
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
-			listaRetorno = (ArrayList<?>) ois.readObject(); // É NECESSÁRIO CASTING POR CAUSA DO CURINGA
-		} catch (IOException er) {
-			System.out.println("Arquivo não encontrado na desserialização: " + er.getMessage());
-		} catch (ClassNotFoundException er) {
-			System.out.println("Exceção de Classe não encontrada na desserialização: " + er.getMessage());
-		}
-		return listaRetorno;
-	}
+    @SuppressWarnings("unchecked")
+	public static <T> ArrayList<T> desserializar(String caminhoFile) throws ClassNotFoundException {
+        ArrayList<T> listaRetorno = null;
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
+            listaRetorno = (ArrayList<T>) ois.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("Arquivo não encontrado na desserialização: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("Erro de I/O na desserialização: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Exceção de Classe não encontrada na desserialização: " + e.getMessage());
+            throw e;
+        }
+        return listaRetorno;
+    }
 	
 	public static void existenciaArquivo() {
 		

@@ -15,10 +15,8 @@ import tiposProduto.Mobilia;
 import tiposProduto.Produto;
 import tiposProduto.Roupa;
 
-public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Serializable {
-	/**
-	 * 
-	 */
+public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornecedor>, Serializable {
+	
 	private static final long serialVersionUID = 1L;
 	
 	static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -29,14 +27,15 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 	private String emailFornecedor;
 	private String senha;
 	private String cpf;
+	//coloco cpf?
 	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 
-	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha) {
+	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha, String cpf) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
 		this.senha = senha;
+		this.cpf = cpf;
 	}
-	
 	
 	//Para login do fornecedor
 	public Fornecedor(String emailFornecedor, String senha) {
@@ -44,14 +43,35 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		this.senha = senha;
 	}
 
-
-
 	public String getNomeFornecedor() {
 		return nomeFornecedor;
 	}
 
 	public String getCaminhoFornecedoresFile() {
 		return caminhoFornecedoresFile;
+	}
+	
+	public void operadorFornecedor() {
+		System.out.println("Operações de fornecedor: ");
+		Short valor = null;
+		do {
+			System.out.println("1 - Cadastrar produto\n2 - Fazer pagamento\n3 - Listar produtos associados a conta\n4 - Sair da conta");
+			 valor = sc.nextShort();
+			switch (valor) {
+			case 1:
+				this.cadastrarProduto();
+				break;
+			case 2: 
+				this.pagamento();
+				break;
+			case 3: 
+				this.printarProdutos();
+				break;
+			case 4:
+				break;
+			}
+		} while (valor > 0 || valor < 4);
+				
 	}
 
 	public void cadastrarProduto() {
@@ -95,9 +115,6 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		default:
 			break;
 		}
-		// printar os casos 7 tipos
-				//switch (tipo) 
-				// case
 		System.out.println();
 		System.out.print("Você adicionou documentos ( S | N )? ");
 		Boolean temDoc = (sc.next().toUpperCase().charAt(0) == 'S' | sc.next().toUpperCase().charAt(0) == 'N') ? true : false;
@@ -114,15 +131,13 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		Estoque.addProduto(produto);
 		System.out.println("Produto cadastrado no estoque");
 	}
+	
+	public void printarProdutos() {
+	}
 
-	public ArrayList<Fornecedor> arquivoFornecedores() {
-		return null;
-		//ArrayList<Vendedores> vendedoresFile = ModelagemFile.desserializar(getCaminhoVendedoresFile());
-		/* 
-		 * for (vendedoresFile)
-		 * 
-		 * */
-		
+	@Override
+	public void cadastro() {
+		condicaoCadastro(this, caminhoFornecedoresFile);
 	}
 
 	public void verifPagamento(Cliente cliente) {
@@ -147,17 +162,12 @@ public class Fornecedor extends Utilizador implements Usuario<Fornecedor>, Seria
 		// chamar os avisos por ultimos
 	}
 
-	@Override
-	public void cadastrarUser() {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 	@Override
 	public void confirmarUser(String[] dadosEntrada) {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	
 }

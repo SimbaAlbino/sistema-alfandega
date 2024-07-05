@@ -14,6 +14,8 @@ import utilidade.ModelagemFile;
 
 public class Estoque implements Serializable {
 	
+	//ideia: ao iniciar as operações, todos os estoque desserializam os produtos, ao selecionar a opção finalizar, os produtos são serializados.
+	
 	private static final long serialVersionUID = 1L;
 	
 	protected static ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
@@ -46,11 +48,10 @@ public class Estoque implements Serializable {
 		//pegar listaProdutosEstoque, fazer um sort de acordo com o Cliente, e reescrever o arquivo serializando.
 	}	
 	
-	@SuppressWarnings("unchecked")
 	public static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
 		try {
-			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(Cliente.getCaminhoClientesFile()); // CASTING DO CURINGA
+			listaProdutos = ModelagemFile.desserializar(Cliente.getCaminhoClientesFile()); // CASTING DO CURINGA
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -93,17 +94,13 @@ public class Estoque implements Serializable {
 	
 	//buscar produtos do fornecedor
 	
-	public void addStatusEnum() {
-		// SE ESTIVER CLASSIFICADO COMO 
-		// gostaria de herdar esse Status para o canal, para classificar onde o produto está no despache
-		// localizar o produto por id no arquivo, esse método será constantemente chamdo por atualizar
-	}
+	
 	
 	public void limiteData(DadosProduto dadoProduto) {
 		LocalDate chegadaProduto = dadoProduto.getDataChegada();
 		LocalDate agora = LocalDate.now();
 		if (ChronoUnit.DAYS.between(chegadaProduto, agora) > 31) {
-			dadoProduto.setStatus(StatusProduto.valueOf("RETORNO"));
+			dadoProduto.setStatus(StatusProduto.valueOf("RETORNO"));// NÃO É RETORNO, É VERMELHO
 		}
 		//mover produto e enviar para o despache
 		//colocarStatusEnum Retorno	
