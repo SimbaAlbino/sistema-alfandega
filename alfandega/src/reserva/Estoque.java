@@ -60,8 +60,13 @@ public class Estoque implements Serializable {
 	
 	public static DadosProduto buscarIDBinarySearch(Integer code) {
 		//desserializarDoEstoque ou do Despache
-		List<DadosProduto> produtosEstoque = Estoque.listaProdutosEstoque();
-		produtosEstoque.sort((p1, p2) -> p1.getIdRastreio().compareTo(p2.getIdRastreio()));
+		List<DadosProduto> produtosEstoque = new ArrayList<>();
+		try {
+			produtosEstoque = Estoque.listaProdutosEstoque();
+			produtosEstoque.sort((p1, p2) -> p1.getIdRastreio().compareTo(p2.getIdRastreio()));
+		} catch (NullPointerException e) {
+			System.out.println("A lista de produtos está vazia" + e.getMessage());
+		}
 		//Collections.sort(produtosEstoque);
 		//Usar comparator para ter uma ordem de itens personalizada
 		int indice = Collections.binarySearch(produtosEstoque, new DadosProduto(code), 
@@ -79,15 +84,19 @@ public class Estoque implements Serializable {
 	//Passando o método estático listaProdutosEstoque e um cliente
 	public static ArrayList<DadosProduto> buscarClientEquals(Cliente clienteBusca) {
 		ArrayList<DadosProduto> produtosEncontrados = new ArrayList<>();
-		for (DadosProduto dadoProduto : Estoque.listaProdutosEstoque()) {
-			// se não estiver no estoque, estará no despache
-			if (dadoProduto.getCliente().equals(clienteBusca)) {
-				produtosEncontrados.add(dadoProduto);
+		try {
+			for (DadosProduto dadoProduto : Estoque.listaProdutosEstoque()) {
+				// se não estiver no estoque, estará no despache
+				if (dadoProduto.getCliente().equals(clienteBusca)) {
+					produtosEncontrados.add(dadoProduto);
+				}
 			}
-		}
-		if (produtosEncontrados.size() == 0) {
-			// tentar buscar no despache
-			return null;
+			if (produtosEncontrados.size() == 0) {
+				// tentar buscar no despache
+				return null;
+			}
+		} catch (NullPointerException e) {
+			System.out.println("A lista de produtos está vazia");
 		}
 		return produtosEncontrados;
 	}
@@ -107,6 +116,7 @@ public class Estoque implements Serializable {
 		//se passar da data, chamar statusEnum
 	}
 
+	/*
 	public void liberarProduto(DadosProduto produtoDado) {
 		// instancia o Canais
 		Canais canalProduto = new Canais(produtoDado);
@@ -123,6 +133,7 @@ public class Estoque implements Serializable {
 		}
 			
 	}
+	*/
 	
 	//aplicar o hascode e equals
 	

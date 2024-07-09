@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import utilidade.ModelagemFile;
-
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
 
 	// alterar os construtores usando this
@@ -56,7 +54,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return senha;
 	}
 
-	static String getCaminhoClientesFile() {
+	public static String getCaminhoClientesFile() {
 		return caminhoClientesFile;
 	}
 
@@ -111,12 +109,12 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 
 	@Override
 	public boolean confirmarUser(String[] dadosEntrada) {
-		ArrayList<Cliente> listaPessoas = listarUsuarios(getCaminhoClientesFile());
-		if (listaPessoas == null) {
-			System.out.println("Não há este cadastro no registro.");
+		ArrayList<Cliente> clientes = listarUsuarios(getCaminhoClientesFile());
+		if (clientes == null) {
+			System.out.println("Não existe este cadastro no registro.");
 		} else {
 			Cliente cliente = new Cliente(dadosEntrada[0], dadosEntrada[1]);
-			for (Cliente pessoa : listaPessoas) {
+			for (Cliente pessoa : clientes) {
 				if (pessoa.getEmail() == cliente.getEmail() && pessoa.getSenha() == cliente.getSenha()) {
 					return true;
 				}
@@ -126,16 +124,17 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	}
 	
 	@Override
+	public void operacoesUser() {
+		
+		
+	}
+	
+	@Override
 	protected void pagamento() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void cadastrarUser() {
-		// TODO Auto-generated method stub
-		
-	}
 }
 
 

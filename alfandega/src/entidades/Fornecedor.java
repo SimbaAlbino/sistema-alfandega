@@ -5,7 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import aplicacao.MenuUser;
 import reserva.Estoque;
 import tiposProduto.Acessorios;
 import tiposProduto.Automoveis;
@@ -15,7 +14,6 @@ import tiposProduto.Informatica;
 import tiposProduto.Mobilia;
 import tiposProduto.Produto;
 import tiposProduto.Roupa;
-import utilidade.ModelagemFile;
 
 public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornecedor>, Serializable {
 	
@@ -28,7 +26,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	private String nomeFornecedor;
 	private String emailFornecedor;
 	private String senha;
-	private String cpf;
 	//coloco cpf?
 	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 	
@@ -36,11 +33,10 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public Fornecedor() {
 	}
 	
-	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha, String cpf) {
+	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
 		this.senha = senha;
-		this.cpf = cpf;
 	}
 	
 	//Para login do fornecedor
@@ -63,29 +59,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 	public String getSenha() {
 		return senha;
-	}
-
-	public void operadorFornecedor() {
-		System.out.println("Operações de fornecedor: ");
-		Short valor = null;
-		do {
-			System.out.println("1 - Cadastrar produto\n2 - Fazer pagamento\n3 - Listar produtos associados a conta\n4 - Sair da conta");
-			 valor = sc.nextShort();
-			switch (valor) {
-			case 1:
-				this.cadastrarProduto();
-				break;
-			case 2: 
-				this.pagamento();
-				break;
-			case 3: 
-				this.printarProdutos();
-				break;
-			case 4:
-				break;
-			}
-		} while (valor > 0 || valor < 4);
-				
 	}
 
 	public void cadastrarProduto() {
@@ -140,7 +113,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		System.out.println("Digite o número da residência: ");
 		short residencia = sc.nextShort();
 		
-		//testando
+		//Adicionando cliente referente ao produto
 		DadosProduto produto = new DadosProduto(new Cliente(nomeCliente, cpfCliente), this, categoriaProduto, temDoc, new Endereco(cep, residencia));
 		Estoque.addProduto(produto);
 		System.out.println("Produto cadastrado no estoque");
@@ -149,13 +122,40 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public void printarProdutos() {
 	}
 
+	
+	
 	@Override
 	public void cadastro() {
 		condicaoCadastro(this, caminhoFornecedoresFile);
 	}
 
-	public void verifPagamento(Cliente cliente) {
-
+	
+	@Override
+	public boolean confirmarUser(String[] dadosEntrada) {
+		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFornecedoresFile());
+		if (fornecedores == null) {
+			System.out.println("Não existe este cadastro no registro.");
+		} else {
+			Fornecedor fornecedor = new Fornecedor(dadosEntrada[0], dadosEntrada[1]);
+			for (Fornecedor pessoa : fornecedores) {
+				if (pessoa.getEmailFornecedor() == fornecedor.getEmailFornecedor() && pessoa.getSenha() == fornecedor.getSenha()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public boolean avisosCanal(DadosProduto produto) {
+		return false;
+		// emitirAviso()
+	}
+	
+	@Override
+	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
+		// TODO Auto-generated method stub
+		// chamar os avisos por ultimos
 	}
 
 	@Override
@@ -164,29 +164,33 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 	}
 
-	@Override
-	public boolean avisosCanal(DadosProduto produto) {
-		return false;
-		// emitirAviso()
+	public void verifPagamento(Cliente cliente) {
+		
 	}
 
 	@Override
-	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
-		// TODO Auto-generated method stub
-		// chamar os avisos por ultimos
-	}
-
-
-	@Override
-	public boolean confirmarUser(String[] dadosEntrada) {
-		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFornecedoresFile());
-		Fornecedor fornecedor = new Fornecedor(dadosEntrada[0], dadosEntrada[1]);
-		for (Fornecedor pessoa : fornecedores) {
-			if (pessoa.getEmailFornecedor() == fornecedor.getEmailFornecedor() && pessoa.getSenha() == fornecedor.getSenha()) {
-				return true;
+	public void operacoesUser() {
+		System.out.println("Operações de fornecedor: ");
+		Short valor = null;
+		do {
+			System.out.println("1 - Cadastrar produto\n2 - Fazer pagamento\n3 - Listar produtos associados a conta\n4 - Sair da conta");
+			 valor = sc.nextShort();
+			switch (valor) {
+			case 1:
+				this.cadastrarProduto();
+				break;
+			case 2: 
+				this.pagamento();
+				break;
+			case 3: 
+				this.printarProdutos();
+				break;
+			case 4:
+				break;
 			}
-		}
-		return false;
+		} while (valor > 0 || valor < 4);
 	}
+
+
 	
 }

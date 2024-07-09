@@ -8,6 +8,7 @@ public class Canais {
 
 	private CanalCor cor;
 	private DadosProduto produto;
+	private double minPrecoTax = 250;
 
 	public Canais(DadosProduto produto) {
 		this.produto = produto;
@@ -29,6 +30,14 @@ public class Canais {
 		this.produto = produto;
 	}
 
+	public double getMinPrecoTax() {
+		return minPrecoTax;
+	}
+
+	public void setMinPrecoTax(double minPrecoTax) {
+		this.minPrecoTax = minPrecoTax;
+	}
+
 	public CanalCor coloracaoObj(DadosProduto produto) {
 	    if (produto.isDocumentos() == true) {
 	        this.cor = CanalCor.valueOf("CINZA");
@@ -37,7 +46,7 @@ public class Canais {
 	        this.cor = CanalCor.valueOf("VERMELHO");
 	    } else if (produto.getStatus() == StatusProduto.FISCALIZANDO) {
 	        this.cor = CanalCor.valueOf("AMARELO");
-	    } else if (produto.getTipoProduto().getClass() instanceof Informatica || //aguardando pagamento do status){ // corrigir
+	    } else if (produto.getTipoProduto() instanceof Informatica || produto.getTipoProduto().getPrecoUnico() < getMinPrecoTax()) { //aguardando pagamento do status){ // corrigir
 	        this.cor = CanalCor.valueOf("VERDE");
 	    } // ou se o produto tiver o status 
 	// lançar um throw que o produto não tem um status
@@ -45,19 +54,20 @@ public class Canais {
 
 	}
 
-	public void addStatusEnum() {
-		for (DadosProduto dado: listaProdutosEstoque()) {
-		
-		}
-	// SE ESTIVER CLASSIFICADO COMO 
-	// gostaria de herdar esse Status para o canal, para classificar onde o produto está no despache
-	// localizar o produto por id no arquivo, esse método será constantemente chamdo por atualizar
-	}
 
 	public void finalProdutoPago() {
 		
 	}
-
+	/*
+	public void addStatusEnum() {
+		for (DadosProduto dado: listaProdutosEstoque()) {
+			
+		}
+		// SE ESTIVER CLASSIFICADO COMO 
+		// gostaria de herdar esse Status para o canal, para classificar onde o produto está no despache
+		// localizar o produto por id no arquivo, esse método será constantemente chamdo por atualizar
+	}
+	
 	public String notaFiscal() {
 		System.out.println("O produto %s de id %s foi revisado e está no canal %s%s."); // afirmar imposto, como foi calculado, quantidade e 
 	}
@@ -69,4 +79,5 @@ public class Canais {
 			
 		produto.setRecado()
 	}
+	*/
 }

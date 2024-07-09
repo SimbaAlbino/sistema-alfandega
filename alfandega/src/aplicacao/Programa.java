@@ -15,7 +15,7 @@ public class Programa {
 	public static void main(String[] args) {
 		// Obtém a solicitação do usuário (por exemplo, saldo zero, credor ou devedor)
 		Scanner sc = new Scanner(System.in);
-				
+
 		MenuUser conta = choicesUser[AplicarMenu.getRequest(1)];
 
 		while (conta != MenuUser.FINALIZAR) {
@@ -45,26 +45,26 @@ public class Programa {
 
 					break;
 				case LOGAR:
-					while (true) {
+					
 						Usuario<?> usuario = null;
 						switch (conta) {
-			            case CLIENTE:
-			                usuario = new Cliente();
-			                if (usuario.confirmarUser(usuario.loginUser())) {
-			                	
-			                }
-			                break;
-			            case FORNECEDOR:
-			                usuario = new Fornecedor();
-			                break;
-			            case FUNCIONARIO:
-			                usuario = new Funcionario();
-			                break;
-			            default:
-			                throw new IllegalArgumentException("Tipo de usuário inválido");
-				        } 
-					}
-					
+						case CLIENTE:
+							usuario = new Cliente();
+							break;
+						case FORNECEDOR:
+							usuario = new Fornecedor();
+							break;
+						case FUNCIONARIO:
+							usuario = new Funcionario();
+							break;
+						default:
+							throw new IllegalArgumentException("Tipo de usuário inválido");
+						}
+						if (usuario.confirmarUser(usuario.loginUser())) {
+							while (true) {
+								usuario.operacoesUser();
+							}
+						}
 					// operações
 				default:
 					break;

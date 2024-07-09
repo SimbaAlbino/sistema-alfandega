@@ -45,6 +45,11 @@ public class AplicarMenu {
 	
 	 // Retorna o valor enum da opção
 		//pesquisar como pegar 2 tipos de erros em um código entre parÊnteses()
+	
+	public static void clearScreen() {
+		 System.out.print("\033[H\033[2J");
+		 System.out.flush();
+		} 
 }
 
 

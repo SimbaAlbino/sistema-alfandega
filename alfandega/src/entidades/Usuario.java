@@ -14,6 +14,8 @@ public interface Usuario<T> {
 	static Scanner sc = new Scanner(System.in);
 
 	void listarProdutos(ArrayList<DadosProduto> produtosFiltrados);
+	
+	void operacoesUser();
 
 	boolean avisosCanal(DadosProduto produto);
 
@@ -118,14 +120,15 @@ public interface Usuario<T> {
 		String email = sc.next();
 		System.out.println("Sua senha: ");
 		String senha = sc.next();
-		System.out.println("Seu cpf: ");
-		String cpf = sc.next();
+		
 		
 		if (status.equals(MenuUser.CLIENTE)) {
+			System.out.println("Seu cpf: ");
+			String cpf = sc.next();
 			Cliente pessoa = new Cliente(nome, email, senha, cpf);
 			pessoa.cadastro();
 		} else if (status.equals(MenuUser.FORNECEDOR)) {
-			Fornecedor pessoa = new Fornecedor(nome, email, senha, cpf);
+			Fornecedor pessoa = new Fornecedor(nome, email, senha);
 			pessoa.cadastro();
 		} else if (status.equals(MenuUser.FUNCIONARIO)) {
 			System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");

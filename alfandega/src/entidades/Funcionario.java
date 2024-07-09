@@ -52,22 +52,22 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	@Override
 	public boolean confirmarUser(String[] dadosEntrada) {
 		ArrayList<Funcionario> funcionarios = listarUsuarios(getCaminhoFuncionariosFile());
-		if (funcionarios.isEmpty()) {
-			System.out.println("A lista de Fornecedores está vazia.");
-			return false;
-		}
-		Funcionario funcionario = new Funcionario(dadosEntrada[0], dadosEntrada[1]);
-		for (Funcionario pessoa : funcionarios) {
-			if (pessoa.getEmail() == funcionario.getEmail() && pessoa.getSenha() == funcionario.getSenha()) {
-				return true;
+		if (funcionarios == null) {
+			System.out.println("Não existe este cadastro no registro.");
+		} else {
+			Funcionario funcionario = new Funcionario(dadosEntrada[0], dadosEntrada[1]);
+			for (Funcionario pessoa : funcionarios) {
+				if (pessoa.getEmail() == funcionario.getEmail() && pessoa.getSenha() == funcionario.getSenha()) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	public void cadastrarFuncionario(String nomeAdm, String email, String senha) {
+	public void cadastrarFuncionario(String nomeAdm, String email, String senha, String cpf) {
 		// instanciamos o funcionario com o construtor
-
+		
 	}
 
 	
@@ -100,13 +100,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	}
 
 	@Override
-	public void listarProdutos() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void avisosCanal(DadosProduto produto) {
+	public boolean avisosCanal(DadosProduto produto) {
+		return false;
 		// TODO Auto-generated method stub
 
 	}
@@ -120,6 +115,10 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	@Override
 	public void cadastro() {
 		condicaoCadastro(this, caminhoFuncionariosFile);
+	}
+
+	@Override
+	public void operacoesUser() {	
 	}
 
 	// criar metodo cadastrar funcionario, pois ele só podera ser criado a partir de
