@@ -44,7 +44,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return nomeCliente;
 	}
 
-	public String getEmail() {
+	private String getEmail() {
 		return email;
 	}
 
@@ -52,7 +52,11 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return cpf;
 	}
 
-	public static String getCaminhoClientesFile() {
+	private String getSenha() {
+		return senha;
+	}
+
+	static String getCaminhoClientesFile() {
 		return caminhoClientesFile;
 	}
 
@@ -99,7 +103,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		Cliente other = (Cliente) obj;
 		return Objects.equals(cpf, other.cpf);
 	}
-
 	
 	// ao validar o cpf do cliente, apenas considerar os números, se vier uma letra
 	// faz um while.
@@ -107,9 +110,19 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	// produtos precisamos encontrar por Cliente
 
 	@Override
-	public void confirmarUser(String[] dadosEntrada) {
-		// TODO Auto-generated method stub
-		
+	public boolean confirmarUser(String[] dadosEntrada) {
+		ArrayList<Cliente> listaPessoas = listarUsuarios(getCaminhoClientesFile());
+		if (listaPessoas == null) {
+			System.out.println("Não há este cadastro no registro.");
+		} else {
+			Cliente cliente = new Cliente(dadosEntrada[0], dadosEntrada[1]);
+			for (Cliente pessoa : listaPessoas) {
+				if (pessoa.getEmail() == cliente.getEmail() && pessoa.getSenha() == cliente.getSenha()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	@Override

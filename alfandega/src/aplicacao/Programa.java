@@ -2,7 +2,9 @@ package aplicacao;
 
 import java.util.Scanner;
 
+import entidades.Cliente;
 import entidades.Fornecedor;
+import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
 
@@ -13,11 +15,10 @@ public class Programa {
 	public static void main(String[] args) {
 		// Obtém a solicitação do usuário (por exemplo, saldo zero, credor ou devedor)
 		Scanner sc = new Scanner(System.in);
-
+				
 		MenuUser conta = choicesUser[AplicarMenu.getRequest(1)];
 
 		while (conta != MenuUser.FINALIZAR) {
-
 			if (conta == MenuUser.FINALIZAR) {
 				break;
 			}
@@ -31,20 +32,40 @@ public class Programa {
 					Utilizador.rastrearProdutos();
 					break;
 				case CADASTRAR:
-					System.out.printf("%nCadastrar usuário no sistema:%n");
-					System.out.println();
-					Usuario.identificarCadastro(conta);
+					if (conta == MenuUser.FUNCIONARIO) {
+						System.out.println("Apenas um funcionário pode cadastrar outro funcionário");
+					} else {
+						System.out.printf("%nCadastrar usuário no sistema:%n");
+						System.out.println();
+						Usuario.identificarCadastro(conta);
+					}
 					// seleciona como deseja cadastrar: usuario, fornecedor
 					// cadastrarCliente(); // cadastra, coloca nos arquivos e volta ao menu com o
 					// break seguinte
 
 					break;
 				case LOGAR:
-					System.out.printf("%nLogin:%n");
-					Fornecedor pessoa = confirmarFornecedor();
-					// seleciona como deseja entrar cliente, fornecedor ou funcionario
+					while (true) {
+						Usuario<?> usuario = null;
+						switch (conta) {
+			            case CLIENTE:
+			                usuario = new Cliente();
+			                if (usuario.confirmarUser(usuario.loginUser())) {
+			                	
+			                }
+			                break;
+			            case FORNECEDOR:
+			                usuario = new Fornecedor();
+			                break;
+			            case FUNCIONARIO:
+			                usuario = new Funcionario();
+			                break;
+			            default:
+			                throw new IllegalArgumentException("Tipo de usuário inválido");
+				        } 
+					}
+					
 					// operações
-					break;
 				default:
 					break;
 				}
@@ -58,20 +79,13 @@ public class Programa {
 
 		sc.close();
 	}
-	
-	
 
 }
 
 /*
- * public static void operador(MenuUser status) {
-		if (status.equals(MenuUser.CLIENTE)) {
-			Cliente.operador();
-		} else if (status.equals(MenuUser.FORNECEDOR)) {
-			Fornecedor.operador();
-		} else if (status.equals(MenuUser.FUNCIONARIO)) {
-			Funcionario.operador();
-		} else {
-			System.out.println("Operador não encontrado");
-		}
-	}*/
+ * public static void operador(MenuUser status) { if
+ * (status.equals(MenuUser.CLIENTE)) { Cliente.operador(); } else if
+ * (status.equals(MenuUser.FORNECEDOR)) { Fornecedor.operador(); } else if
+ * (status.equals(MenuUser.FUNCIONARIO)) { Funcionario.operador(); } else {
+ * System.out.println("Operador não encontrado"); } }
+ */

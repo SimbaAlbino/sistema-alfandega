@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aplicacao.MenuUser;
 import reserva.Estoque;
 import tiposProduto.Acessorios;
 import tiposProduto.Automoveis;
@@ -14,6 +15,7 @@ import tiposProduto.Informatica;
 import tiposProduto.Mobilia;
 import tiposProduto.Produto;
 import tiposProduto.Roupa;
+import utilidade.ModelagemFile;
 
 public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornecedor>, Serializable {
 	
@@ -29,7 +31,11 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	private String cpf;
 	//coloco cpf?
 	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
-
+	
+	//Construtor vazio para o menu
+	public Fornecedor() {
+	}
+	
 	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha, String cpf) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
@@ -47,10 +53,18 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		return nomeFornecedor;
 	}
 
-	public String getCaminhoFornecedoresFile() {
+	String getCaminhoFornecedoresFile() {
 		return caminhoFornecedoresFile;
 	}
 	
+	public String getEmailFornecedor() {
+		return emailFornecedor;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
 	public void operadorFornecedor() {
 		System.out.println("Operações de fornecedor: ");
 		Short valor = null;
@@ -164,10 +178,15 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 
 	@Override
-	public void confirmarUser(String[] dadosEntrada) {
-		// TODO Auto-generated method stub
-		
+	public boolean confirmarUser(String[] dadosEntrada) {
+		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFornecedoresFile());
+		Fornecedor fornecedor = new Fornecedor(dadosEntrada[0], dadosEntrada[1]);
+		for (Fornecedor pessoa : fornecedores) {
+			if (pessoa.getEmailFornecedor() == fornecedor.getEmailFornecedor() && pessoa.getSenha() == fornecedor.getSenha()) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
 	
 }

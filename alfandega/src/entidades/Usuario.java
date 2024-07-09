@@ -17,7 +17,9 @@ public interface Usuario<T> {
 
 	boolean avisosCanal(DadosProduto produto);
 
-	T confirmarUser(String[] dadosEntrada);
+	//cada usuario terá seu confirmarUser dentro de sua classe para a senha e email serem restritos à classe.
+	boolean confirmarUser(String[] dadosEntrada);
+	
 
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
@@ -51,17 +53,29 @@ public interface Usuario<T> {
 		}
 	}
 
-	default String[] loginUser(T pessoas) {
+	default String[] loginUser() {
 		Scanner sc = null;
 		String[] dados = new String[2];
+		short contador = 3;
 		try {
 			sc = new Scanner(System.in);
-			System.out.println("Login:");
-			System.out.print("E-mail: ");
-			dados[0] = sc.next();
-			System.out.println();
-			System.out.println("Senha: ");
-			dados[1] = sc.next();
+			System.out.println("- Login -:");
+			do {
+				System.out.print("E-mail: ");
+				dados[0] = sc.next();
+				System.out.print("Senha: ");
+				dados[1] = sc.next();
+				contador--;
+				if (confirmarUser(dados)) {
+					break;
+				} else {
+					dados = null;
+				}
+				System.out.println("E-mail/Senha errados, tente novamente!");
+			} while (contador > 0);
+			if (dados.equals(null)) {
+				throw new IllegalAccessError("Seus dados não correnspondem ao sistema. Tente novamente mais tarde.");
+			}
 		} catch (IllegalArgumentException e) {
 			System.out.println("Erro por um argumento ilegal: " + e.getMessage());
 		} finally {
@@ -121,6 +135,18 @@ public interface Usuario<T> {
 		//chamar o método cadastrarUser
 	}
 	// ArrayList<T> cadastroAttUser();
+	default ArrayList<T> listarUsuarios(String caminho) {
+		ArrayList<T> listaPessoas = null;
+		try {
+			listaPessoas = ModelagemFile.desserializar(caminho);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			System.out.printf("Não há %ss na lista.", getClass().getSimpleName());
+		}
+		return listaPessoas;
+	}
 }
 //pesquisar o T e generics, e se interface pode ser considerada como extends
 /*
