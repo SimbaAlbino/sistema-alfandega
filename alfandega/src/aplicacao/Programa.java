@@ -1,5 +1,6 @@
 package aplicacao;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import entidades.Cliente;
@@ -9,6 +10,8 @@ import entidades.Usuario;
 import entidades.Utilizador;
 
 public class Programa {
+	
+	//instanciar um unico scanner
 	final static MenuInicial[] choices = MenuInicial.values();
 	final static MenuUser[] choicesUser = MenuUser.values();
 
@@ -39,6 +42,12 @@ public class Programa {
 						System.out.println();
 						Usuario.identificarCadastro(conta);
 					}
+					
+					//testar funcionamento do cadastro
+					Cliente cl = new Cliente();
+					ArrayList<Cliente> aa = cl.listarUsuarios("C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileClientes.txt");
+					cl.printarUsers(aa);
+					System.out.println();
 					// seleciona como deseja cadastrar: usuario, fornecedor
 					// cadastrarCliente(); // cadastra, coloca nos arquivos e volta ao menu com o
 					// break seguinte

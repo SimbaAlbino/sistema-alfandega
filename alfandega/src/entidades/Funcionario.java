@@ -14,6 +14,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	private String email;
 	private String senha;
 	private String cpf;
+	
+	//Pensar em criar um sistema de pagamento para o funcionário.
 
 	private String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
 
@@ -33,11 +35,12 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		this.senha = senha;
 	}
 
-	public String getNomeAdm() {
+	@Override
+	public String getNome() {
 		return nomeAdm;
 	}
 
-	String getCaminhoFuncionariosFile() {
+	public String getCaminhoFileUser() {
 		return caminhoFuncionariosFile;
 	}
 
@@ -51,13 +54,13 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	
 	@Override
 	public boolean confirmarUser(String[] dadosEntrada) {
-		ArrayList<Funcionario> funcionarios = listarUsuarios(getCaminhoFuncionariosFile());
+		ArrayList<Funcionario> funcionarios = listarUsuarios(getCaminhoFileUser());
 		if (funcionarios == null) {
 			System.out.println("Não existe este cadastro no registro.");
 		} else {
 			Funcionario funcionario = new Funcionario(dadosEntrada[0], dadosEntrada[1]);
 			for (Funcionario pessoa : funcionarios) {
-				if (pessoa.getEmail() == funcionario.getEmail() && pessoa.getSenha() == funcionario.getSenha()) {
+				if (pessoa.equalsByEmailAndSenha(funcionario.getEmail(), funcionario.getSenha())) {
 					return true;
 				}
 			}
@@ -90,6 +93,10 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	public void editarDadoProduto() {
 
 	}
+	
+	public boolean equalsByEmailAndSenha(String email, String senha) {
+        return this.email.equals(email) && this.senha.equals(senha);
+    }
 
 	public void editarProcesso() {
 
@@ -100,7 +107,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	}
 
 	@Override
-	public boolean avisosCanal(DadosProduto produto) {
+	public ArrayList<DadosProduto> avisosCanal(DadosProduto produto) {
 		return false;
 		// TODO Auto-generated method stub
 

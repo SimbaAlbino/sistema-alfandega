@@ -1,8 +1,5 @@
 package entidades;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,18 +7,20 @@ import aplicacao.MenuUser;
 import utilidade.ModelagemFile;
 
 public interface Usuario<T> {
-	
+
 	static Scanner sc = new Scanner(System.in);
 
-	void listarProdutos(ArrayList<DadosProduto> produtosFiltrados);
-	
+	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache );
+
 	void operacoesUser();
 
-	boolean avisosCanal(DadosProduto produto);
+	void avisosCanal(ArrayList<DadosProduto> produtosCliente);
 
-	//cada usuario terá seu confirmarUser dentro de sua classe para a senha e email serem restritos à classe.
+	// cada usuario terá seu confirmarUser dentro de sua classe para a senha e email
+	// serem restritos à classe.
 	boolean confirmarUser(String[] dadosEntrada);
-	
+
+	String getCaminhoFileUser();
 
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
@@ -39,22 +38,6 @@ public interface Usuario<T> {
 		// esse método apagarUser
 	}
 
-	default void printarUsers(T classChamada, String caminho) {
-		// utilidade. desserializar();
-		System.out.printf("Lista de todos os %s: %n", classChamada.getClass().getSimpleName());
-		try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
-			String line = br.readLine();
-			int contador = 1;
-			while (line != null) {
-				String[] dadosUser = line.split(",");
-				System.out.printf("%d %s: %s%n", contador++, classChamada.getClass().getSimpleName(), dadosUser[0]);
-				br.readLine();
-			}
-		} catch (IOException e) {
-			System.out.println("Erro ao listar o arquivo clientes: " + e.getMessage());
-		}
-	}
-
 	default String[] loginUser() {
 		Scanner sc = null;
 		String[] dados = new String[2];
@@ -67,30 +50,29 @@ public interface Usuario<T> {
 				dados[0] = sc.next();
 				System.out.print("Senha: ");
 				dados[1] = sc.next();
-				contador--;
 				if (confirmarUser(dados)) {
 					break;
 				} else {
-					dados = null;
+					System.out.println("E-mail/Senha errados, tente novamente!");
+					contador--;
 				}
-				System.out.println("E-mail/Senha errados, tente novamente!");
 			} while (contador > 0);
-			if (dados.equals(null)) {
-				throw new IllegalAccessError("Seus dados não correnspondem ao sistema. Tente novamente mais tarde.");
+			if (dados[0] == null || dados[1] == null) {
+				throw new IllegalArgumentException(
+						"Seus dados não correnspondem ao sistema. Tente novamente mais tarde.");
+			} else {
+				System.out.println("Bem-vindo ao Sistema Alfândega.");
 			}
 		} catch (IllegalArgumentException e) {
 			System.out.println("Erro por um argumento ilegal: " + e.getMessage());
-		} finally {
-			if (sc != null) {
-				sc.close();
-			}
-		}
+		} 
 		return dados;
 	}
 
 	void cadastro();
 
-	// O método abaixo recebe uma lista atualizada para ser serializada, ele verifica se pode adicionar e assim o faz
+	// O método abaixo recebe uma lista atualizada para ser serializada, ele
+	// verifica se pode adicionar e assim o faz
 	@SuppressWarnings("unchecked")
 	default void condicaoCadastro(T classChamada, String caminho) {
 		ArrayList<T> listaUsers = null;
@@ -111,19 +93,18 @@ public interface Usuario<T> {
 			System.out.println("Usuário cadastrado");
 		}
 	}
-	
+
 	public static void identificarCadastro(MenuUser status) {
 		System.out.println("Cadastrar:");
-		System.out.println("Seu nome: ");
+		System.out.print("Seu nome: ");
 		String nome = sc.nextLine();
-		System.out.println("Seu e-mail: ");
+		System.out.print("Seu e-mail: ");
 		String email = sc.next();
-		System.out.println("Sua senha: ");
+		System.out.print("Sua senha: ");
 		String senha = sc.next();
-		
-		
+
 		if (status.equals(MenuUser.CLIENTE)) {
-			System.out.println("Seu cpf: ");
+			System.out.print("Seu cpf: ");
 			String cpf = sc.next();
 			Cliente pessoa = new Cliente(nome, email, senha, cpf);
 			pessoa.cadastro();
@@ -135,8 +116,39 @@ public interface Usuario<T> {
 		} else {
 			System.out.println("Operador não encontrado");
 		}
-		//chamar o método cadastrarUser
+		// chamar o método cadastrarUser
 	}
+
+	String getNome();
+
+	// alterar para funcionar com a serialização
+	default void printarUsers(ArrayList<? extends Usuario<T>> lista) {
+		// utilidade. desserializar();
+		System.out.printf("Lista de todos os %s: %n", getClass().getSimpleName());
+		try {
+			int contador = 1;
+			for (Usuario<T> user : lista) {
+				System.out.printf("%d %s: %s%n", contador++, getClass().getSimpleName(), user.getNome());
+
+			}
+		} catch (NullPointerException e) {
+			System.out.println("Erro ao listar o arquivo clientes: " + e.getMessage());
+		}
+	}
+
+	default void removerUser(ArrayList<? extends Usuario<T>> lista, T pessoa) {
+		try {
+			for (Usuario<T> user : lista) {
+				if (user.equals(pessoa)) {
+					lista.remove(pessoa);
+				}
+			}
+		} catch (NullPointerException e) {
+			System.out.println("Erro ao listar o arquivo: " + e.getMessage());
+		}
+		ModelagemFile.serializar(getCaminhoFileUser(), lista);
+	}
+
 	// ArrayList<T> cadastroAttUser();
 	default ArrayList<T> listarUsuarios(String caminho) {
 		ArrayList<T> listaPessoas = null;

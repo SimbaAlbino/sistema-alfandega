@@ -25,6 +25,8 @@ public abstract class Utilizador <T> {
 		return resultado;
 		//fazer print metodo static de utilidades.
 	}
+	
+	public abstract void listarDividas();
 
 // o identificar serve para saber a quem está se referindo entre os
 // utilizadores: cliente
