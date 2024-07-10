@@ -144,20 +144,90 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		return false;
 	}
 
-	public void printarProdutos() {
-		listarProdutos(null);
+	public boolean equalsByEmailAndSenha(String email, String senha) {
+		return this.emailFornecedor.equals(email) && this.senha.equals(senha);
 	}
 
 	@Override
-	public ArrayList<DadosProduto> avisosCanal(DadosProduto produto) {
-		return false;
-		// emitirAviso()
+	public void operacoesUser() {
+		System.out.println();
+		int valor = 0;
+		do {
+			System.out.print("Escolha uma opção: \n");
+
+			valor = sc.nextInt();
+			// Verifique se a entrada é um inteiro válido
+			if (valor > 0 || valor < 6) {
+				switch (valor) {
+				case 1:
+					System.out.println("Listando produtos: ");
+					// this.printarProdutos(listarProdutos(Estoque.buscarClientEquals(this),
+					// Despache.buscarClientEquals(this)));
+					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
+					// os seus produtos fornecidos
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 2:
+					// pagando
+					this.pagamento();
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 3:
+					// this.listarDividas(null);
+					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
+					// os seus produtos fornecidos
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 4:
+					// chamar usar o listar produtos para identificar se tem avisos canal e passar
+					// para a função.
+
+					// this.avisosCanal();
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 5:
+					System.out.println("Saindo da conta...");
+					break;
+				default:
+					System.out.println("Opção inválida. Tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Entrada inválida. Por favor, insira um número.");
+				sc.nextLine(); // Consumir a entrada inválida
+			}
+		} while (valor != 5);
+		System.out.println("Fim das operações de usuário.");
 	}
 
+	// seria interessante uma função que aceitasse um predicado no estoque
+	//corrigir
 	@Override
-	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
-		// TODO Auto-generated method stub
-		// chamar os avisos por ultimos
+	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache) {
+		//listar do fornecedor ou fornecedor entre tal cliente
+		ArrayList<DadosProduto> listaFiltrada = new ArrayList<>();
+		System.out.println("Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
+		short tipoListagem = sc.nextShort();
+		if (tipoListagem == 1) {
+			for (DadosProduto produto: produtosEstoque) {
+				listaFiltrada.add(produto);
+			}
+			for (DadosProduto produto: produtosDespache) {
+				listaFiltrada.add(produto);
+			}
+		} else if (tipoListagem == 2) {
+			for (DadosProduto produto: produtosEstoque) {
+				listaFiltrada.add(produto);
+			}
+			for (DadosProduto produto: produtosDespache) {
+				listaFiltrada.add(produto);
+			}
+		}
+		return listaFiltrada;
 	}
 
 	@Override
@@ -170,39 +240,10 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 	}
 
-	public boolean equalsByEmailAndSenha(String email, String senha) {
-		return this.emailFornecedor.equals(email) && this.senha.equals(senha);
-	}
-
-	@Override
-	public void operacoesUser() {
-		System.out.println("Operações de fornecedor: ");
-		Short valor = null;
-		do {
-			System.out.println(
-					"1 - Cadastrar produto\n2 - Fazer pagamento\n3 - Listar produtos associados a conta\n4 - Sair da conta");
-			valor = sc.nextShort();
-			switch (valor) {
-			case 1:
-				this.cadastrarProduto();
-				break;
-			case 2:
-				this.pagamento();
-				break;
-			case 3:
-				this.printarProdutos();
-				break;
-			case 4:
-				break;
-			}
-		} while (valor > 0 || valor < 4);
-		
-	}
-
 	@Override
 	public void listarDividas() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

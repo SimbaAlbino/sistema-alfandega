@@ -22,6 +22,15 @@ public class AplicarMenu {
 		case 2:
 			opcoes = Arrays.asList("Rastrear um produto por id", "Cadastro", "Login", "Voltar");
 			break;
+		case 3 :
+			opcoes = Arrays.asList("Listar produtos associados a conta", "Fazer pagamento", "Dívidas", "Notificações de produto", "Sair da conta");
+			break;
+		case 4:
+			opcoes = Arrays.asList("Listar produtos fornecidos","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
+			break;
+		case 5:
+			opcoes = Arrays.asList("Editar Produto", "Editar Cliente", "Editar Fornecedor", "Editar Divida", "Editar Funcionario", "Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
+			break;
 		default:
 			throw new IllegalArgumentException("Opção inválida, tente novamente");
 		}
@@ -36,11 +45,11 @@ public class AplicarMenu {
 			do { // Insere a solicitação de usuário
 				System.out.printf("%n-> ");
 				request = input.nextInt();
-			} while ((request < 1) || (request > opcoes.size() - 1));
+			} while ((request < 1) || (request > opcoes.size()));
 		} catch (NoSuchElementException noSuchElementException) {
 			System.err.println("Invalid input. Terminating.");
 		}
-		return request - 1; // Retorna o valor enum da opção
+		return request; // Retorna o valor enum da opção
 	}
 	
 	 // Retorna o valor enum da opção

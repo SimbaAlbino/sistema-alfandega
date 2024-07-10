@@ -19,14 +19,14 @@ public class Programa {
 		// Obtém a solicitação do usuário (por exemplo, saldo zero, credor ou devedor)
 		Scanner sc = new Scanner(System.in);
 
-		MenuUser conta = choicesUser[AplicarMenu.getRequest(1)];
+		MenuUser conta = choicesUser[AplicarMenu.getRequest(1) - 1];
 
 		while (conta != MenuUser.FINALIZAR) {
 			if (conta == MenuUser.FINALIZAR) {
 				break;
 			}
 
-			MenuInicial operacao = choices[AplicarMenu.getRequest(2)];
+			MenuInicial operacao = choices[AplicarMenu.getRequest(2) - 1];
 
 			while (operacao != MenuInicial.VOLTAR) {
 				switch (operacao) {
@@ -70,20 +70,18 @@ public class Programa {
 							throw new IllegalArgumentException("Tipo de usuário inválido");
 						}
 						if (usuario.confirmarUser(usuario.loginUser())) {
-							while (true) {
-								usuario.operacoesUser();
-							}
+							usuario.operacoesUser();
 						}
 					// operações
 				default:
 					break;
 				}
-				operacao = choices[AplicarMenu.getRequest(2)]; // Obtém a solicitação do usuário
+				operacao = choices[AplicarMenu.getRequest(2) - 1]; // Obtém a solicitação do usuário
 				// if T extends Utilizador else if Funcionario
 				// operacao vai carregar a opcao de usuario
 			}
 
-			conta = choicesUser[AplicarMenu.getRequest(1)];
+			conta = choicesUser[AplicarMenu.getRequest(1) - 1];
 		}
 
 		sc.close();

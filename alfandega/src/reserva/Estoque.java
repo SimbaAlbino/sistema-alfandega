@@ -19,6 +19,12 @@ public class Estoque implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	protected static ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
+	
+	private static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
+
+	public static String getCaminhoEstoqueproduto() {
+		return caminhoEstoqueproduto;
+	}
 
 	public ArrayList<DadosProduto> getEstoqueGeral() {
 		return estoqueGeral;
@@ -51,12 +57,19 @@ public class Estoque implements Serializable {
 	public static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
 		try {
-			listaProdutos = ModelagemFile.desserializar(Cliente.getCaminhoClientesFile()); // CASTING DO CURINGA
+			listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueproduto()); 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return listaProdutos;
+		//construir ou retornar
 	}
+	
+	public static ArrayList<DadosProduto> listagemProdutoFornecedor() {
+		ArrayList<DadosProduto> lista = listaProdutosEstoque();
+	}
+	
+	// adicionar métodos de busca por Fornecedor e fornecedor-cliente
 	
 	public static DadosProduto buscarIDBinarySearch(Integer code) {
 		//desserializarDoEstoque ou do Despache

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
+import aplicacao.AplicarMenu;
 import reserva.Estoque;
 
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
@@ -64,21 +65,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	public String getCaminhoFileUser() {
 		return caminhoClientesFile;
 	}
-	
-	public void printarProdutos(ArrayList<DadosProduto> listaTodosProdutos) {
-		System.out.println("Total de registros: " + listaTodosProdutos.size());
-		System.out.println();
-		System.out.println("🟡 indica que é preciso realizar ação para que o objeto seja encaminhado ao seu destino.");
-		System.out.println("🔴 simboliza que o produto será retornado por expirar");
-		System.out.println("⚫ mostra que o produto foi negado na alfândega e foi encaminhado para as autoridades.");
-		System.out.println();
-		System.out.printf("%s", "aviso", "id", "cpf vinculado", "situação atual", "data da situação");
-		//recebendo uma lista já filtrada de todos produtos do cliente.
-		for (DadosProduto dadoProduto : listaTodosProdutos) {
-			// se não estiver no estoque, estará no despache
-			System.out.println(dadoProduto);
-		}
-	}
 
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache ) {
@@ -95,25 +81,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	}
 
 	// avisoscanal receberá o listar produtos()
-	
-	public void avisosCanal(ArrayList<DadosProduto> produtosCliente) {
-		// contador para o total de produtos
-		long contador = 0;
-		for (DadosProduto produto : produtosCliente) {
-			if (!(produto.getRecado() == null)) {
-				System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
-						produto.getRecado());
-				contador ++;
-			}
-		}
-		System.out.println("Total de avisos: " + contador);
-		System.out.println();
-		if (contador == 0) {
-			System.out.println("Você não possui avisos de urgência estendidos do produto.");
-		}
-		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
-		// funcionario, mensagem;
-	}
 
 	@Override
 	public void cadastro() {
@@ -169,11 +136,10 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		System.out.println();
 		int valor = 0;
 		do {
-			System.out.println(
-					"1 - Listar produtos associados a conta\n2 - Fazer pagamento\n3 - Dívidas\n4 - Notificações de produto\n5 - Sair da conta");
-			System.out.print("Escolha uma opção: ");
+			System.out.print("Escolha uma opção: \n");
 
-			valor = sc.nextInt();
+			valor = AplicarMenu.getRequest(3);
+			System.out.println(valor);
 			// Verifique se a entrada é um inteiro válido
 			if (valor > 0 || valor < 6) {
 				switch (valor) {
@@ -186,11 +152,13 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				case 2:
 					//pagando
 					this.pagamento();
+					System.out.println("Quadro de pagamento: \n");
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 3:
 					//this.listarDividas(null);
+					System.out.println("Quadro de dívidas: \n");
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -199,6 +167,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					// para a função.
 
 					//this.avisosCanal();
+					System.out.println("Quadro de avisos: \n");
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -206,8 +175,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					System.out.println("Saindo da conta...");
 					break;
 				default:
-					System.out.println("Opção inválida. Tente novamente.");
-					break;
+					throw new IllegalArgumentException("Opção inválida, tente novamente");
 				}
 			} else {
 				System.out.println("Entrada inválida. Por favor, insira um número.");

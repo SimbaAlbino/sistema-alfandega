@@ -77,7 +77,6 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	/*
 	public void opreadorFuncionario() {
 		System.out.println("Reformulação de Estoque: ");
-		System.out.println("1 - editar Produto\n2 - editar Cliente\n3 - editar Fornecedor\n4 - editarDivida");
 		short op = sc.nextShort();
 		switch (op) {
 		case 1:
