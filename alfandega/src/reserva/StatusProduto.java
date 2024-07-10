@@ -6,5 +6,6 @@ public enum StatusProduto {
 	FISCALIZANDO,
 	RETORNADO,
 	REJEITADO,
-	ENVIADO;
+	ENVIADO,
+	PAGO;
 }
