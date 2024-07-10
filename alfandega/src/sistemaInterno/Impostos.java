@@ -26,5 +26,4 @@ public abstract class Impostos {
 	public void setValorImposto(double valorImposto) {
 		this.valorImposto = valorImposto;
 	}
-
 }
