@@ -1,36 +1,36 @@
 package sistemaInterno;
 
-public class EstoqueDívida extends Estoque {
-	
-	// Atributo que representa o cliente associado à dívida no estoque
-	private Cliente clientela;
+import java.util.ArrayList;
+import tiposProduto.Produto;
+import reserva.Estoque;
 
-	// Atributo que representa o montante da dívida no estoque
-	private double montante;
+public class EstoqueDivida extends Estoque {
+	private ArrayList<Dividas> dividas;
 
-	// Método privado para calcular a despesa
-	private double calcularDespesa(Object params) {
-		// Implementação do método calcularDespesa
-		return 0.0;
+	public EstoqueDivida() {
+		this.dividas = new ArrayList<>();
 	}
 
-	// Método privado para verificar se a dívida está pendente
-	private void dividaPendente(Object params) {
-		// Implementação do método dividaPendente
+	public void lerEstoqueDividas() {
+		for (Dividas divida : dividas) {
+			System.out.println("Dívida de " + divida.getClientela().getNome() + ": " + divida.getMontante());
+		}
 	}
 
-	// Método privado para selecionar um produto associado à dívida
-	private void selecionarProduto() {
-		// Implementação do método selecionarProduto
+	public double calcularDespesa() {
+		double total = 0;
+		for (Dividas divida : dividas) {
+			total += divida.getMontante();
+		}
+		return total;
 	}
 
-	// Método privado para marcar a dívida como paga
-	private void dividaPaga() {
-		// Implementação do método dividaPaga
+	@Override
+	public void selecionarProduto(Produto produto) {
+
 	}
 
-	// Método privado para adicionar a dívida a um arquivo
-	private void addDividaFile() {
-		// Implementação do método addDividaFile
+	public void addDividaFile(Dividas divida) {
+		dividas.add(divida);
 	}
 }
