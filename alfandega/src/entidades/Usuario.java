@@ -3,7 +3,6 @@ package entidades;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import aplicacao.MenuUser;
 import utilidade.ModelagemFile;
 
 public interface Usuario<T> {
@@ -13,8 +12,8 @@ public interface Usuario<T> {
 	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache );
 
 	void operacoesUser();
-
-	void avisosCanal(ArrayList<DadosProduto> produtosCliente);
+	
+	void removerUser(T pessoa);
 
 	// cada usuario terá seu confirmarUser dentro de sua classe para a senha e email
 	// serem restritos à classe.
@@ -69,7 +68,7 @@ public interface Usuario<T> {
 		return dados;
 	}
 
-	void cadastro();
+	
 
 	// O método abaixo recebe uma lista atualizada para ser serializada, ele
 	// verifica se pode adicionar e assim o faz
@@ -94,31 +93,6 @@ public interface Usuario<T> {
 		}
 	}
 
-	public static void identificarCadastro(MenuUser status) {
-		System.out.println("Cadastrar:");
-		System.out.print("Seu nome: ");
-		String nome = sc.nextLine();
-		System.out.print("Seu e-mail: ");
-		String email = sc.next();
-		System.out.print("Sua senha: ");
-		String senha = sc.next();
-
-		if (status.equals(MenuUser.CLIENTE)) {
-			System.out.print("Seu cpf: ");
-			String cpf = sc.next();
-			Cliente pessoa = new Cliente(nome, email, senha, cpf);
-			pessoa.cadastro();
-		} else if (status.equals(MenuUser.FORNECEDOR)) {
-			Fornecedor pessoa = new Fornecedor(nome, email, senha);
-			pessoa.cadastro();
-		} else if (status.equals(MenuUser.FUNCIONARIO)) {
-			System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");
-		} else {
-			System.out.println("Operador não encontrado");
-		}
-		// chamar o método cadastrarUser
-	}
-
 	String getNome();
 
 	// alterar para funcionar com a serialização
@@ -134,19 +108,6 @@ public interface Usuario<T> {
 		} catch (NullPointerException e) {
 			System.out.println("Erro ao listar o arquivo clientes: " + e.getMessage());
 		}
-	}
-
-	default void removerUser(ArrayList<? extends Usuario<T>> lista, T pessoa) {
-		try {
-			for (Usuario<T> user : lista) {
-				if (user.equals(pessoa)) {
-					lista.remove(pessoa);
-				}
-			}
-		} catch (NullPointerException e) {
-			System.out.println("Erro ao listar o arquivo: " + e.getMessage());
-		}
-		ModelagemFile.serializar(getCaminhoFileUser(), lista);
 	}
 
 	// ArrayList<T> cadastroAttUser();

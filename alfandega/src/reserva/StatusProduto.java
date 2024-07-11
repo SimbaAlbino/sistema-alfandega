@@ -7,5 +7,6 @@ public enum StatusProduto {
 	RETORNADO,
 	REJEITADO,
 	ENVIADO,
+	CONGELADO,
 	PAGO;
 }

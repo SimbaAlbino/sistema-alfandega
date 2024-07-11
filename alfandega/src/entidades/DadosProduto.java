@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.Scanner;
 
 import reserva.StatusProduto;
 import tiposProduto.Produto;
@@ -21,9 +22,10 @@ public class DadosProduto implements Serializable {
 	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // VALOR INICIAL
 	
 	private String recado = null;
-	private String 
-
+	
 	// add construtor e getters
+	
+	Scanner sc = new Scanner(System.in);
 
 	public DadosProduto(Cliente cliente, Fornecedor fornecedor, Produto tipoProduto, boolean documentos, Endereco endereco) {
 		this.cliente = cliente;
@@ -77,17 +79,56 @@ public class DadosProduto implements Serializable {
 	public void setStatus(StatusProduto status) {
 		this.status = status;
 	}
+	
+	//metodo abaixo usado pelo próprio sistema para adicionar status de produto.
+	public void setRecado(String msg) {
+		this.recado = msg;
+	}
 
 	public void gerarIdRastreio() {
 		Random random = new Random();
 		int idGerado = random.nextInt(999999);
 		//receber a lista de estoque e de despache e verificar se o id já existe
 		this.idRastreio = idGerado;
-		
 	}
-
+	
+	//continuar
 	public void editarRemessa(int caso) {
-		// aplicar switch case
+		switch (caso) {
+		case 1 :
+			//tratar
+			System.out.println("Alteração de documentos: ");
+			System.out.print("A remessa possui documentação (s/n)? ");
+			char bool = sc.next().charAt(0);
+			if (bool == 's') {
+				this.documentos = true;				
+			} else if (bool == 'n') {
+				this.documentos = false;	
+			} else {
+				System.out.println("Entrada inválida.");
+			}
+		case 2 :
+			// tratar
+			System.out.println("Alteração de notificações do produto: ");
+			System.out.println("Digite o recado para o quadro de avisos: ");
+			String aviso = sc.nextLine();
+			this.setRecado(aviso);
+			
+		case 3 :
+			// Mudar status de produto
+			// tratar Urgente
+			System.out.println("Alteração de status do produto: ");
+			System.out.println("Selecione o status desejado: ");
+			//logica para identificar onde o produto está: 
+			System.out.println("Produto no estoque: ");
+			System.out.println("INEXISTENTE, CONGELADO, FISCALIZANDO;");
+			
+			// 
+		case 4 :
+			// deletar remessa
+			System.out.println("Remoção de produto: ");
+			// instanciar o estoque pois vai mexer e precisa serializar.
+		}
 	}
 
 		

@@ -3,6 +3,7 @@ package entidades;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aplicacao.MenuUser;
 import reserva.Estoque;
 import reserva.StatusProduto;
 
@@ -61,5 +62,32 @@ public abstract class Utilizador <T> {
 		}
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
+	}
+	
+	public abstract void cadastro();
+	
+	public static void identificarCadastro(MenuUser status) {
+		System.out.println("Cadastrar:");
+		System.out.print("Seu nome: ");
+		String nome = sc.nextLine();
+		System.out.print("Seu e-mail: ");
+		String email = sc.next();
+		System.out.print("Sua senha: ");
+		String senha = sc.next();
+
+		if (status.equals(MenuUser.CLIENTE)) {
+			System.out.print("Seu cpf: ");
+			String cpf = sc.next();
+			Cliente pessoa = new Cliente(nome, email, senha, cpf);
+			pessoa.cadastro();
+		} else if (status.equals(MenuUser.FORNECEDOR)) {
+			Fornecedor pessoa = new Fornecedor(nome, email, senha);
+			pessoa.cadastro();
+		} else if (status.equals(MenuUser.FUNCIONARIO)) {
+			System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");
+		} else {
+			System.out.println("Operador não encontrado");
+		}
+		// chamar o método cadastrarUser
 	}
 }

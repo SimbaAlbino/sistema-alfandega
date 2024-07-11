@@ -18,43 +18,20 @@ public class Estoque implements Serializable {
 	//ideia: ao iniciar as operações, todos os estoque desserializam os produtos, ao selecionar a opção finalizar, os produtos são serializados.
 	
 	private static final long serialVersionUID = 1L;
-	
-	protected static ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
-	
+		
 	private static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
 
 	public static String getCaminhoEstoqueproduto() {
 		return caminhoEstoqueproduto;
 	}
-
-	public ArrayList<DadosProduto> getEstoqueGeral() {
-		return estoqueGeral;
-	}
 	
 	public static void addProduto(DadosProduto produto) {
+		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		estoqueGeral.add(produto);
+		ModelagemFile.serializar(caminhoEstoqueproduto, estoqueGeral);
 	}
 
-	public Double subtotalRemessa(DadosProduto produto) {
-		return produto.getTipoProduto().getPrecoUnico() * produto.getTipoProduto().getPrecoUnico();
-	}
-	
-	public void verificarRemessa() {
-		//verificar se a remessa está no estoque pelo buscarProdutosID, se não estiver, passar para o despache, é aqui onde o cliente possui contato indireto.
-	}
-	
-	public void clienteSubtotal() {
-		//subtotal de todos os produtos relacionados ao cliente, tanto o preço total de compra, quanto o imposto aplicado para cada compra, a partir daqui será possivel efetuar o pagamento.
-	}
-	
-	public void verificarPagamento() {
-		
-	}
-	
-	public void ordenarLista() {
-		//pegar listaProdutosEstoque, fazer um sort de acordo com o Cliente, e reescrever o arquivo serializando.
-	}	
-	
+
 	public static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
 		try {
@@ -114,7 +91,6 @@ public class Estoque implements Serializable {
 	//buscar produtos do fornecedor
 	
 	
-	
 	public void limiteData(DadosProduto dadoProduto) {
 		LocalDate chegadaProduto = dadoProduto.getDataChegada();
 		LocalDate agora = LocalDate.now();
@@ -125,6 +101,27 @@ public class Estoque implements Serializable {
 		//colocarStatusEnum Retorno	
 		//se passar da data, chamar statusEnum
 	}
+		
+	public Double subtotalRemessa(DadosProduto produto) {
+		return produto.getTipoProduto().getPrecoUnico() * produto.getTipoProduto().getPrecoUnico();
+	}
+	
+	public void verificarRemessa() {
+		//verificar se a remessa está no estoque pelo buscarProdutosID, se não estiver, passar para o despache, é aqui onde o cliente possui contato indireto.
+	}
+	
+	public void clienteSubtotal() {
+		//subtotal de todos os produtos relacionados ao cliente, tanto o preço total de compra, quanto o imposto aplicado para cada compra, a partir daqui será possivel efetuar o pagamento.
+	}
+	
+	public void verificarPagamento() {
+		
+	}
+	
+	public void ordenarLista() {
+		//pegar listaProdutosEstoque, fazer um sort de acordo com o Cliente, e reescrever o arquivo serializando.
+	}	
+	
 
 	/*
 	public void liberarProduto(DadosProduto produtoDado) {
@@ -144,47 +141,4 @@ public class Estoque implements Serializable {
 			
 	}
 	*/
-	
-	//aplicar o hascode e equals
-	
 }
-
-
-//como serializei e desserializei
-/*	public void serializar(String caminhoFile) {
-		try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
-			oos.writeObject(this);
-		} catch (IOException er) {
-			System.out.println("Arquivo não encontrado na serialização: " + er.getMessage());
-		} 
-	}
-
-	public Estoque desserializar(String caminhoFile) throws ClassNotFoundException {
-		Estoque listaRetorno = null;
-		try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
-			listaRetorno = (Estoque) ois.readObject();
-		} catch (IOException er) {
-			System.out.println("Arquivo não encontrado na desserialização: " + er.getMessage());
-		} catch (ClassNotFoundException er) {
-			System.out.println("Exceção de Classe não encontrada na desserialização: " + er.getMessage());
-		}
-		return listaRetorno;
-	}
-	
-	
-	@SuppressWarnings("unchecked")
-	public static void buscarProdutosCpfNome(ArrayList<DadosProduto> lista, Cliente produtoCliente) {
-		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
-		try {
-			listaProdutos = (ArrayList<DadosProduto>) ModelagemFile.desserializar(Cliente.getCaminhoClientesFile()); // CASTING DO CURINGA
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		for (DadosProduto dadoProduto : listaProdutos) {
-			// se não estiver no estoque, estará no despache
-			if (dadoProduto.getCliente().equals(produtoCliente)) {
-				System.out.println(dadoProduto);
-			}
-		}
-	}
- */

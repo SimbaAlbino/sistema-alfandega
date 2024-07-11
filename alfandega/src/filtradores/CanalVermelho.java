@@ -21,4 +21,5 @@ public class CanalVermelho {
 	public void devolverDemanda() {
 		
 	}
+	//o cliente terá um tempo para retornar o produto. Ou seja, ele vai ser rejeitado, se no próximo atualizarEstoque, com o tempo passado, o funcionario não atualizar, ele vai ser despachado.
 }

@@ -40,7 +40,7 @@ public class Programa {
 					} else {
 						System.out.printf("%nCadastrar usuário no sistema:%n");
 						System.out.println();
-						Usuario.identificarCadastro(conta);
+						Utilizador.identificarCadastro(conta);
 					}
 					
 					//testar funcionamento do cadastro

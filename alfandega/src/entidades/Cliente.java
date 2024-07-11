@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import aplicacao.AplicarMenu;
-import reserva.Estoque;
+import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
 
@@ -124,6 +124,18 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		}
 		return false;
 	}
+	
+	@Override
+	public void removerUser(Cliente pessoa) {
+		ArrayList<Cliente> clientes = listarUsuarios(getCaminhoFileUser());
+        try {
+            clientes.removeIf(user -> user.equals(pessoa));
+        } catch (NullPointerException e) {
+            System.out.println("Erro ao listar o arquivo: " + e.getMessage());
+        }
+        ModelagemFile.serializar(caminhoClientesFile, clientes);
+    }
+
 
 	// equals já está sendo usado para o cpf
 	public boolean equalsByEmailAndSenha(String email, String senha) {

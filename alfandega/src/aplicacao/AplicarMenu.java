@@ -29,7 +29,10 @@ public class AplicarMenu {
 			opcoes = Arrays.asList("Listar produtos fornecidos","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
 			break;
 		case 5:
-			opcoes = Arrays.asList("Editar Produto", "Editar Cliente", "Editar Fornecedor", "Editar Divida", "Editar Funcionario", "Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
+			opcoes = Arrays.asList("Editar Produto", "Editar Cliente/Fornecedor", "Editar Funcionario", "Editar Divida", "Registrar Funcionário","Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
+			break;
+		case 6:
+			opcoes = Arrays.asList("Documento do Produto", "Notificações do Produto", "Status do Produto", "Remoção do Produto");
 			break;
 		default:
 			throw new IllegalArgumentException("Opção inválida, tente novamente");

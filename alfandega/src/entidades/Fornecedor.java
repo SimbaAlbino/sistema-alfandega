@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -17,6 +18,7 @@ import tiposProduto.Informatica;
 import tiposProduto.Mobilia;
 import tiposProduto.Produto;
 import tiposProduto.Roupa;
+import utilidade.ModelagemFile;
 
 public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornecedor>, Serializable {
 
@@ -36,6 +38,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public Fornecedor() {
 	}
 
+	// aplicar nome email e senha como parâmetros em utilizador?
 	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
@@ -46,6 +49,12 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public Fornecedor(String emailFornecedor, String senha) {
 		this.emailFornecedor = emailFornecedor;
 		this.senha = senha;
+	}
+	
+	
+	// passando para o Funcionario apagar a conta
+	public Fornecedor(String emailFornecedor) {
+		this.emailFornecedor = emailFornecedor;
 	}
 
 	@Override
@@ -216,7 +225,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		//listar do fornecedor ou fornecedor entre tal cliente
 		List<DadosProduto> listaFiltrada = new ArrayList<>();
 		System.out.println("Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
-		short tipoListagem = sc.nextShort();
+		short tipoListagem = 0;
 		
 		List<DadosProduto> listaEstoque = Estoque.listaProdutosEstoque();
 		List<DadosProduto> listaDespache = EstoqueDespache.listaProdutosDespache();
@@ -241,6 +250,34 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			//corrigir
 		}
 		return (ArrayList<DadosProduto>) listaFiltrada;
+	}
+	
+	@Override
+	public void removerUser(Fornecedor pessoa) {
+		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFileUser());
+        try {
+            fornecedores.removeIf(user -> user.equals(pessoa));
+        } catch (NullPointerException e) {
+            System.out.println("Erro ao listar o arquivo: " + e.getMessage());
+        }
+        ModelagemFile.serializar(getCaminhoFileUser(), fornecedores);
+    }
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(emailFornecedor);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fornecedor other = (Fornecedor) obj;
+		return Objects.equals(emailFornecedor, other.emailFornecedor);
 	}
 
 	@Override
