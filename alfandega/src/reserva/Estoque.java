@@ -6,10 +6,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import entidades.Cliente;
 import entidades.DadosProduto;
-import filtradores.Canais;
+import entidades.Fornecedor;
 import utilidade.ModelagemFile;
 
 public class Estoque implements Serializable {
@@ -63,10 +64,6 @@ public class Estoque implements Serializable {
 		}
 		return listaProdutos;
 		//construir ou retornar
-	}
-	
-	public static ArrayList<DadosProduto> listagemProdutoFornecedor() {
-		ArrayList<DadosProduto> lista = listaProdutosEstoque();
 	}
 	
 	// adicionar métodos de busca por Fornecedor e fornecedor-cliente

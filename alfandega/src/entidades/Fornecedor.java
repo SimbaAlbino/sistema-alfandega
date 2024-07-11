@@ -3,9 +3,12 @@ package entidades;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import reserva.Estoque;
+import reserva.EstoqueDespache;
 import tiposProduto.Acessorios;
 import tiposProduto.Automoveis;
 import tiposProduto.Eletrodomesticos;
@@ -160,11 +163,11 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			if (valor > 0 || valor < 6) {
 				switch (valor) {
 				case 1:
-					System.out.println("Listando produtos: ");
-					// this.printarProdutos(listarProdutos(Estoque.buscarClientEquals(this),
-					// Despache.buscarClientEquals(this)));
+					//feito, mas precisa de throws
 					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
 					// os seus produtos fornecidos
+					System.out.println("Listando produtos: ");
+					this.printarProdutos(listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -186,6 +189,8 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// para a função.
 
 					// this.avisosCanal();
+					this.avisosCanal(listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
+					//pegando aviso dos produtos em estoque e despachados
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -205,29 +210,37 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	}
 
 	// seria interessante uma função que aceitasse um predicado no estoque
-	//corrigir
+	//recebendo 2 arrays, do estoque e do despache
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache) {
 		//listar do fornecedor ou fornecedor entre tal cliente
-		ArrayList<DadosProduto> listaFiltrada = new ArrayList<>();
+		List<DadosProduto> listaFiltrada = new ArrayList<>();
 		System.out.println("Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
 		short tipoListagem = sc.nextShort();
-		if (tipoListagem == 1) {
-			for (DadosProduto produto: produtosEstoque) {
-				listaFiltrada.add(produto);
+		
+		List<DadosProduto> listaEstoque = Estoque.listaProdutosEstoque();
+		List<DadosProduto> listaDespache = EstoqueDespache.listaProdutosDespache();
+		
+		while (tipoListagem != 1 && tipoListagem != 2) {
+			tipoListagem = sc.nextShort();
+			if (tipoListagem == 1) {
+				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this)).collect(Collectors.toList());
+				listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this)).collect(Collectors.toList());
+			} else if (tipoListagem == 2) {
+				System.out.println("Informe o CPF do cliente associado: ");
+				String cpfCliente = sc.nextLine();
+				Cliente cliente = new Cliente(cpfCliente);
+				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente)).collect(Collectors.toList());
+				listaEstoque = listaDespache.stream().filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente)).collect(Collectors.toList());
+			} else {
+				System.out.println("Opção inválida, tente novamente.");
+				System.out.println("1 - Listar por Fornecedor associado\\n2 - Listar por Associação Fornecedor-Cliente");
 			}
-			for (DadosProduto produto: produtosDespache) {
-				listaFiltrada.add(produto);
-			}
-		} else if (tipoListagem == 2) {
-			for (DadosProduto produto: produtosEstoque) {
-				listaFiltrada.add(produto);
-			}
-			for (DadosProduto produto: produtosDespache) {
-				listaFiltrada.add(produto);
-			}
+			listaFiltrada.addAll(listaDespache);
+			listaFiltrada.addAll(listaDespache);
+			//corrigir
 		}
-		return listaFiltrada;
+		return (ArrayList<DadosProduto>) listaFiltrada;
 	}
 
 	@Override

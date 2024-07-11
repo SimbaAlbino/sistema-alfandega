@@ -51,6 +51,27 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	public String getSenha() {
 		return senha;
 	}
+
+	public void cadastrarFuncionario(String nomeAdm, String email, String senha, String cpf) {
+		// instanciamos o funcionario com o construtor
+		
+	}
+
+	public boolean equalsByEmailAndSenha(String email, String senha) {
+		return this.email.equals(email) && this.senha.equals(senha);
+	}
+
+	public void editarDadoProduto() {
+	}
+	
+
+	public void editarProcesso() {
+
+	}
+
+	public void editarDivida() {
+
+	}
 	
 	@Override
 	public boolean confirmarUser(String[] dadosEntrada) {
@@ -68,56 +89,6 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		return false;
 	}
 
-	public void cadastrarFuncionario(String nomeAdm, String email, String senha, String cpf) {
-		// instanciamos o funcionario com o construtor
-		
-	}
-
-	
-	/*
-	public void opreadorFuncionario() {
-		System.out.println("Reformulação de Estoque: ");
-		short op = sc.nextShort();
-		switch (op) {
-		case 1:
-			editarDadoProduto();
-		case 2:
-			editarCliente();
-		case 3:
-			editarFornecedor();
-		}
-	}
-	*/
-
-	public void editarDadoProduto() {
-
-	}
-	
-	public boolean equalsByEmailAndSenha(String email, String senha) {
-        return this.email.equals(email) && this.senha.equals(senha);
-    }
-
-	public void editarProcesso() {
-
-	}
-
-	public void editarDivida() {
-
-	}
-
-	@Override
-	public ArrayList<DadosProduto> avisosCanal(DadosProduto produto) {
-		return false;
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void listarProdutos(ArrayList<DadosProduto> produtosFiltrados) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void cadastro() {
 		condicaoCadastro(this, caminhoFuncionariosFile);
@@ -125,6 +96,75 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	@Override
 	public void operacoesUser() {	
+		System.out.println();
+		int valor = 0;
+		do {
+			System.out.print("Escolha uma opção: \n");
+
+			valor = sc.nextInt();
+			// Verifique se a entrada é um inteiro válido
+			if (valor > 0 || valor < 6) {
+				switch (valor) {
+				case 1:
+					System.out.println("Editar produto: ");
+					//lista o produto do estoque por id.
+					// a partir disso, chamar a função dentro do 
+					// this.printarProdutos(listarProdutos(Estoque.buscarClientEquals(this),
+					// Despache.buscarClientEquals(this)));
+					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
+					// os seus produtos fornecidos
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 2:
+					// pagando
+					System.out.println("Editar cliente: ");
+
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 3:
+					System.out.println("Editar Fornecedor");
+					// this.listarDividas(null);
+					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
+					// os seus produtos fornecidos
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 4:
+					System.out.println("Operações de edição de dívida: ");
+					// chamar usar o listar produtos para identificar se tem avisos canal e passar
+					// para a função.
+
+					// this.avisosCanal();
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 5:
+					System.out.println("Operações de registro de funcionario");
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 6:
+					System.out.println("Listando Estoque");
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 7:
+					System.out.println("Listando produtos despachados");
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				default:
+					System.out.println("Opção inválida. Tente novamente.");
+					break;
+				}
+			} else {
+				System.out.println("Entrada inválida. Por favor, insira um número.");
+				sc.nextLine(); // Consumir a entrada inválida
+			}
+		} while (valor != 5);
+		System.out.println("Fim das operações de usuário.");
 	}
 
 	// criar metodo cadastrar funcionario, pois ele só podera ser criado a partir de

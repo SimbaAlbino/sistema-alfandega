@@ -28,9 +28,6 @@ public abstract class Utilizador <T> {
 	}
 	
 	public abstract void listarDividas();
-	// o identificar serve para saber a quem está se referindo entre os
-	// utilizadores: cliente
-	// acho que coloca na interface
 	
 	//passo a determinada lista para printar todos os produtos associados. tanto cliente, quanto fornecedor
 	public void printarProdutos(ArrayList<DadosProduto> listaTodosProdutos) {
@@ -47,10 +44,10 @@ public abstract class Utilizador <T> {
 		}
 	}
 	
-	public void avisosCanal(ArrayList<DadosProduto> produtosCliente) {
+	public void avisosCanal(ArrayList<DadosProduto> produtosListados) {
 		// contador para o total de produtos
 		long contador = 0;
-		for (DadosProduto produto : produtosCliente) {
+		for (DadosProduto produto : produtosListados) {
 			if (!(produto.getRecado() == null)) {
 				System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
 						produto.getRecado());

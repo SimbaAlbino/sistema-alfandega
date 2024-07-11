@@ -21,6 +21,7 @@ public class DadosProduto implements Serializable {
 	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // VALOR INICIAL
 	
 	private String recado = null;
+	private String 
 
 	// add construtor e getters
 
@@ -89,7 +90,7 @@ public class DadosProduto implements Serializable {
 		// aplicar switch case
 	}
 
-	
+		
 
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
