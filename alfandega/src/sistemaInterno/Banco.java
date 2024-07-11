@@ -2,6 +2,7 @@ package sistemaInterno;
 
 import java.util.ArrayList;
 import java.util.List;
+import entidades.Cliente;
 
 public class Banco {
 	private List<Cliente> clientes;

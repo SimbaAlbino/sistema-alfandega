@@ -1,14 +1,16 @@
 package tiposProduto;
 
-public abstract class Produto {
+import entidades.Cliente;
 
+public abstract class Produto {
 	private double precoUnico;
 	private int quantidade;
+	private Cliente cliente; // cliente associado
 
-	public Produto(double precoUnico, int quantidade) {
+	public Produto(double precoUnico, int quantidade, Cliente cliente) {
 		this.precoUnico = precoUnico;
 		this.quantidade = quantidade;
-
+		this.cliente = cliente;
 	}
 
 	public double getPrecoUnico() {
@@ -27,10 +29,17 @@ public abstract class Produto {
 		this.quantidade = quantidade;
 	}
 
-    // metodo abstrato da taxa unica
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	public abstract double getTaxaUnica();
 
-	public double getTotal() {    // metodo para calcular o total dos produtos
+	public double getTotal() {
 		double taxa = getTaxaUnica();
 		return (this.precoUnico * this.quantidade) * (1 + taxa);
 	}
