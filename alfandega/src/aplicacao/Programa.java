@@ -20,7 +20,7 @@ public class Programa {
 		Scanner sc = new Scanner(System.in);
 
 		MenuUser conta = choicesUser[AplicarMenu.getRequest(1) - 1];
-
+		
 		while (conta != MenuUser.FINALIZAR) {
 			if (conta == MenuUser.FINALIZAR) {
 				break;

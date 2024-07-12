@@ -1,8 +1,8 @@
 package filtradores;
 
 public enum CanalCor {
-	VERDE,
-	AMARELO,
-	CINZA,
-	VERMELHO;
+	CANAL_VERDE,
+	CANAL_AMARELO,
+	CANAL_CINZA,
+	CANAL_VERMELHO;
 }
