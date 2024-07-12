@@ -61,7 +61,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return senha;
 	}
 
-	@Override
 	public String getCaminhoFileUser() {
 		return caminhoClientesFile;
 	}

@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import entidades.Cliente;
@@ -22,7 +23,7 @@ public class Estoque implements Serializable {
 
 	private static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
 
-	public static String getCaminhoEstoqueproduto() {
+	public static String getCaminhoEstoqueProduto() {
 		return caminhoEstoqueproduto;
 	}
 
@@ -30,93 +31,148 @@ public class Estoque implements Serializable {
 		return totalProdutos;
 	}
 
-	public static void addProduto(DadosProduto produto) {
+	public synchronized void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		estoqueGeral.add(produto);
-		ModelagemFile.serializar(caminhoEstoqueproduto, estoqueGeral);
-		totalProdutos++;
+		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
+		produto.setArmazenamentoAtual(Local.ESTOQUE);
+		//
 	}
 
-	public static void removerProdutoEstoque(DadosProduto produto) {
+	public synchronized static void removerProdutoEstoque(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		estoqueGeral.remove(produto);
-		ModelagemFile.serializar(caminhoEstoqueproduto, estoqueGeral);
-		totalProdutos--;
+		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
 	}
 
+	// o código já está atualizado
 	public static void despacharProduto(DadosProduto produto) {
-
+		EstoqueDespache.addProduto(produto);
+		produto.setArmazenamentoAtual(Local.DESPACHE);
+		removerProdutoEstoque(produto);
 	}
 
-	public static ArrayList<DadosProduto> listaProdutosEstoque() {
-		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
-		try {
-			listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueproduto());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	// a att do código será no começo e final da operação
+	public static void atualizarSistema() {
+		// aplicar um design bonito de carregando
+		for (DadosProduto produto : listaProdutosEstoque()) {
+			attCanaisFiltro(produto);
 		}
+		EstoqueDespache.atualizarDespache();
+		ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutosEstoque());
+		
+		
+		int total = 50;
+		for (int i = 0; i <= total; i++) {
+            // Simulando um processo que leva tempo
+            try {
+                Thread.sleep(100); // Pausa por 100 milissegundos
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Atualizando a barra de carregamento
+            int progress = (i * 100) / total; // Calculando a porcentagem de progresso
+            StringBuilder barra = new StringBuilder("[");
+            for (int j = 0; j < total; j++) {
+                if (j < i) {
+                    barra.append("=");
+                } else {
+                    barra.append(" ");
+                }
+            }
+            barra.append("] " + progress + "%");
+
+            // Imprimindo a barra de carregamento
+            System.out.print("\r" + barra.toString());
+        }
+
+        System.out.println("\nCarregamento concluído!");
+	}
+
+	public final static ArrayList<DadosProduto> listaProdutosEstoque() {
+		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
+		listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
+		totalProdutos = listaProdutos.size();
 		return listaProdutos;
 		// construir ou retornar
 	}
 
-	// Adicionar para verificar no despache tambem
 	public static DadosProduto buscarIDBinarySearch(Integer code) {
-		// desserializarDoEstoque ou do Despache
-		List<DadosProduto> produtosEstoque = new ArrayList<>();
-		try {
-			produtosEstoque = Estoque.listaProdutosEstoque();
-			produtosEstoque.sort((p1, p2) -> p1.getIdRastreio().compareTo(p2.getIdRastreio()));
-		} catch (NullPointerException e) {
-			System.out.println("A lista de produtos está vazia" + e.getMessage());
+		// Desserializar do Estoque e do Despache
+		List<DadosProduto> produtosEstoque = listaProdutosEstoque();
+		List<DadosProduto> produtosDespache = EstoqueDespache.listaProdutosDespache();
+
+		// Ordenar as listas pelo ID de rastreio
+		produtosEstoque.sort(Comparator.comparingInt(DadosProduto::getIdRastreio));
+		produtosDespache.sort(Comparator.comparingInt(DadosProduto::getIdRastreio));
+
+		// Buscar no estoque
+		int indiceEstoque = Collections.binarySearch(produtosEstoque, new DadosProduto(code),
+				Comparator.comparingInt(DadosProduto::getIdRastreio));
+
+		// Se o produto foi encontrado no estoque, retornar
+		if (indiceEstoque >= 0) {
+			return produtosEstoque.get(indiceEstoque);
 		}
-		// Collections.sort(produtosEstoque);
-		// Usar comparator para ter uma ordem de itens personalizada
-		int indice = Collections.binarySearch(produtosEstoque, new DadosProduto(code),
-				(p1, p2) -> Integer.compare(p1.getIdRastreio(), p2.getIdRastreio()));
-		// Também poderia usar o Comparator.comparingInt
-		// Comparator.comparing -> perguntar como usar essa serialização ao professor.
-		// Fazer um if para caso não encontre
-		if (indice == 0) {
-			// tentar buscar no despache
-			return null;
+
+		// Buscar no despache
+		int indiceDespache = Collections.binarySearch(produtosDespache, new DadosProduto(code),
+				Comparator.comparingInt(DadosProduto::getIdRastreio));
+
+		// Se o produto foi encontrado no despache, retornar
+		if (indiceDespache >= 0) {
+			return produtosDespache.get(indiceDespache);
 		}
-		return produtosEstoque.get(indice);
+
+		// Se não encontrado em nenhum dos dois, retornar null
+		return null;
 	}
 
-	// Adicionar para verificar no despache tambem
-	// Passando o método estático listaProdutosEstoque e um cliente
+	// Método para buscar produtos associados a um cliente
 	public static ArrayList<DadosProduto> buscarClientEquals(Cliente clienteBusca) {
 		ArrayList<DadosProduto> produtosEncontrados = new ArrayList<>();
-		try {
-			for (DadosProduto dadoProduto : Estoque.listaProdutosEstoque()) {
-				// se não estiver no estoque, estará no despache
-				if (dadoProduto.getCliente().equals(clienteBusca)) {
+
+		ArrayList<DadosProduto> produtosEstoque = Estoque.listaProdutosEstoque();
+		ArrayList<DadosProduto> produtosDespache = EstoqueDespache.listaProdutosDespache();
+
+		if (produtosEstoque != null) {
+			for (DadosProduto dadoProduto : produtosEstoque) {
+				if (clienteBusca.equals(dadoProduto.getCliente())) {
 					produtosEncontrados.add(dadoProduto);
 				}
 			}
-			if (produtosEncontrados.size() == 0) {
-				// tentar buscar no despache
-				return null;
-			}
-		} catch (NullPointerException e) {
-			System.out.println("A lista de produtos está vazia");
 		}
+
+		if (produtosDespache != null) {
+			for (DadosProduto dadoProduto : produtosDespache) {
+				if (clienteBusca.equals(dadoProduto.getCliente())) {
+					produtosEncontrados.add(dadoProduto);
+				}
+			}
+		}
+
+		if (produtosEncontrados.isEmpty()) {
+			System.out.println("Nenhum produto encontrado para o cliente especificado.");
+		}
+
 		return produtosEncontrados;
 	}
 
 	// buscar produtos do fornecedor
 
-	public void attCanaisFiltro(DadosProduto dadoProduto) {
+	public static void attCanaisFiltro(DadosProduto dadoProduto) {
 		// Estoque pode ter: fiscalizando, aguardando pagamento, pago, rejeitado
-		//vencimentos no estoque
+		// vencimentos no estoque
 		LocalDate dataOperacaoDeProduto = dadoProduto.getDataDeOperacao();
 		LocalDate agora = LocalDate.now();
 		Canais canais = new Canais(dadoProduto);
 		switch (dadoProduto.getStatus()) {
 		case AGUARDANDO_PAGAMENTO:
-			//feito
+			// feito
 			if (ChronoUnit.DAYS.between(dadoProduto.getDataDeOperacao(), LocalDate.now()) > 30) {
 				dadoProduto.setStatus(StatusProduto.RETORNADO);
+				dadoProduto.setDataDeOperacao(agora);
 				dadoProduto.setNotaFiscal("NOTA DE PIRANGAGEM");
 				despacharProduto(dadoProduto);
 			}
@@ -124,7 +180,7 @@ public class Estoque implements Serializable {
 		case FISCALIZANDO: {
 			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 3) {
 				canais.moldagemProduto();
-				//manda para canais
+				// manda para canais
 			}
 		}
 			break;
@@ -142,7 +198,7 @@ public class Estoque implements Serializable {
 			}
 			break;
 		case INEXISTENTE:
-			//feito
+			// feito
 			// Remover o produto caso a data de inexistência declarada pelo funcionario.
 			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 3) {
 				removerProdutoEstoque(dadoProduto);
@@ -151,37 +207,9 @@ public class Estoque implements Serializable {
 		default:
 			break;
 		}
-
-		// mover produto e enviar para o despache
-		// colocarStatusEnum Retorno
-		// se passar da data, chamar statusEnum
 	}
 
-	public Double subtotalRemessa(DadosProduto produto) {
-		return produto.getTipoProduto().getPrecoUnico() * produto.getTipoProduto().getPrecoUnico();
-	}
-
-	// a att do código será no começo e final da operação
-	//urgente
-	public void atualizarSistema() {
-		//aplicar um design bonito de carregando
-		for (DadosProduto produto : listaProdutosEstoque()) {
-			attCanaisFiltro(produto);
-		}
-	}
-
-	public void checkStatusEstoque(DadosProduto dadoProduto) {
-
-		// verificar se a remessa está no estoque pelo buscarProdutosID, se não estiver,
-		// passar para o despache, é aqui onde o cliente possui contato indireto.
-	}
-
-	// sem muita importância
-	public void ordenarLista() {
-		// pegar listaProdutosEstoque, fazer um sort de acordo com o Cliente, e
-		// reescrever o arquivo serializando.
-	}
-
+	// ver se ainda precisa
 	public void clienteSubtotal() {
 		// subtotal de todos os produtos relacionados ao cliente, tanto o preço total de
 		// compra, quanto o imposto aplicado para cada compra, a partir daqui será
@@ -191,17 +219,4 @@ public class Estoque implements Serializable {
 	public void verificarPagamento() {
 
 	}
-
-	/*
-	 * public void liberarProduto(DadosProduto produtoDado) { // instancia o Canais
-	 * Canais canalProduto = new Canais(produtoDado); switch (canalProduto.getCor())
-	 * { case VERDE: ModelagemFile.moverArquivo(produtoDado); case AMARELO:
-	 * ModelagemFile.moverArquivo(produtoDado); case VERMELHO:
-	 * ModelagemFile.moverArquivo(produtoDado); case CINZA:
-	 * ModelagemFile.moverArquivo(produtoDado);
-	 * 
-	 * }
-	 * 
-	 * }
-	 */
 }

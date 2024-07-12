@@ -62,7 +62,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		return nomeFornecedor;
 	}
 
-	@Override
 	public String getCaminhoFileUser() {
 		return caminhoFornecedoresFile;
 	}

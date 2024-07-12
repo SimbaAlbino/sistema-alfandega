@@ -19,15 +19,9 @@ public interface Usuario<T> {
 	// serem restritos à classe.
 	boolean confirmarUser(String[] dadosEntrada);
 
-	String getCaminhoFileUser();
-
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
-		try {
-			pessoas = (ArrayList<?>) ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		pessoas = (ArrayList<?>) ModelagemFile.desserializar(caminho);
 		if (pessoas.contains(classChamada)) {
 			pessoas.remove(classChamada);
 		}
@@ -72,14 +66,8 @@ public interface Usuario<T> {
 
 	// O método abaixo recebe uma lista atualizada para ser serializada, ele
 	// verifica se pode adicionar e assim o faz
-	@SuppressWarnings("unchecked")
 	default void condicaoCadastro(T classChamada, String caminho) {
-		ArrayList<T> listaUsers = null;
-		try {
-			listaUsers = (ArrayList<T>) ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		ArrayList<T> listaUsers = ModelagemFile.desserializar(caminho);
 		// Inicializa a lista se estiver nula
 		if (listaUsers == null) {
 			listaUsers = new ArrayList<>();
@@ -115,9 +103,6 @@ public interface Usuario<T> {
 		ArrayList<T> listaPessoas = null;
 		try {
 			listaPessoas = ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out.printf("Não há %ss na lista.", getClass().getSimpleName());
 		}

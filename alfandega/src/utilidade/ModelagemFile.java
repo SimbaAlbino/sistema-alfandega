@@ -1,8 +1,10 @@
 package utilidade;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,59 +23,48 @@ public class ModelagemFile {
     }
 
     @SuppressWarnings("unchecked")
-	public static <T> ArrayList<T> desserializar(String caminhoFile) throws ClassNotFoundException {
-        ArrayList<T> listaRetorno = null;
-        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
-            listaRetorno = (ArrayList<T>) ois.readObject();
-        } catch (FileNotFoundException e) {
-            System.out.println("Arquivo não encontrado na desserialização: " + e.getMessage());
-        } catch (IOException e) {
-            System.out.println("Erro de I/O na desserialização: " + e.getMessage());
-        } catch (ClassNotFoundException e) {
-            System.out.println("Exceção de Classe não encontrada na desserialização: " + e.getMessage());
-            throw e;
+    public static <T> ArrayList<T> desserializar(String caminhoFile) {
+        ArrayList<T> listaRetorno = new ArrayList<>();
+        File file = new File(caminhoFile);
+        if (file.exists() && file.length() > 0) {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(caminhoFile))) {
+                listaRetorno = (ArrayList<T>) ois.readObject();
+            } catch (FileNotFoundException e) {
+                System.out.println("Arquivo não encontrado na desserialização: " + e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Erro de I/O na desserialização: " + e.getMessage());
+            } catch (ClassNotFoundException e) {
+                System.out.println("Exceção de Classe não encontrada na desserialização: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Arquivo não encontrado ou está vazio.");
+            /*if (!file.exists()) {
+            	criarArquivo(caminhoFile);
+            }*/
         }
         return listaRetorno;
     }
+    
+    public static void criarArquivo(String caminhoFile) throws IOException {
+    	File file = new File(caminhoFile);
+    	try {
+            if (file.createNewFile()) {
+                System.out.println("Arquivo criado: " + file.getName());
+            } else {
+                System.out.println("O arquivo já existe.");
+            }
+        } catch (IOException e) {
+            System.out.println("Ocorreu um erro.");
+            e.printStackTrace();
+        }
+    }
 	
-	public static void existenciaArquivo() {
-		
-	}
-	
-	public static void deletarArquivo() {
-		
-	}
-
-	public static void moverArquivo() {
-		
-	}
-	
-	public static void limparArquivo() {
-		
-	}
-	
-	
-	
-	
-	//ler arquivo vai retornar uma array e antes usará o desserializar, ou seja, tudo que está na interface user, na verdade será somente serializar.
+    public static void limparArquivo(String caminhoArquivo) {
+        try (FileWriter writer = new FileWriter(caminhoArquivo)) {
+            // Escreve uma string vazia para limpar o conteúdo do arquivo
+            writer.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
-
-/*
- * public static ArrayList<String> lerArquivoString(String caminho) {
-		try {
-			ModelagemFile.desserializar(caminho);
-		} catch (ClassNotFoundException e) {
-			System.out.println("Problema ao desserializar arquivo: " + e.getMessage());
-		}
-		ArrayList<String> listagemFile = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(caminho))) {
-			String line = br.readLine();
-			while (line != null) {
-				listagemFile.add(line); //resolver problema de listar o file
-			}
-		} catch (IOException er) {
-			System.out.println("Erro ao encontrar o arquivo para leitura: " + er.getMessage());
-		}
-		return listagemFile;
-	}
- */ 

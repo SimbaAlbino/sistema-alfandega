@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Random;
 import java.util.Scanner;
 
+import reserva.Local;
 import reserva.StatusProduto;
 import tiposProduto.Produto;
 
@@ -22,6 +23,7 @@ public class DadosProduto implements Serializable {
 	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // VALOR INICIAL
 	private String recado = null;
 	private String notaFiscal; //implementar
+	private Local armazenamentoAtual;
 	// add construtor e getters
 
 	Scanner sc = new Scanner(System.in);
@@ -95,6 +97,14 @@ public class DadosProduto implements Serializable {
 
 	public void setNotaFiscal(String notaFiscal) {
 		this.notaFiscal = notaFiscal;
+	}
+
+	public Local getArmazenamentoAtual() {
+		return armazenamentoAtual;
+	}
+
+	public void setArmazenamentoAtual(Local armazenamentoAtual) {
+		this.armazenamentoAtual = armazenamentoAtual;
 	}
 
 	public void gerarIdRastreio() {

@@ -8,6 +8,7 @@ import entidades.Fornecedor;
 import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
+import reserva.Estoque;
 
 public class Programa {
 	
@@ -16,7 +17,9 @@ public class Programa {
 	final static MenuUser[] choicesUser = MenuUser.values();
 
 	public static void main(String[] args) {
-		// Obtém a solicitação do usuário (por exemplo, saldo zero, credor ou devedor)
+		
+		Estoque.atualizarSistema();
+		
 		Scanner sc = new Scanner(System.in);
 
 		MenuUser conta = choicesUser[AplicarMenu.getRequest(1) - 1];
@@ -72,6 +75,8 @@ public class Programa {
 						if (usuario.confirmarUser(usuario.loginUser())) {
 							usuario.operacoesUser();
 						}
+						//atualizar console depois das operações de usuario
+						Estoque.atualizarSistema();
 					// operações
 				default:
 					break;

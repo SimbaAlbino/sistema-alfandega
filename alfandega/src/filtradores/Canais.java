@@ -41,11 +41,14 @@ public class Canais {
 	public CanalCor coloracaoStatusObj() {
 		if (getProduto().isDocumentos() == false && getProduto().getStatus() == StatusProduto.FISCALIZANDO) {
 			this.cor = CanalCor.valueOf("CINZA");
+			getProduto().setRecado("Produto rejeitado... entre em contato com um funcionario tals tals");
 			// status vai ser definido como rejeitado
 			
 		} else if (getProduto().getStatus() == StatusProduto.FISCALIZANDO
-				|| ChronoUnit.DAYS.between(getProduto().getDataDeOperacao(), LocalDate.now()) > 30) {
+				&& ChronoUnit.DAYS.between(getProduto().getDataDeOperacao(), LocalDate.now()) > 30) {
 			this.cor = CanalCor.valueOf("VERMELHO");
+			getProduto().setRecado("Produto retornado... prazo de 30 dias expirou.");
+
 			// produto terá status como retornado e será enviado imediatamente ao despache
 
 		} else if ((getProduto().getStatus() == StatusProduto.FISCALIZANDO
@@ -56,10 +59,10 @@ public class Canais {
 			// libera se for produto de informática, ou preço unico do produto for menor que
 			// 250 reais, ou status do produto for pago
 			this.cor = CanalCor.valueOf("VERDE");
-
+			getProduto().setRecado("Produto aprovado pela alfândega, liberado para envio");
 		} else if (getProduto().getStatus() == StatusProduto.FISCALIZANDO) {
 			this.cor = CanalCor.valueOf("AMARELO");
-
+			getProduto().setRecado("Produto aguardando pagamento");
 		}
 
 		// ou se o produto tiver o status
@@ -75,13 +78,16 @@ public class Canais {
 		switch (cor) {
 		case CANAL_CINZA:
 			getProduto().setStatus(StatusProduto.REJEITADO);
+			getProduto().setDataDeOperacao(LocalDate.now());
 			break;
 		case CANAL_AMARELO:
 			getProduto().setStatus(StatusProduto.AGUARDANDO_PAGAMENTO);
+			getProduto().setDataDeOperacao(LocalDate.now());
 			// chamar a operação de adicionar dívida
 			break;
 		case CANAL_VERDE:
 			getProduto().setStatus(StatusProduto.ENVIADO);
+			//getProduto().setNotaFiscal(null); CHAMAR OPERAÇÂO DE NOTA FISCAL talvez para um ou para todos
 			Estoque.despacharProduto(getProduto());
 			break;
 		case CANAL_VERMELHO:
