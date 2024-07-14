@@ -1,16 +1,12 @@
 package tiposProduto;
 
-import entidades.Cliente;
-
 public abstract class Produto {
 	private double precoUnico;
 	private int quantidade;
-	private Cliente cliente; // cliente associado
 
-	public Produto(double precoUnico, int quantidade, Cliente cliente) {
+	public Produto(double precoUnico, int quantidade) {
 		this.precoUnico = precoUnico;
 		this.quantidade = quantidade;
-		this.cliente = cliente;
 	}
 
 	public double getPrecoUnico() {
@@ -27,14 +23,6 @@ public abstract class Produto {
 
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
 	}
 
 	public abstract double getTaxaUnica();

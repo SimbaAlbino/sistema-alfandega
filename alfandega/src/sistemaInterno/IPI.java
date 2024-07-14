@@ -10,6 +10,8 @@ public class IPI extends Impostos {
 
 	@Override
 	public double calcularImpostoTotal() {
-		return getValorImposto() * TAXA_IPI;
+		double total = getValorImposto() * TAXA_IPI;
+		adicionarValorRecolhido(total);
+		return total;
 	}
 }

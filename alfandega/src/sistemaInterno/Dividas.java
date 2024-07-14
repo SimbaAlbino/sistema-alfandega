@@ -3,12 +3,12 @@ package sistemaInterno;
 import java.util.ArrayList;
 import java.util.List;
 import entidades.Cliente;
-import tiposProduto.Produto;
+import entidades.DadosProduto;
 
 public class Dividas implements Pagamento {
 	private Cliente clientela;
 	private double montante;
-	private List<Produto> produtos;
+	private List<DadosProduto> produtos;
 	private List<Divida> dividas;
 
 	public Dividas(Cliente clientela) {
@@ -20,8 +20,8 @@ public class Dividas implements Pagamento {
 
 	private double calcularDespesa() {
 		double total = 0.0;
-		for (Produto produto : produtos) {
-			total += produto.getPrecoUnico();
+		for (DadosProduto produto : produtos) {
+			total += produto.getTipoProduto().getPrecoUnico();
 		}
 		return total;
 	}
@@ -69,9 +69,9 @@ public class Dividas implements Pagamento {
 		}
 	}
 
-	public void selecionarProduto(Produto produto) {
+	public void selecionarProduto(DadosProduto produto) {
 		produtos.add(produto);
-		montante += produto.getPrecoUnico();
+		montante += produto.getTipoProduto().getPrecoUnico();
 	}
 
 	public String processoCalculo() {
@@ -99,9 +99,9 @@ public class Dividas implements Pagamento {
 	private class Divida {
 		private Cliente cliente;
 		private double valor;
-		private List<Produto> produtos;
+		private List<DadosProduto> produtos;
 
-		public Divida(Cliente cliente, double valor, List<Produto> produtos) {
+		public Divida(Cliente cliente, double valor, List<DadosProduto> produtos) {
 			this.cliente = cliente;
 			this.valor = valor;
 			this.produtos = new ArrayList<>(produtos);

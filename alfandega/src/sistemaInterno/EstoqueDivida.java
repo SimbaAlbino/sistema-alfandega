@@ -3,7 +3,7 @@ package sistemaInterno;
 import java.util.ArrayList;
 import entidades.Cliente;
 import reserva.Estoque;
-import tiposProduto.Produto;
+import entidades.DadosProduto;
 
 public class EstoqueDivida extends Estoque {
 	private ArrayList<Dividas> dividas;
@@ -26,8 +26,7 @@ public class EstoqueDivida extends Estoque {
 		return total;
 	}
 
-	@Override
-	public void selecionarProduto(Produto produto) {
+	public void selecionarProduto(DadosProduto produto) {
 		Cliente cliente = produto.getCliente();
 		Dividas dividaExistente = encontrarDividaPorCliente(cliente);
 
@@ -40,7 +39,7 @@ public class EstoqueDivida extends Estoque {
 		}
 	}
 
-	private Dividas encontrarDividaPorCliente(Cliente cliente) {
+	Dividas encontrarDividaPorCliente(Cliente cliente) {
 		for (Dividas divida : dividas) {
 			if (divida.getClientela().equals(cliente)) {
 				return divida;

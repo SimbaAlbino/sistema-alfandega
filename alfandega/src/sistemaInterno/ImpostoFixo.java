@@ -10,6 +10,7 @@ public class ImpostoFixo extends Impostos {
 
 	@Override
 	public double calcularImpostoTotal() {
+		adicionarValorRecolhido(VALOR_IMPOSTO_FIXO);
 		return VALOR_IMPOSTO_FIXO;
 	}
 }

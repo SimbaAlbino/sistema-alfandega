@@ -10,6 +10,8 @@ public class ICMS extends Impostos {
 
 	@Override
 	public double calcularImpostoTotal() {
-		return getValorImposto() * TAXA_ICMS;
+		double total = getValorImposto() * TAXA_ICMS;
+		adicionarValorRecolhido(total);
+		return total;
 	}
 }
