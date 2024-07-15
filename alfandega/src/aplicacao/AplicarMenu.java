@@ -2,7 +2,6 @@ package aplicacao;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class AplicarMenu {
@@ -38,19 +37,30 @@ public class AplicarMenu {
 			throw new IllegalArgumentException("Opção inválida, tente novamente");
 		}
 		
-		int request = 1;
+		boolean entrada = false;
+		int request = 4;
 		short contador = 1;
 		// Exibe opções de solicitação
 		for (String opcao : opcoes) {
 			System.out.printf("%d - %s\n", contador++, opcao);
 		}
-		try {
-			do { // Insere a solicitação de usuário
-				System.out.printf("%n-> ");
-				request = input.nextInt();
-			} while ((request < 1) || (request > opcoes.size()));
-		} catch (NoSuchElementException noSuchElementException) {
-			System.err.println("Invalid input. Terminating.");
+		while (!entrada) {
+			try {
+				do { // Insere a solicitação de usuário
+					System.out.printf("%n-> ");
+					String digito = input.nextLine().trim();
+					if (digito.isEmpty()) {
+						throw new IllegalArgumentException("Valor nulo lançado");
+					}
+					request = Integer.parseInt(digito);
+					clearScreen();
+				} while ((request < 1) || (request > opcoes.size()));
+				clearScreen();
+				entrada = true;
+			} catch (IllegalArgumentException e) {
+				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
+				input.nextLine();
+			} 
 		}
 		return request; // Retorna o valor enum da opção
 	}
@@ -59,10 +69,18 @@ public class AplicarMenu {
 		//pesquisar como pegar 2 tipos de erros em um código entre parÊnteses()
 	
 	public static void clearScreen() {
-		 System.out.print("\033[H\033[2J");
-		 System.out.flush();
-		} 
+		for (int i = 0; i < 50; ++i) System.out.println();
+	}
 	
+	public static void titulo() {
+		System.out.println("    ___    __    _________    _   ______  _______________ \r\n"
+				+ "   /   |  / /   / ____/   |  / | / / __ \\/ ____/ ____/   |\r\n"
+				+ "  / /| | / /   / /_  / /| | /  |/ / / / / __/ / / __/ /| |\r\n"
+				+ " / ___ |/ /___/ __/ / ___ |/ /|  / /_/ / /___/ /_/ / ___ |\r\n"
+				+ "/_/  |_/_____/_/   /_/  |_/_/ |_/_____/_____/\\____/_/  |_|\n");
+		System.out.println("------------------------------------------------------------");
+	}
+
 	
 }
 

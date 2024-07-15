@@ -6,6 +6,7 @@ import java.util.Scanner;
 import aplicacao.MenuUser;
 import reserva.Estoque;
 import reserva.StatusProduto;
+import utilidade.ValidarDados;
 
 public abstract class Utilizador <T> {
 	
@@ -13,16 +14,19 @@ public abstract class Utilizador <T> {
 	protected abstract void pagamento();
 		
 	public static DadosProduto rastrearProdutos() {
-		System.out.println("- Rastreio por Código");
 		DadosProduto resultado;
-		sc.nextLine();	
 		System.out.println("Digite o ID de rastreio do produto: ");
 		System.out.print("\n->");
+		
 		Integer idRastreio = sc.nextInt();
+		
 		resultado = Estoque.buscarIDBinarySearch(idRastreio);				
 		if (resultado == null) {
 			System.out.println("Produto: " + StatusProduto.INEXISTENTE);
 		}
+		System.out.println("Pressione enter para voltar");
+		sc.nextLine();
+		sc.nextLine();
 		//enum.codRastreio para saber onde está localizado em destaque no enum
 		return resultado;
 		//fazer print metodo static de utilidades.
@@ -49,7 +53,7 @@ public abstract class Utilizador <T> {
 		// contador para o total de produtos
 		long contador = 0;
 		for (DadosProduto produto : produtosListados) {
-			if (!(produto.getRecado() == null)) {
+			if (!(produto.getRecado().equals(null))) {
 				System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
 						produto.getRecado());
 				contador ++;
@@ -67,27 +71,38 @@ public abstract class Utilizador <T> {
 	public abstract void cadastro();
 	
 	public static void identificarCadastro(MenuUser status) {
-		System.out.println("Cadastrar:");
-		System.out.print("Seu nome: ");
-		String nome = sc.nextLine();
-		System.out.print("Seu e-mail: ");
-		String email = sc.next();
-		System.out.print("Sua senha: ");
-		String senha = sc.next();
-
-		if (status.equals(MenuUser.CLIENTE)) {
-			System.out.print("Seu cpf: ");
-			String cpf = sc.next();
-			Cliente pessoa = new Cliente(nome, email, senha, cpf);
-			pessoa.cadastro();
-		} else if (status.equals(MenuUser.FORNECEDOR)) {
-			Fornecedor pessoa = new Fornecedor(nome, email, senha);
-			pessoa.cadastro();
-		} else if (status.equals(MenuUser.FUNCIONARIO)) {
-			System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");
-		} else {
-			System.out.println("Operador não encontrado");
+		boolean opCadastro = true;
+		while (opCadastro) {
+			try {
+				System.out.println("Cadastrar:");
+				System.out.print("Seu nome: ");
+				String nome = sc.nextLine();
+				System.out.print("Seu e-mail: ");
+				String email = sc.next();
+				System.out.print("Sua senha: ");
+				String senha = sc.next();
+				
+				if (status.equals(MenuUser.CLIENTE)) {
+					System.out.print("Seu cpf: ");
+					String cpf = sc.next().replace(".", "").replace("-", "");
+					if (!ValidarDados.validarCPF(cpf)) {
+						throw new IllegalArgumentException("CPF inválido");
+					}
+					//testar sem - e .
+					Cliente pessoa = new Cliente(nome, email, senha, cpf);
+					pessoa.cadastro();
+				} else if (status.equals(MenuUser.FORNECEDOR)) {
+					Fornecedor pessoa = new Fornecedor(nome, email, senha);
+					pessoa.cadastro();
+				} else if (status.equals(MenuUser.FUNCIONARIO)) {
+					System.out.println("Um usuário só pode ser cadastrado por outro funcionário.");
+				} else {
+					System.out.println("Operador não encontrado");
+				}
+				opCadastro = false;
+			} catch (IllegalArgumentException e) {
+				System.out.printf("Erro, argumento inválido, %s, reiniciando o cadastro.\n" + e.getMessage());
+			}
 		}
-		// chamar o método cadastrarUser
 	}
 }

@@ -19,6 +19,7 @@ public class Programa {
 	public static void main(String[] args) {
 		
 		Estoque.atualizarSistema();
+		AplicarMenu.titulo();
 		
 		Scanner sc = new Scanner(System.in);
 
@@ -45,12 +46,6 @@ public class Programa {
 						System.out.println();
 						Utilizador.identificarCadastro(conta);
 					}
-					
-					//testar funcionamento do cadastro
-					Cliente cl = new Cliente();
-					ArrayList<Cliente> aa = cl.listarUsuarios("C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileClientes.txt");
-					cl.printarUsers(aa);
-					System.out.println();
 					// seleciona como deseja cadastrar: usuario, fornecedor
 					// cadastrarCliente(); // cadastra, coloca nos arquivos e volta ao menu com o
 					// break seguinte
@@ -81,11 +76,12 @@ public class Programa {
 				default:
 					break;
 				}
+				AplicarMenu.clearScreen();
 				operacao = choices[AplicarMenu.getRequest(2) - 1]; // Obtém a solicitação do usuário
 				// if T extends Utilizador else if Funcionario
 				// operacao vai carregar a opcao de usuario
 			}
-
+			
 			conta = choicesUser[AplicarMenu.getRequest(1) - 1];
 		}
 

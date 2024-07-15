@@ -60,39 +60,27 @@ public class Estoque implements Serializable {
 		}
 		EstoqueDespache.atualizarDespache();
 		ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutosEstoque());
-		
-		
-		int total = 50;
-		for (int i = 0; i <= total; i++) {
-            // Simulando um processo que leva tempo
-            try {
-                Thread.sleep(100); // Pausa por 100 milissegundos
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
-            // Atualizando a barra de carregamento
-            int progress = (i * 100) / total; // Calculando a porcentagem de progresso
-            StringBuilder barra = new StringBuilder("[");
-            for (int j = 0; j < total; j++) {
-                if (j < i) {
-                    barra.append("=");
-                } else {
-                    barra.append(" ");
-                }
-            }
-            barra.append("] " + progress + "%");
+		int totalSteps = 30; // Total de etapas da barra de carregamento
 
-            // Imprimindo a barra de carregamento
-            System.out.print("\r" + barra.toString());
-        }
+		System.out.print("Carregando Sistema: [");
 
-        System.out.println("\nCarregamento concluído!");
+		for (int i = 0; i < totalSteps; i++) {
+			System.out.print(".");
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				System.out.println("ERRO: " + e.getMessage());
+			}
+		}
+
+		System.out.println("] Concluído!");
+			
 	}
 
+
 	public final static ArrayList<DadosProduto> listaProdutosEstoque() {
-		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
-		listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
+		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
 		totalProdutos = listaProdutos.size();
 		return listaProdutos;
 		// construir ou retornar
@@ -173,7 +161,7 @@ public class Estoque implements Serializable {
 			if (ChronoUnit.DAYS.between(dadoProduto.getDataDeOperacao(), LocalDate.now()) > 30) {
 				dadoProduto.setStatus(StatusProduto.RETORNADO);
 				dadoProduto.setDataDeOperacao(agora);
-				dadoProduto.setNotaFiscal("NOTA DE PIRANGAGEM");
+				dadoProduto.setRecado("Nota de pirangagem"); // pense
 				despacharProduto(dadoProduto);
 			}
 			break;
@@ -186,15 +174,17 @@ public class Estoque implements Serializable {
 			break;
 		case PAGO:
 			canais.moldagemProduto();
+			// o método que setar como pago deve remover o recado do produto
 			// manda para canais, o valor será verde
 			break;
 		case REJEITADO:
 			// primeiro if significa que o fornecedor não forneceu o documento em 7 dias
 			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 7) {
-				dadoProduto.setNotaFiscal("Vencimento do prazo para documento");
+				dadoProduto.setRecado("Vencimento do prazo para documento rejeitado");
 				despacharProduto(dadoProduto);
 			} else if (dadoProduto.isDocumentos() == true) {
 				dadoProduto.setStatus(StatusProduto.FISCALIZANDO);
+				dadoProduto.setRecado(null);
 			}
 			break;
 		case INEXISTENTE:
@@ -216,7 +206,9 @@ public class Estoque implements Serializable {
 		// possivel efetuar o pagamento.
 	}
 
-	public void verificarPagamento() {
+	public void statusPago(int code) {
 
+		// produto.setStatus(StatusProduto.PAGO);
+		// produto.setRecado(null);
 	}
 }

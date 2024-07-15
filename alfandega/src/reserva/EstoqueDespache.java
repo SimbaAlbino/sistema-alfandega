@@ -31,15 +31,14 @@ public class EstoqueDespache implements Serializable {
 	}
 
 	public static ArrayList<DadosProduto> listaProdutosDespache() {
-		ArrayList<DadosProduto> listaProdutos = new ArrayList<>();
-		listaProdutos = ModelagemFile.desserializar(caminhoDespacheProduto);
+		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(caminhoDespacheProduto);
+		totalProdutosDespache = listaProdutos.size();
 		return listaProdutos;
 	}
 
 	
 	public static void atualizarDespache() {
-		ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
-		estoqueGeral = ModelagemFile.desserializar(caminhoDespacheProduto);
+		ArrayList<DadosProduto> estoqueGeral = ModelagemFile.desserializar(caminhoDespacheProduto);
 
 		Iterator<DadosProduto> iterator = estoqueGeral.iterator();
 		while (iterator.hasNext()) {
@@ -49,7 +48,6 @@ public class EstoqueDespache implements Serializable {
 			}
 		}
 
-		totalProdutosDespache = estoqueGeral.size();
 		ModelagemFile.serializar(caminhoDespacheProduto, estoqueGeral);
 	}
 	

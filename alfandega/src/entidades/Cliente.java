@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import aplicacao.AplicarMenu;
+import reserva.Estoque;
 import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
@@ -156,20 +157,20 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				switch (valor) {
 				case 1:
 					System.out.println("Listando produtos: ");
-					//this.printarProdutos(listarProdutos(Estoque.buscarClientEquals(this), Despache.buscarClientEquals(this)));
+					printarProdutos(Estoque.buscarClientEquals(this));
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 2:
 					//pagando
-					this.pagamento();
 					System.out.println("Quadro de pagamento: \n");
+					this.pagamento();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 3:
-					//this.listarDividas(null);
 					System.out.println("Quadro de dívidas: \n");
+					//this.listarDividas(null);
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -177,8 +178,8 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					// chamar usar o listar produtos para identificar se tem avisos canal e passar
 					// para a função.
 
-					//this.avisosCanal();
 					System.out.println("Quadro de avisos: \n");
+					avisosCanal(Estoque.buscarClientEquals(this));
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
