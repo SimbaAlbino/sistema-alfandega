@@ -1,26 +1,46 @@
 package sistemaInterno;
 
 import java.util.ArrayList;
+
 import entidades.Cliente;
-import reserva.Estoque;
 import entidades.DadosProduto;
+import utilidade.ModelagemFile;
 
-public class EstoqueDivida extends Estoque {
-	private ArrayList<Dividas> dividas;
+public class EstoqueDivida {
 
-	public EstoqueDivida() {
-		this.dividas = new ArrayList<>();
+	private static long totalDividas;
+
+	private static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
+
+	public static ArrayList<Dividas> listaDividas() {
+		ArrayList<Dividas> listaDividas = ModelagemFile.desserializar(getCaminhoBanco());
+		totalDividas = listaDividas.size();
+		return listaDividas;
+	}
+
+	public static void addDividas(Dividas dividas) {
+		ArrayList<Dividas> estoqueGeral = listaDividas();
+		estoqueGeral.add(dividas);
+		ModelagemFile.serializar(getCaminhoBanco(), estoqueGeral);
+		//
+	}
+
+	public synchronized static void removerDividas(Dividas dividas) {
+		ArrayList<Dividas> estoqueGeral = listaDividas();
+		estoqueGeral.remove(dividas);
+		ModelagemFile.serializar(getCaminhoBanco(), estoqueGeral);
+
 	}
 
 	public void lerEstoqueDividas() {
-		for (Dividas divida : dividas) {
+		for (Dividas divida : listaDividas()) {
 			System.out.println("Dívida de " + divida.getClientela().getNome() + ": " + divida.getMontante());
 		}
 	}
 
 	public double calcularDespesa() {
 		double total = 0;
-		for (Dividas divida : dividas) {
+		for (Dividas divida : listaDividas()) {
 			total += divida.getMontante();
 		}
 		return total;
@@ -33,14 +53,14 @@ public class EstoqueDivida extends Estoque {
 		if (dividaExistente == null) {
 			Dividas novaDivida = new Dividas(cliente);
 			novaDivida.selecionarProduto(produto);
-			dividas.add(novaDivida);
+			listaDividas().add(novaDivida);
 		} else {
 			dividaExistente.selecionarProduto(produto);
 		}
 	}
 
 	Dividas encontrarDividaPorCliente(Cliente cliente) {
-		for (Dividas divida : dividas) {
+		for (Dividas divida : listaDividas()) {
 			if (divida.getClientela().equals(cliente)) {
 				return divida;
 			}
@@ -49,10 +69,19 @@ public class EstoqueDivida extends Estoque {
 	}
 
 	public void addDividaFile(Dividas divida) {
-		dividas.add(divida);
+		listaDividas().add(divida);
 	}
 
 	public ArrayList<Dividas> getDividas() {
-		return dividas;
+		return listaDividas();
 	}
+
+	public static long getTotalDividas() {
+		return totalDividas;
+	}
+
+	public static String getCaminhoBanco() {
+		return caminhoBanco;
+	}
+
 }

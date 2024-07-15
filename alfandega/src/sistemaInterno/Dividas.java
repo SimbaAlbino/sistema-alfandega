@@ -106,5 +106,7 @@ public class Dividas implements Pagamento {
 			this.valor = valor;
 			this.produtos = new ArrayList<>(produtos);
 		}
+
 	}
+
 }
