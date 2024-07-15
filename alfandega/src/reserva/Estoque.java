@@ -31,7 +31,7 @@ public class Estoque implements Serializable {
 		return totalProdutos;
 	}
 
-	public synchronized void addProduto(DadosProduto produto) {
+	public synchronized static void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		estoqueGeral.add(produto);
 		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
@@ -162,6 +162,7 @@ public class Estoque implements Serializable {
 				dadoProduto.setStatus(StatusProduto.RETORNADO);
 				dadoProduto.setDataDeOperacao(agora);
 				dadoProduto.setRecado("Nota de pirangagem"); // pense
+				// REMOVER PRODUTO DO ESTOQUE DE DIVIDA ADD EstoqueDividas.removeDivida
 				despacharProduto(dadoProduto);
 			}
 			break;
@@ -174,6 +175,7 @@ public class Estoque implements Serializable {
 			break;
 		case PAGO:
 			canais.moldagemProduto();
+			// REMOVER PRODUTO DO ESTOQUE DE DIVIDA ADD EstoqueDividas.removeDivida
 			// o método que setar como pago deve remover o recado do produto
 			// manda para canais, o valor será verde
 			break;

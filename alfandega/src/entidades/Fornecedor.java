@@ -3,11 +3,15 @@ package entidades;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import aplicacao.AplicarMenu;
 import reserva.Estoque;
 import reserva.EstoqueDespache;
 import tiposProduto.Acessorios;
@@ -19,6 +23,7 @@ import tiposProduto.Mobilia;
 import tiposProduto.Produto;
 import tiposProduto.Roupa;
 import utilidade.ModelagemFile;
+import utilidade.ValidarDados;
 
 public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornecedor>, Serializable {
 
@@ -50,8 +55,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		this.emailFornecedor = emailFornecedor;
 		this.senha = senha;
 	}
-	
-	
+
 	// passando para o Funcionario apagar a conta
 	public Fornecedor(String emailFornecedor) {
 		this.emailFornecedor = emailFornecedor;
@@ -76,62 +80,101 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 	public void cadastrarProduto() {
 		Produto categoriaProduto = null;
+		boolean fimOp = false, temDoc = false;
+		String nomeCliente = null, cpfCliente = null, cep = null;
+		int quantidade = 0;
+		double preco = 0;
+		Integer tipoProduto = null;
+		short residencia = 0;
+		short iterador = 0;
 
-		System.out.print("Digite o nome do Cliente: ");
-		String nomeCliente = sc.nextLine();
-		System.out.print("Digite o CPF");
-		String cpfCliente = sc.next();
-		System.out.println();
-		System.out.print("Próxima etapa (Descrição do Produto): ");
-		System.out.print("Tipo de produto: ");
-		System.out.println("");
-		short tipoProduto = sc.nextShort();
-		System.out.print("Qual o preço da unidade? ");
-		double preco = sc.nextDouble();
-		System.out.print("Qual a quantidade? ");
-		int quantidade = sc.nextInt();
-		switch (tipoProduto) {
-		case 1:
-			categoriaProduto = new Acessorios(preco, quantidade);
-			break;
-		case 2:
-			categoriaProduto = new Automoveis(preco, quantidade);
-			break;
-		case 3:
-			categoriaProduto = new Eletrodomesticos(preco, quantidade);
-			break;
-		case 4:
-			categoriaProduto = new Ferramentas(preco, quantidade);
-			break;
-		case 5:
-			categoriaProduto = new Informatica(preco, quantidade);
-			break;
-		case 6:
-			categoriaProduto = new Mobilia(preco, quantidade);
-			break;
-		case 7:
-			categoriaProduto = new Roupa(preco, quantidade);
-			break;
-		default:
-			break;
+		String[] perguntas = { "Digite o nome do Cliente: ", "Digite o CPF",
+				"Próxima etapa (Descrição do Produto): \nTipo de produto: ", "Qual o preço da unidade? ",
+				"Qual a quantidade? ", "Você adicionou documentos ( S | N )? ", "Digite o cep: ",
+				"Digite o número da residência: " };
+
+		while (!fimOp) {
+			try {
+
+				for (; iterador < perguntas.length; iterador++) {
+					System.out.print(perguntas[iterador]);
+					switch (iterador) {
+					case 1:
+						nomeCliente = sc.nextLine();
+					case 2:
+						cpfCliente = sc.next().replace(".", "").replace("-", "");
+						if (!ValidarDados.validarCPF(cpfCliente)) {
+							throw new IllegalArgumentException("os dígitos de cpf ultrapassam 11");
+						}
+					case 3:
+						tipoProduto = AplicarMenu.getRequest(7); // fazer um get com todos os tipos de produto
+					case 4:
+						preco = sc.nextDouble();
+					case 5:
+						quantidade = sc.nextInt();
+					case 6:
+						String resposta = sc.next().toUpperCase();
+						if (resposta.charAt(0) == 'S') {
+							temDoc = true;
+						} else if (resposta.charAt(0) == 'N') {
+							temDoc = false;
+						} else {
+							throw new IllegalArgumentException("Digite (s/n) para Sim/Não");
+						}
+					case 7:
+						cep = sc.next();
+						if (!ValidarDados.validarCEP(cep)) {
+							throw new IllegalArgumentException("O valor do cep deve ter 8 dígitos");
+						}
+					case 8:
+						residencia = sc.nextShort();
+					default:
+						break;
+					}
+
+				}
+
+				criarProduto(tipoProduto, preco, quantidade);
+
+				// talvez fazer um vetor para percorrer
+
+				DadosProduto produto = new DadosProduto(new Cliente(nomeCliente, cpfCliente), this, categoriaProduto,
+						temDoc, new Endereco(cep, residencia));
+				Estoque.addProduto(produto);
+				fimOp = true;
+			} catch (InputMismatchException e) {
+				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
+				sc.nextLine();
+				sc.nextLine();
+			} catch (IllegalArgumentException e) {
+				System.out.println(
+						"Erro por argumento inválido, digite os dados do produto novamente: " + e.getMessage());
+				sc.nextLine();
+				sc.nextLine();
+			}
 		}
-		System.out.println();
-		System.out.print("Você adicionou documentos ( S | N )? ");
-		Boolean temDoc = (sc.next().toUpperCase().charAt(0) == 'S' | sc.next().toUpperCase().charAt(0) == 'N') ? true
-				: false;
-		System.out.println();
-		System.out.println();
-		System.out.print("Digite o cep: ");
-		String cep = sc.next();
-		System.out.println();
-		System.out.println("Digite o número da residência: ");
-		short residencia = sc.nextShort();
 
 		// Adicionando cliente referente ao produto
-		DadosProduto produto = new DadosProduto(new Cliente(nomeCliente, cpfCliente), this, categoriaProduto, temDoc,
-				new Endereco(cep, residencia));
-		Estoque.addProduto(produto);
 		System.out.println("Produto cadastrado no estoque");
+	}
+
+	private static Produto criarProduto(int tipoProduto, double preco, int quantidade) throws IllegalArgumentException {
+		Map<Integer, Produto> tipoProdutoMap = new HashMap<>();
+		// armazenar entradas chave-valor como um dicionário de um valor, único.
+		tipoProdutoMap.put(1, new Acessorios(preco, quantidade));
+		tipoProdutoMap.put(2, new Automoveis(preco, quantidade));
+		tipoProdutoMap.put(3, new Eletrodomesticos(preco, quantidade));
+		tipoProdutoMap.put(4, new Ferramentas(preco, quantidade));
+		tipoProdutoMap.put(5, new Informatica(preco, quantidade));
+		tipoProdutoMap.put(6, new Mobilia(preco, quantidade));
+		tipoProdutoMap.put(7, new Roupa(preco, quantidade));
+
+		Produto produto = tipoProdutoMap.get(tipoProduto);
+		if (produto == null) {
+			throw new IllegalArgumentException("Tipo de produto inválido");
+		}
+
+		return produto;
 	}
 
 	@Override
@@ -171,11 +214,12 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			if (valor > 0 || valor < 6) {
 				switch (valor) {
 				case 1:
-					//feito, mas precisa de throws
+					// feito, mas precisa de throws
 					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
 					// os seus produtos fornecidos
 					System.out.println("Listando produtos: ");
-					this.printarProdutos(listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
+					printarProdutos(
+							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -197,8 +241,9 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// para a função.
 
 					// this.avisosCanal();
-					this.avisosCanal(listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
-					//pegando aviso dos produtos em estoque e despachados
+					this.avisosCanal(
+							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
+					// pegando aviso dos produtos em estoque e despachados
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -218,49 +263,58 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	}
 
 	// seria interessante uma função que aceitasse um predicado no estoque
-	//recebendo 2 arrays, do estoque e do despache
+	// recebendo 2 arrays, do estoque e do despache
 	@Override
-	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache) {
-		//listar do fornecedor ou fornecedor entre tal cliente
+	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
+			ArrayList<DadosProduto> produtosDespache) {
+		// listar do fornecedor ou fornecedor entre tal cliente
 		List<DadosProduto> listaFiltrada = new ArrayList<>();
-		System.out.println("Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
+		System.out.println(
+				"Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
 		short tipoListagem = 0;
-		
+
 		List<DadosProduto> listaEstoque = Estoque.listaProdutosEstoque();
 		List<DadosProduto> listaDespache = EstoqueDespache.listaProdutosDespache();
-		
+
 		while (tipoListagem != 1 && tipoListagem != 2) {
 			tipoListagem = sc.nextShort();
 			if (tipoListagem == 1) {
-				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this)).collect(Collectors.toList());
-				listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this)).collect(Collectors.toList());
+				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this))
+						.collect(Collectors.toList());
+				listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this))
+						.collect(Collectors.toList());
 			} else if (tipoListagem == 2) {
 				System.out.println("Informe o CPF do cliente associado: ");
 				String cpfCliente = sc.nextLine();
 				Cliente cliente = new Cliente(cpfCliente);
-				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente)).collect(Collectors.toList());
-				listaEstoque = listaDespache.stream().filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente)).collect(Collectors.toList());
+				listaEstoque = listaEstoque.stream()
+						.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
+						.collect(Collectors.toList());
+				listaEstoque = listaDespache.stream()
+						.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
+						.collect(Collectors.toList());
 			} else {
 				System.out.println("Opção inválida, tente novamente.");
-				System.out.println("1 - Listar por Fornecedor associado\\n2 - Listar por Associação Fornecedor-Cliente");
+				System.out
+						.println("1 - Listar por Fornecedor associado\\n2 - Listar por Associação Fornecedor-Cliente");
 			}
 			listaFiltrada.addAll(listaDespache);
 			listaFiltrada.addAll(listaDespache);
-			//corrigir
+			// corrigir
 		}
 		return (ArrayList<DadosProduto>) listaFiltrada;
 	}
-	
+
 	@Override
 	public void removerUser(Fornecedor pessoa) {
 		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFileUser());
-        try {
-            fornecedores.removeIf(user -> user.equals(pessoa));
-        } catch (NullPointerException e) {
-            System.out.println("Erro ao listar o arquivo: " + e.getMessage());
-        }
-        ModelagemFile.serializar(getCaminhoFileUser(), fornecedores);
-    }
+		try {
+			fornecedores.removeIf(user -> user.equals(pessoa));
+		} catch (NullPointerException e) {
+			System.out.println("Erro ao listar o arquivo: " + e.getMessage());
+		}
+		ModelagemFile.serializar(getCaminhoFileUser(), fornecedores);
+	}
 
 	@Override
 	public int hashCode() {

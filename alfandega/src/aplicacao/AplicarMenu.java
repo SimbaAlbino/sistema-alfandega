@@ -1,6 +1,7 @@
 package aplicacao;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,6 +34,9 @@ public class AplicarMenu {
 		case 6:
 			opcoes = Arrays.asList("Documento do Produto", "Notificações do Produto", "Status do Produto", "Remoção do Produto");
 			break;
+		case 7:
+			opcoes = Arrays.asList("Acessórios", "Automóveis", "Eletrodomésticos", "Ferramentas", "Informática", "Mobília", "Roupa");
+			break;
 		default:
 			throw new IllegalArgumentException("Opção inválida, tente novamente");
 		}
@@ -47,20 +51,23 @@ public class AplicarMenu {
 		while (!entrada) {
 			try {
 				do { // Insere a solicitação de usuário
-					System.out.printf("%n-> ");
+					System.out.print("%n-> ");
 					String digito = input.nextLine().trim();
 					if (digito.isEmpty()) {
 						throw new IllegalArgumentException("Valor nulo lançado");
 					}
 					request = Integer.parseInt(digito);
 					clearScreen();
+					if (request < 1 || request > opcoes.size()) {
+						System.out.println("Valor fora dos parâmetros, digite entre 1 e " + opcoes.size());
+					}
 				} while ((request < 1) || (request > opcoes.size()));
 				clearScreen();
 				entrada = true;
-			} catch (IllegalArgumentException e) {
+			} catch (InputMismatchException e) {
 				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
 				input.nextLine();
-			} 
+			}
 		}
 		return request; // Retorna o valor enum da opção
 	}
