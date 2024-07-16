@@ -3,6 +3,7 @@ package entidades;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.InputMismatchException;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -115,6 +116,21 @@ public class DadosProduto implements Serializable {
 		// receber a lista de estoque e de despache e verificar se o id já existe
 		this.idRastreio = idGerado;
 	}
+	
+	//Default para o utilizador conseguir usar
+	String getIconeStatus() {
+	    if (this.getArmazenamentoAtual() == Local.ESTOQUE) {
+	        switch (this.getStatus()) {
+	            case REJEITADO: return "🔴";
+	            case FISCALIZANDO: return "⚫";
+	            case AGUARDANDO_PAGAMENTO: return "🟡";
+	            default: return "";
+	        }
+	    } else if (this.getArmazenamentoAtual() == Local.DESPACHE) {
+	        return "🟢";
+	    }
+	    return "";
+	}
 
 	// continuar
 	public void editarRemessa(int caso) throws InterruptedException, InputMismatchException {
@@ -166,6 +182,32 @@ public class DadosProduto implements Serializable {
 				break;
 			}
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(cliente, documentos, fornecedor, idRastreio);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DadosProduto other = (DadosProduto) obj;
+		return Objects.equals(cliente, other.cliente) && documentos == other.documentos
+				&& Objects.equals(fornecedor, other.fornecedor) && Objects.equals(idRastreio, other.idRastreio);
+	}
+
+	@Override
+	public String toString() {
+	    return String.format("%d %s %s %s",
+	        getIdRastreio(), getCliente().getCpf(), getStatus(), getDataDeOperacao());
+	}
+	
+	  
 
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente

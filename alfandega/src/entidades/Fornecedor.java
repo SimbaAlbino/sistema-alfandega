@@ -36,7 +36,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	private String nomeFornecedor;
 	private String emailFornecedor;
 	private String senha;
-	// coloco cpf?
+	
 	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 
 	// Construtor vazio para o menu
@@ -339,6 +339,13 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			return false;
 		Fornecedor other = (Fornecedor) obj;
 		return Objects.equals(emailFornecedor, other.emailFornecedor);
+	}
+	
+	
+
+	@Override
+	public String toString() {
+		return "[nomeFornecedor=" + nomeFornecedor + ", emailFornecedor=" + emailFornecedor + "]";
 	}
 
 	@Override

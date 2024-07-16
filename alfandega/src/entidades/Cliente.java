@@ -206,7 +206,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 
 	@Override
 	public String toString() {
-		return "Cliente [nomeCliente=" + nomeCliente + ", cpf=" + cpf + "]";
+		return "[nome=" + nomeCliente + ", cpf=" + cpf + "]";
 	}
 	
 	// parte de gabriel

@@ -411,6 +411,13 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		ModelagemFile.serializar(getCaminhoFileUser(), funcionarios);
 	}
 
+	@Override
+	public String toString() {
+		return "[nomeAdm=" + nomeAdm + ", cpf=" + cpf + "]";
+	}
+	
+	
+
 	// criar metodo cadastrar funcionario, pois ele só podera ser criado a partir de
 	// outro funcionario.
 

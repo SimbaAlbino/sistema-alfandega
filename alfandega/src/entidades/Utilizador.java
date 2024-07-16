@@ -55,20 +55,32 @@ public abstract class Utilizador<T> {
 		}
 	}
 
-	// passo a determinada lista para printar todos os produtos associados. tanto
-	// cliente, quanto fornecedor
+	
+
 	public static void printarProdutos(ArrayList<DadosProduto> listaTodosProdutos) {
-		System.out.println("Total de registros: " + listaTodosProdutos.size());
-		System.out.println();
-		System.out.println("🟡 indica que é preciso realizar ação para que o objeto seja encaminhado ao seu destino.");
-		System.out.println("🔴 simboliza que o produto será retornado por expirar");
-		System.out.println("⚫ mostra que o produto foi negado na alfândega e foi encaminhado para as autoridades.\n");
-		System.out.printf("%s", "aviso", "id", "cpf vinculado", "situação atual", "data da situação");
-		// recebendo uma lista já filtrada de todos produtos do cliente.
-		for (DadosProduto dadoProduto : listaTodosProdutos) {
-			// se não estiver no estoque, estará no despache
-			System.out.println(dadoProduto);
-		}
+	    System.out.println("Total de registros: " + listaTodosProdutos.size());
+	    System.out.println();
+	    System.out.println("🟡 - deve realizar pagamento.");
+	    System.out.println("🟢 - produto aprovado");
+	    System.out.println("🔴 - exige documento.");
+	    System.out.println("⚫ - fiscalizando\n");
+
+	    // Cabeçalhos das colunas
+	    String format = "%-8s %-20s %-15s %-20s %-20s";
+	    System.out.printf(format, "Aviso", "ID", "CPF Vinculado", "Situação Atual", "Data da Situação");
+	    System.out.println();
+	    System.out.println("--------------------------------------------------------------------------------------------");
+
+	    // Exibição dos produtos
+	    for (DadosProduto dadoProduto : listaTodosProdutos) {
+	        System.out.printf(format, 
+	            dadoProduto.getIconeStatus(), 
+	            dadoProduto.getIdRastreio(), 
+	            dadoProduto.getCliente().getCpf(), 
+	            dadoProduto.getStatus(), 
+	            dadoProduto.getDataDeOperacao());
+	        System.out.println();
+	    }
 	}
 
 	public void avisosCanal(ArrayList<DadosProduto> produtosListados) {
