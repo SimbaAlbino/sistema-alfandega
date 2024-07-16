@@ -185,9 +185,16 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					break;
 				case 5:
 					System.out.println("Saindo da conta...");
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						System.out.println("Erro no sleep: " + e.getMessage());
+					}
 					break;
 				default:
-					throw new IllegalArgumentException("Opção inválida, tente novamente");
+					System.out.println("Opção inválida. Pressione enter para voltar e tente novamente.");
+					sc.nextLine();
+					break;
 				}
 			} else {
 				System.out.println("Entrada inválida. Por favor, insira um número.");

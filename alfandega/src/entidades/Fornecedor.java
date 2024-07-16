@@ -209,7 +209,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		do {
 			System.out.print("Escolha uma opção: \n");
 
-			valor = sc.nextInt();
+			valor = AplicarMenu.getRequest(4);
 			// Verifique se a entrada é um inteiro válido
 			if (valor > 0 || valor < 6) {
 				switch (valor) {
@@ -240,15 +240,18 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// chamar usar o listar produtos para identificar se tem avisos canal e passar
 					// para a função.
 
-					// this.avisosCanal();
 					this.avisosCanal(
 							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
-					// pegando aviso dos produtos em estoque e despachados
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 5:
 					System.out.println("Saindo da conta...");
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						System.out.println("Erro no sleep: " + e.getMessage());
+					}
 					break;
 				default:
 					System.out.println("Opção inválida. Tente novamente.");
@@ -262,45 +265,50 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		System.out.println("Fim das operações de usuário.");
 	}
 
-	// seria interessante uma função que aceitasse um predicado no estoque
-	// recebendo 2 arrays, do estoque e do despache
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
 			ArrayList<DadosProduto> produtosDespache) {
 		// listar do fornecedor ou fornecedor entre tal cliente
 		List<DadosProduto> listaFiltrada = new ArrayList<>();
 		System.out.println(
-				"Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por Associação Fornecedor-Cliente");
+				"Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por associação Fornecedor-Cliente");
 		short tipoListagem = 0;
 
 		List<DadosProduto> listaEstoque = Estoque.listaProdutosEstoque();
 		List<DadosProduto> listaDespache = EstoqueDespache.listaProdutosDespache();
+		try {
+			do {
+				System.out.print("\n->");
+				tipoListagem = sc.nextShort();
+				if (tipoListagem == 1) {
+					listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this))
+							.collect(Collectors.toList());
+					listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this))
+							.collect(Collectors.toList());
+				} else if (tipoListagem == 2) {
+					System.out.println("Informe o CPF do cliente associado: ");
+					String cpfCliente = sc.next().replace(".", "").replace("-", "");
+					if (!ValidarDados.validarCPF(cpfCliente)) {
+						throw new IllegalArgumentException("número de dígites deve ser 11");
+					}
+					Cliente cliente = new Cliente(cpfCliente);
+					listaEstoque = listaEstoque.stream()
+							.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
+							.collect(Collectors.toList());
+					listaEstoque = listaDespache.stream()
+							.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
+							.collect(Collectors.toList());
+				} else {
+					System.out.println("Opção inválida, tente novamente.");
 
-		while (tipoListagem != 1 && tipoListagem != 2) {
-			tipoListagem = sc.nextShort();
-			if (tipoListagem == 1) {
-				listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this))
-						.collect(Collectors.toList());
-				listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this))
-						.collect(Collectors.toList());
-			} else if (tipoListagem == 2) {
-				System.out.println("Informe o CPF do cliente associado: ");
-				String cpfCliente = sc.nextLine();
-				Cliente cliente = new Cliente(cpfCliente);
-				listaEstoque = listaEstoque.stream()
-						.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
-						.collect(Collectors.toList());
-				listaEstoque = listaDespache.stream()
-						.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
-						.collect(Collectors.toList());
-			} else {
-				System.out.println("Opção inválida, tente novamente.");
-				System.out
-						.println("1 - Listar por Fornecedor associado\\n2 - Listar por Associação Fornecedor-Cliente");
-			}
-			listaFiltrada.addAll(listaDespache);
-			listaFiltrada.addAll(listaDespache);
-			// corrigir
+				}
+				listaFiltrada.addAll(listaDespache);
+				listaFiltrada.addAll(listaDespache);
+				// corrigir
+			} while (tipoListagem != 1 && tipoListagem != 2);
+		} catch (IllegalArgumentException e) {
+			System.out.printf("Erro, opção inválida, %s ,tente novamente, pressione enter.\n", e.getMessage());
+			sc.nextLine();
 		}
 		return (ArrayList<DadosProduto>) listaFiltrada;
 	}
@@ -336,7 +344,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	@Override
 	protected void pagamento() {
 		// TODO Auto-generated method stub
-
+		// pagamento fornecerá um cliente
 	}
 
 	public void verifPagamento(Cliente cliente) {
