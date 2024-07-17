@@ -36,7 +36,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	private String nomeFornecedor;
 	private String emailFornecedor;
 	private String senha;
-	
+
 	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 
 	// Construtor vazio para o menu
@@ -81,7 +81,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public void cadastrarProduto() {
 		Produto categoriaProduto = null;
 		boolean fimOp = false, temDoc = false;
-		String nomeCliente = null, cpfCliente = null, cep = null;
+		String nomeCliente = null, cpfCliente = null, cep = null, valorString = null;
 		int quantidade = 0;
 		double preco = 0;
 		Integer tipoProduto = null;
@@ -109,7 +109,15 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					case 3:
 						tipoProduto = AplicarMenu.getRequest(7); // fazer um get com todos os tipos de produto
 					case 4:
-						preco = sc.nextDouble();
+						valorString = sc.next();
+                        // Substituir a vírgula por ponto
+                        valorString = valorString.replace(',', '.');
+                        try {
+                            preco = Double.parseDouble(valorString);
+                        } catch (NumberFormatException e) {
+                            throw new IllegalArgumentException("Formato de preço inválido");
+                        }
+                        break;
 					case 5:
 						quantidade = sc.nextInt();
 					case 6:
@@ -340,8 +348,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		Fornecedor other = (Fornecedor) obj;
 		return Objects.equals(emailFornecedor, other.emailFornecedor);
 	}
-	
-	
 
 	@Override
 	public String toString() {

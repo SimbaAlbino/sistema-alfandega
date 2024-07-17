@@ -1,5 +1,6 @@
 package aplicacao;
 
+import java.util.Locale;
 import java.util.Scanner;
 
 import entidades.Cliente;
@@ -16,6 +17,8 @@ public class Programa {
 	final static MenuUser[] choicesUser = MenuUser.values();
 
 	public static void main(String[] args) {
+		
+		Locale.setDefault(Locale.US);
 		
 		Estoque.atualizarSistema();
 		AplicarMenu.titulo();
