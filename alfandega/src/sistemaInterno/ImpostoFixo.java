@@ -1,16 +1,45 @@
 package sistemaInterno;
 
+import entidades.DadosProduto;
+
 public class ImpostoFixo extends Impostos {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static final String TIPO_IMPOSTO = "Imposto Fixo";
-	private static final double VALOR_IMPOSTO_FIXO = 15.0;
+	private static double taxaImpostoFixo;
 
 	public ImpostoFixo() {
-		super(TIPO_IMPOSTO, VALOR_IMPOSTO_FIXO);
+
+	}
+
+	public ImpostoFixo(DadosProduto produto) {
+		super(produto); //
 	}
 
 	@Override
-	public double calcularImpostoTotal() {
-		adicionarValorRecolhido(VALOR_IMPOSTO_FIXO);
-		return VALOR_IMPOSTO_FIXO;
+	public void receberImpostos() {
+
+		adicionarImposto(getTipoImposto(), impostoProduto(getDadosProduto())); //
 	}
+
+	public static double impostoProduto(DadosProduto produto) {
+
+		return produto.getTipoProduto().getPrecoUnico() * getTaxaImpostoFixo();
+
+	}
+
+	public static double getTaxaImpostoFixo() {
+		return taxaImpostoFixo;
+	}
+
+	public static String getTipoImposto() {
+		return TIPO_IMPOSTO;
+	}
+
+	public static void setTaxaImpostoFixo(double taxaImpostoFixo) {
+		ImpostoFixo.taxaImpostoFixo = taxaImpostoFixo;
+	}
+
 }

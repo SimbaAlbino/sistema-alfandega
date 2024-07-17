@@ -12,18 +12,16 @@ import tiposProduto.Produto;
 
 public class Banco {
 	private List<Cliente> clientes;
-	private EstoqueDivida estoqueDivida;
 	private double saldoTotal;
 	private double icmsTotal;
 	private double ipiTotal;
 	private double impostoFixoTotal;
-
+// tem que acessar o estoque divida em estatico -> devido ao uso do seriarizable
 	private List<String> historicoPagamentos;
 	private List<String> historicoImpostos;
 
 	public Banco() {
 		this.clientes = new ArrayList<>();
-		this.estoqueDivida = new EstoqueDivida();
 		this.saldoTotal = 0;
 		this.icmsTotal = 0;
 		this.ipiTotal = 0;
@@ -32,6 +30,31 @@ public class Banco {
 		this.historicoImpostos = new ArrayList<>();
 	}
 
+	// Metodo liberarPedido - receber paaramentros(boolean - confirmando pagamento -
+	// fazer em dividas,, mostrar o cliente, receberProduto, )
+
+	// mostrar se eh verdadeiro, se for vai no estoque de divida -> lista -> busca o
+	// cliente -> busca o item associado ao cliente pelo ID, comparar se o produto
+	// eh igual ao outro
+	// se for verdadero entao esta aprovado e retorna true. se for falso retor
+	// sysout e falso.
+	
+	public boolean liberarPedido(Cliente cliente, DadosProduto produto) {
+        Dividas divida = EstoqueDivida.encontrarDividaPorCliente(cliente).stream()
+                .filter(d -> d.getDadoProduto().equals(produto))
+                .findFirst()
+                .orElse(null);
+
+        if (divida != null && !divida.dividaPendente()) {
+            System.out.println("Pedido liberado para o cliente: " + cliente.getNome());
+            return true;
+        } else {
+            System.out.println("Pedido não liberado. Dívida pendente ou produto não encontrado.");
+            return false;
+        }
+    }
+	
+	
 	public void adicionarCliente(Cliente cliente) {
 		clientes.add(cliente);
 	}
@@ -44,7 +67,7 @@ public class Banco {
 		saldoTotal = estoqueDivida.calcularDespesa();
 	}
 
-	public void calcularImpostos() {
+	public static void calcularImpostos() {
 		icmsTotal = 0;
 		ipiTotal = 0;
 		impostoFixoTotal = 0;

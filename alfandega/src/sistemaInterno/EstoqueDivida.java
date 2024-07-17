@@ -1,6 +1,8 @@
 package sistemaInterno;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import entidades.Cliente;
 import entidades.DadosProduto;
@@ -38,17 +40,17 @@ public class EstoqueDivida {
 		}
 	}
 
-	public double calcularDespesa() {
+	public double calcularDespesaDoPedido() { // De cada produto do cliente
 		double total = 0;
 		for (Dividas divida : listaDividas()) {
-			total += divida.getMontante();
+			quantidade = divida.getDadoProduto().getTipoProduto().getQuantidade();
 		}
 		return total;
 	}
 
-	public void selecionarProduto(DadosProduto produto) {
+	public void selecionarProduto(DadosProduto produto) { //
 		Cliente cliente = produto.getCliente();
-		Dividas dividaExistente = encontrarDividaPorCliente(cliente);
+		ArrayList<Dividas> dividaExistente = encontrarDividaPorCliente(cliente);
 
 		if (dividaExistente == null) {
 			Dividas novaDivida = new Dividas(cliente);
@@ -59,12 +61,14 @@ public class EstoqueDivida {
 		}
 	}
 
-	Dividas encontrarDividaPorCliente(Cliente cliente) {
-		for (Dividas divida : listaDividas()) {
-			if (divida.getClientela().equals(cliente)) {
-				return divida;
-			}
+	ArrayList<Dividas> encontrarDividaPorCliente(Cliente cliente) { //
+		List<Dividas> dividas = listaDividas().stream().filter(x -> x.getClientela().equals(cliente))
+				.collect(Collectors.toList()); // ArrayList<String> arrayList = new ArrayList<>(list);
+		if (dividas != null) {
+			ArrayList<Dividas> arrayDividas = new ArrayList<>(dividas);
+			return arrayDividas;
 		}
+
 		return null;
 	}
 

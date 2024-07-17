@@ -2,28 +2,22 @@ package sistemaInterno;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import entidades.Cliente;
 import entidades.DadosProduto;
 
 public class Dividas implements Pagamento {
-	private Cliente clientela;
 	private double montante;
+	private DadosProduto dadoProduto;
 	private List<DadosProduto> produtos;
-	private List<Divida> dividas;
 
-	public Dividas(Cliente clientela) {
-		this.clientela = clientela;
-		this.produtos = new ArrayList<>();
-		this.dividas = new ArrayList<>();
-		this.montante = 0.0;
+	public DadosProduto getDadoProduto() {
+		return dadoProduto;
 	}
 
-	private double calcularDespesa() {
-		double total = 0.0;
-		for (DadosProduto produto : produtos) {
-			total += produto.getTipoProduto().getPrecoUnico();
-		}
-		return total;
+	public Dividas(Cliente clientela, DadosProduto dadoProduto) {
+		this.dadoProduto = dadoProduto;
+		this.produtos = new ArrayList<>();
 	}
 
 	@Override
@@ -74,18 +68,17 @@ public class Dividas implements Pagamento {
 		montante += produto.getTipoProduto().getPrecoUnico();
 	}
 
-	public String processoCalculo() {
-		ICMS icms = new ICMS(montante);
-		double valorICMS = icms.calcularImpostoTotal();
+	public String detalharCalculoImposto() {
+		ICMS icms = new ICMS(dadoProduto);
+		icms.receberImpostos(dadoProduto);
 
-		IPI ipi = new IPI(montante);
-		double valorIPI = ipi.calcularImpostoTotal();
+		IPI ipi = new IPI(dadoProduto);
+		ipi.receberImpostos(dadoProduto);
 
-		ImpostoFixo impostoFixo = new ImpostoFixo();
-		double valorImpostoFixo = impostoFixo.calcularImpostoTotal();
+		ImpostoFixo impostoFixo = new ImpostoFixo(dadoProduto);
+		impostoFixo.receberImpostos(dadoProduto);
 
-		return "Cálculo de impostos:\n" + "ICMS: " + valorICMS + "\n" + "IPI: " + valorIPI + "\n" + "Imposto Fixo: "
-				+ valorImpostoFixo;
+		return Impostos.detalharImpostos();
 	}
 
 	public Cliente getClientela() {
@@ -106,7 +99,5 @@ public class Dividas implements Pagamento {
 			this.valor = valor;
 			this.produtos = new ArrayList<>(produtos);
 		}
-
 	}
-
 }

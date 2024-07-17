@@ -5,7 +5,6 @@ public interface Pagamento {
 
 	boolean liberarDivida();
 
-	boolean pagarPorPix(double valor);
+	boolean pagarGeral(double valor);
 
-	boolean pagarPorBoleto(double valor);
 }
