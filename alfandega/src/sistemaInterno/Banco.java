@@ -2,6 +2,7 @@ package sistemaInterno;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import entidades.Cliente;
 import entidades.DadosProduto;
 import entidades.Endereco;
@@ -11,21 +12,16 @@ import tiposProduto.Automoveis;
 import tiposProduto.Produto;
 
 public class Banco {
-	private List<Cliente> clientes;
 	private double saldoTotal;
-	private double icmsTotal;
-	private double ipiTotal;
-	private double impostoFixoTotal;
+	private Impostos imposto;
 // tem que acessar o estoque divida em estatico -> devido ao uso do seriarizable
 	private List<String> historicoPagamentos;
 	private List<String> historicoImpostos;
+	
+	private static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
 
 	public Banco() {
-		this.clientes = new ArrayList<>();
 		this.saldoTotal = 0;
-		this.icmsTotal = 0;
-		this.ipiTotal = 0;
-		this.impostoFixoTotal = 0;
 		this.historicoPagamentos = new ArrayList<>();
 		this.historicoImpostos = new ArrayList<>();
 	}
@@ -39,69 +35,36 @@ public class Banco {
 	// se for verdadero entao esta aprovado e retorna true. se for falso retor
 	// sysout e falso.
 	
-	public boolean liberarPedido(Cliente cliente, DadosProduto produto) {
-        Dividas divida = EstoqueDivida.encontrarDividaPorCliente(cliente).stream()
-                .filter(d -> d.getDadoProduto().equals(produto))
-                .findFirst()
-                .orElse(null);
-
+	public static void liberarPedido(Dividas divida) { // corrigir
         if (divida != null && !divida.dividaPendente()) {
-            System.out.println("Pedido liberado para o cliente: " + cliente.getNome());
-            return true;
+            System.out.println("Pedido liberado para o cliente: " + divida.getDadoProduto().getCliente());
+            EstoqueDivida.removerDivida(divida);
         } else {
             System.out.println("Pedido não liberado. Dívida pendente ou produto não encontrado.");
-            return false;
         }
     }
 	
-	
-	public void adicionarCliente(Cliente cliente) {
-		clientes.add(cliente);
-	}
-
-	public void adicionarDividaParaCliente(Cliente cliente, Dividas divida) {
-		estoqueDivida.addDividaFile(divida);
-	}
+	//metodo receber taxaProduto Banco.addInsumos() método que vai receber esse metodo de impostos calcularImpostoGeral(), serializar
 
 	public void calcularSaldoTotal() {
-		saldoTotal = estoqueDivida.calcularDespesa();
+		//calcular saldoBanco juntar o valor total icms, ipi, if, não é valor de uma compra, valor do maps do imposto
 	}
 
-	public static void calcularImpostos() {
-		icmsTotal = 0;
-		ipiTotal = 0;
-		impostoFixoTotal = 0;
-		for (Dividas divida : estoqueDivida.getDividas()) {
-			ICMS icms = new ICMS(divida.getMontante());
-			double valorICMS = icms.calcularImpostoTotal();
-			icmsTotal += valorICMS;
-
-			IPI ipi = new IPI(divida.getMontante());
-			double valorIPI = ipi.calcularImpostoTotal();
-			ipiTotal += valorIPI;
-
-			ImpostoFixo impostoFixo = new ImpostoFixo();
-			double valorImpostoFixo = impostoFixo.calcularImpostoTotal();
-			impostoFixoTotal += valorImpostoFixo;
-
-			historicoImpostos.add(String.format("Cliente: %s | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f",
-					divida.getClientela().getNome(), valorICMS, valorIPI, valorImpostoFixo));
-		}
-	}
+	
 
 	public void registrarPagamento(String metodo, Cliente cliente, double valor) {
 		historicoPagamentos
 				.add(String.format("Cliente: %s | Método: %s | Valor: %.2f", cliente.getNome(), metodo, valor));
 	}
 
-	public void exibirHistoricoPagamentos() {
+	public void exibirHistoricoPagamentos() { // cliente 
 		System.out.println("\nHistórico de Pagamentos:");
 		for (String registro : historicoPagamentos) {
 			System.out.println(registro);
 		}
 	}
 
-	public void exibirHistoricoImpostos() {
+	public void exibirHistoricoImpostos() { // cliente pagou tais impostos
 		System.out.println("\nHistórico de Impostos:");
 		for (String registro : historicoImpostos) {
 			System.out.println(registro);
@@ -124,7 +87,11 @@ public class Banco {
 		return impostoFixoTotal;
 	}
 
-	public void executarTestes() {
+	
+}
+
+/*
+ * public void executarTestes() {
 		System.out.println("Iniciando Testes do Banco...");
 
 		Cliente cliente1 = new Cliente("Gabriel", "el@gmail.com", "123", "123.456.789-00");
@@ -192,5 +159,4 @@ public class Banco {
 
 		exibirHistoricoPagamentos();
 		exibirHistoricoImpostos();
-	}
-}
+	}*/

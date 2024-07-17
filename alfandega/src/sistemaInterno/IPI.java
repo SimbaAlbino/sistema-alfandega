@@ -21,13 +21,11 @@ public class IPI extends Impostos {
 
 	@Override
 	public void receberImpostos() {
-
 		adicionarImposto(getTIPO_IMPOSTO(), impostoProduto(getDadosProduto())); // !!!!! USO DO GET
 
 	} 
 
 	public static double impostoProduto(DadosProduto produto) {
-
 		return produto.getTipoProduto().getPrecoUnico() * getTaxaIpi();
 
 	}

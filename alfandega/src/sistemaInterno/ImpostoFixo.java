@@ -20,7 +20,6 @@ public class ImpostoFixo extends Impostos {
 
 	@Override
 	public void receberImpostos() {
-
 		adicionarImposto(getTipoImposto(), impostoProduto(getDadosProduto())); //
 	}
 

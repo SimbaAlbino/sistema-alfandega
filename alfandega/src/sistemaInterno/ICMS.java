@@ -25,7 +25,6 @@ public class ICMS extends Impostos {
 	}
 
 	public static double impostoProduto(DadosProduto produto) {
-
 		return produto.getTipoProduto().getPrecoUnico() * getTaxaIcms();
 
 	}

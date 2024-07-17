@@ -12,7 +12,7 @@ public class EstoqueDivida {
 
 	private static long totalDividas;
 
-	private static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
+	private static String caminhoEstoqueDividas = "C:\\Users\\Pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDivida.txt";
 
 	public static ArrayList<Dividas> listaDividas() {
 		ArrayList<Dividas> listaDividas = ModelagemFile.desserializar(getCaminhoBanco());
@@ -27,42 +27,29 @@ public class EstoqueDivida {
 		//
 	}
 
-	public synchronized static void removerDividas(Dividas dividas) {
+	public synchronized static void removerDivida(Dividas dividas) {
 		ArrayList<Dividas> estoqueGeral = listaDividas();
 		estoqueGeral.remove(dividas);
 		ModelagemFile.serializar(getCaminhoBanco(), estoqueGeral);
 
 	}
 
-	public void lerEstoqueDividas() {
+	public static void lerEstoqueDividas() {
 		for (Dividas divida : listaDividas()) {
-			System.out.println("Dívida de " + divida.getClientela().getNome() + ": " + divida.getMontante());
+			System.out.println("Dívida de " + divida.getDadoProduto().getCliente().getNome() + ": " + divida.getMontante());
 		}
 	}
-
-	public double calcularDespesaDoPedido() { // De cada produto do cliente
-		double total = 0;
-		for (Dividas divida : listaDividas()) {
-			quantidade = divida.getDadoProduto().getTipoProduto().getQuantidade();
-		}
-		return total;
+	
+	//metodo para encontrar uma divida a partir de um produto
+	public static Dividas encontrarDividaPorProduto(DadosProduto produto) { //corrigir este metodo
+		//parecido com o de baixo
+		return null;
 	}
 
-	public void selecionarProduto(DadosProduto produto) { //
-		Cliente cliente = produto.getCliente();
-		ArrayList<Dividas> dividaExistente = encontrarDividaPorCliente(cliente);
-
-		if (dividaExistente == null) {
-			Dividas novaDivida = new Dividas(cliente);
-			novaDivida.selecionarProduto(produto);
-			listaDividas().add(novaDivida);
-		} else {
-			dividaExistente.selecionarProduto(produto);
-		}
-	}
-
-	ArrayList<Dividas> encontrarDividaPorCliente(Cliente cliente) { //
-		List<Dividas> dividas = listaDividas().stream().filter(x -> x.getClientela().equals(cliente))
+	//metodo para listar todas as dividas do cliente
+	//quando o cliente quiser saber quais dividas tem
+	public static ArrayList<Dividas> encontrarDividasPorCliente(Cliente cliente) { //
+		List<Dividas> dividas = listaDividas().stream().filter(x -> x.getDadoProduto().getCliente().equals(cliente))
 				.collect(Collectors.toList()); // ArrayList<String> arrayList = new ArrayList<>(list);
 		if (dividas != null) {
 			ArrayList<Dividas> arrayDividas = new ArrayList<>(dividas);
@@ -72,20 +59,11 @@ public class EstoqueDivida {
 		return null;
 	}
 
-	public void addDividaFile(Dividas divida) {
-		listaDividas().add(divida);
-	}
-
-	public ArrayList<Dividas> getDividas() {
-		return listaDividas();
-	}
-
 	public static long getTotalDividas() {
 		return totalDividas;
 	}
 
 	public static String getCaminhoBanco() {
-		return caminhoBanco;
+		return caminhoEstoqueDividas;
 	}
-
 }

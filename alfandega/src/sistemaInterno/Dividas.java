@@ -9,20 +9,17 @@ import entidades.DadosProduto;
 public class Dividas implements Pagamento {
 	private double montante;
 	private DadosProduto dadoProduto;
-	private List<DadosProduto> produtos;
-
-	public DadosProduto getDadoProduto() {
-		return dadoProduto;
-	}
 
 	public Dividas(Cliente clientela, DadosProduto dadoProduto) {
 		this.dadoProduto = dadoProduto;
-		this.produtos = new ArrayList<>();
+		setMontante(calcularDespesaPedidoTot(dadoProduto));
 	}
 
+	// arrumar
+	// se a divida desse produto for 0, significa que pagou
 	@Override
 	public boolean dividaPendente() {
-		return montante > 0;
+		return !(montante == 0);
 	}
 
 	@Override
@@ -37,35 +34,27 @@ public class Dividas implements Pagamento {
 		}
 	}
 
-	@Override
-	public boolean pagarPorPix(double valor) {
-		return realizarPagamento(valor, "PIX");
-	}
+	// metodo para pagar que retorna um boolean
 
-	@Override
-	public boolean pagarPorBoleto(double valor) {
-		return realizarPagamento(valor, "boleto");
-	}
+	// se for true
+	private void realizarPagamento(boolean pago) {
+		
+		if (!pagarProduto()) {
+			// pensar
+			System.out.println("Valor indisponível para pagamento via .");
 
-	private boolean realizarPagamento(double valor, String metodo) {
-		if (valor < 0) {
-			System.out.println("Valor indisponível para pagamento via " + metodo + ".");
-			return false;
-		}
-		if (valor >= montante) {
-			liberarDivida();
-			return true;
 		} else {
-			montante -= valor;
-			System.out
-					.println("Pagamento via " + metodo + " de " + valor + " realizado. Montante restante: " + montante);
-			return false;
-		}
-	}
+			// quando pagamento confirmado
+			// corrigir mensagem
+			// setMontante(0);
+			// mostrar pagamento de getmontante sendo executado.
+			// Banco.addInsumos(); para add valor do imposto
+			Banco.liberarPedido(this);
 
-	public void selecionarProduto(DadosProduto produto) {
-		produtos.add(produto);
-		montante += produto.getTipoProduto().getPrecoUnico();
+			// -> quem faz é o banco
+
+			// msg pagamento confirmado
+		}
 	}
 
 	public String detalharCalculoImposto() {
@@ -81,23 +70,30 @@ public class Dividas implements Pagamento {
 		return Impostos.detalharImpostos();
 	}
 
-	public Cliente getClientela() {
-		return clientela;
-	}
-
 	public double getMontante() {
 		return montante;
 	}
 
-	private class Divida {
-		private Cliente cliente;
-		private double valor;
-		private List<DadosProduto> produtos;
+	public void setMontante(double montante) {
+		this.montante = montante;
+	}
 
-		public Divida(Cliente cliente, double valor, List<DadosProduto> produtos) {
-			this.cliente = cliente;
-			this.valor = valor;
-			this.produtos = new ArrayList<>(produtos);
-		}
+	//criar metodo do boleto
+	//criar o metodo do pix que mandei no disc
+	
+	//fazer
+	public boolean pagarProduto() {
+		// usar métodos que passou de pix e boleto no disc se quiser pix digite 1, 2
+		// para boleto
+		// pagar (s/n)? se sim transfer realiada return true // pagamento autorizado
+		// chamar a função calcular despesas pedido total para descobri o valor total a
+		// ser pago
+		return false;
+	}
+
+	@Override
+	public DadosProduto getDadosProduto() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
