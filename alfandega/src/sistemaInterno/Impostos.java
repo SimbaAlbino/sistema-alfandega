@@ -1,54 +1,65 @@
 package sistemaInterno;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 import entidades.DadosProduto;
 
 public abstract class Impostos implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L; //
-	protected static ICMS icms;
-	protected static IPI ipi;
-	protected static ImpostoFixo impostoFixo;
+	protected ICMS icms;
+	protected IPI ipi;
+	protected ImpostoFixo impostoFixo;
 	protected DadosProduto dadosProduto; ///
+	protected double precoUnico;
+	
+	
 
 	public Impostos() {
 	}
 
-	// Map público e estático
-	public static Map<String, Double> impostosMap = new HashMap<>();
-
-	public Impostos(DadosProduto dadosProduto) {
-		this.dadosProduto = dadosProduto;
+	public Impostos(double precoUnico) {
+		this.precoUnico = precoUnico;
 	}
 
 	// Método abstrato que cada subclasse irá implementar
 	public abstract void receberImpostos();
-
+	//recebe impostos para o banco
+	
+	
 	// Método para adicionar um imposto específico ao mapa -> vai acumular icms, ipi
 	// e imposto Fixo (IMPOSTO TOTAL)
-	public static void adicionarImposto(String chave, double valor) {
-		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
+
+	public static String[] calcularImpostos(DadosProduto produto, int code) { // [pedro,2.5,8.5,2.9,somatotimposto]
+		String[] historicoImposto;
+
+		ICMS icms = new ICMS(produto.getTipoProduto().getPrecoUnico());
+		double valorICMS = icms.impostoProduto();
+
+		IPI ipi = new IPI(produto.getTipoProduto().getPrecoUnico());
+		double valorIPI = ipi.impostoProduto();
+
+		ImpostoFixo impostoFixo = new ImpostoFixo(produto);
+		double valorImpostoFixo = impostoFixo.impostoProduto();
+
+		double valorTotal = valorICMS + valorIPI + valorImpostoFixo;
+		
+		if (code == 0) {
+			historicoImposto = new String[] { produto.getCliente().getNome(), String.format("%.2f", valorICMS),
+					String.format("%.2f", valorIPI), String.format("%.2f", valorImpostoFixo),
+					String.format("%.2f", valorTotal) };
+			// historicoImpostos.add(registro); verificar
+			return historicoImposto;
+		} else if (code == 1) {
+			icms.receberImpostos();
+			ipi.receberImpostos();
+			impostoFixo.receberImpostos();
+			return null;
+		}
+		return null;
 	}
 
-	// Método para calcular o imposto total a partir do map
-	public static double calcularImpostoGeral() {
-		return impostosMap.values().stream().mapToDouble(Double::doubleValue).sum();
-	}
-
-	public static void setBaseImposto(double ipi, double icms, double impostoFixo) {
-
-		IPI.setTaxaIpi(ipi);
-		ICMS.setTaxaIcms(icms);
-		ImpostoFixo.setTaxaImpostoFixo(impostoFixo);
-	}
-
-	public static double[] baseImpostos() { // vetor
+	public static double[] getBaseImpostos() { // vetor
 		double[] vetorImposto = new double[3];
 
 		vetorImposto[0] = IPI.getTaxaIpi();
@@ -56,54 +67,24 @@ public abstract class Impostos implements Serializable {
 		vetorImposto[2] = ImpostoFixo.getTaxaImpostoFixo(); // Ja pode instanciar ja
 
 		return vetorImposto; // tem que retornar o vetor.
-
 	}
 
-	// Método para detalhar os impostos
-	public static String detalharImpostos() {
-		StringBuilder detalhes = new StringBuilder();
-		for (Map.Entry<String, Double> entry : impostosMap.entrySet()) {
-			detalhes.append(String.format("%s: %.2f\n", entry.getKey(), entry.getValue()));
-		}
-		return detalhes.toString();
-	}
-	
-	//corrigir
-	public static void calcularImpostos() {
-		icmsTotal = 0;
-		ipiTotal = 0;
-		impostoFixoTotal = 0;
-		for (Dividas divida : estoqueDivida.getDividas()) {
-			ICMS icms = new ICMS(divida.getMontante());
-			double valorICMS = icms.calcularImpostoTotal();
-			icmsTotal += valorICMS;
-
-			IPI ipi = new IPI(divida.getMontante());
-			double valorIPI = ipi.calcularImpostoTotal();
-			ipiTotal += valorIPI;
-
-			ImpostoFixo impostoFixo = new ImpostoFixo();
-			double valorImpostoFixo = impostoFixo.calcularImpostoTotal();
-			impostoFixoTotal += valorImpostoFixo;
-
-			historicoImpostos.add(String.format("Cliente: %s | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f",
-					divida.getClientela().getNome(), valorICMS, valorIPI, valorImpostoFixo));
-		}
+	public static void setBaseImposto(double ipi, double icms, DadosProduto produto) {
+		IPI.setTaxaIpi(ipi);
+		ICMS.setTaxaIcms(icms);
+		ImpostoFixo.setTaxaImpostoFixo(produto);
 	}
 
 	public DadosProduto getDadosProduto() {
 		return dadosProduto;
 	}
 
-	public static ICMS getIcms() {
+	public ICMS getIcms() {
 		return icms;
 	}
 
-	public static ImpostoFixo getImpostoFixo() {
+	public ImpostoFixo getImpostoFixo() {
 		return impostoFixo;
 	}
 
-	public static Map<String, Double> getImpostosMap() {
-		return impostosMap;
-	}
 }

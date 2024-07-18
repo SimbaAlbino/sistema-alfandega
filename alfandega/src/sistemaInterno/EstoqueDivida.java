@@ -34,31 +34,35 @@ public class EstoqueDivida {
 
 	}
 
-	public static void lerEstoqueDividas() {
-		for (Dividas divida : listaDividas()) {
-			System.out.println("Dívida de " + divida.getDadoProduto().getCliente().getNome() + ": " + divida.getMontante());
-		}
-	}
+	 public static void lerEstoqueDividas() {
+	        for (Dividas divida : listaDividas()) {
+	            System.out.println("Dívida de " + divida.getDadosProduto().getCliente().getNome() + ": " + divida.getMontante());
+	        }
+	    }
 	
 	//metodo para encontrar uma divida a partir de um produto
-	public static Dividas encontrarDividaPorProduto(DadosProduto produto) { //corrigir este metodo
-		//parecido com o de baixo
-		return null;
-	}
+	public static Dividas encontrarDividaPorProduto(DadosProduto produto) {
+        for (Dividas divida : listaDividas()) {
+            if (divida.getDadosProduto().equals(produto)) {
+                return divida;
+            }
+        }
+        return null;
+    }
 
 	//metodo para listar todas as dividas do cliente
 	//quando o cliente quiser saber quais dividas tem
-	public static ArrayList<Dividas> encontrarDividasPorCliente(Cliente cliente) { //
-		List<Dividas> dividas = listaDividas().stream().filter(x -> x.getDadoProduto().getCliente().equals(cliente))
-				.collect(Collectors.toList()); // ArrayList<String> arrayList = new ArrayList<>(list);
-		if (dividas != null) {
-			ArrayList<Dividas> arrayDividas = new ArrayList<>(dividas);
-			return arrayDividas;
-		}
-
-		return null;
-	}
-
+	 public static ArrayList<Dividas> encontrarDividasPorCliente(Cliente cliente) {
+	        List<Dividas> dividas = listaDividas().stream()
+	                .filter(x -> x.getDadosProduto().getCliente().equals(cliente))
+	                .collect(Collectors.toList());
+	        if (dividas != null) {
+	            return new ArrayList<>(dividas);
+	        }
+	        return null;
+	    }
+	 
+	 
 	public static long getTotalDividas() {
 		return totalDividas;
 	}

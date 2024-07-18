@@ -3,15 +3,13 @@ package sistemaInterno;
 import entidades.DadosProduto;
 
 public interface Pagamento {
-	
+
 	DadosProduto getDadosProduto();
 
 	boolean dividaPendente();
 
-	boolean liberarDivida();
-	
-	default double calcularDespesaPedidoTot(DadosProduto produto) {
-		return ICMS.impostoProduto(getDadosProduto()) + IPI.impostoProduto(getDadosProduto()) + ImpostoFixo.impostoProduto(getDadosProduto());
+	default void printarDivida(String[] registro) {
+		System.out.printf("Cliente: %s | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f| Total: %.2f ", registro[0],
+				registro[1], registro[2], registro[3], registro[4]);
 	}
-
 }

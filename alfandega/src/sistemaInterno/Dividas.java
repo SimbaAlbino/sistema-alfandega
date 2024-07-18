@@ -1,28 +1,29 @@
 package sistemaInterno;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
+import java.util.Scanner;
 
 import entidades.Cliente;
 import entidades.DadosProduto;
+import reserva.Estoque;
+import reserva.StatusProduto;
 
 public class Dividas implements Pagamento {
 	private double montante;
 	private DadosProduto dadoProduto;
+	private static final int SIZE = 21; // Tamanho do "QR code"
+	private Scanner sc = new Scanner(System.in);
 
 	public Dividas(Cliente clientela, DadosProduto dadoProduto) {
 		this.dadoProduto = dadoProduto;
-		setMontante(calcularDespesaPedidoTot(dadoProduto));
+		// colocar montante;
 	}
 
-	// arrumar
-	// se a divida desse produto for 0, significa que pagou
 	@Override
 	public boolean dividaPendente() {
-		return !(montante == 0);
+		return montante != 0;
 	}
 
-	@Override
 	public boolean liberarDivida() {
 		if (dividaPendente()) {
 			montante = 0;
@@ -34,66 +35,137 @@ public class Dividas implements Pagamento {
 		}
 	}
 
-	// metodo para pagar que retorna um boolean
-
-	// se for true
-	private void realizarPagamento(boolean pago) {
-		
-		if (!pagarProduto()) {
-			// pensar
-			System.out.println("Valor indisponível para pagamento via .");
-
-		} else {
-			// quando pagamento confirmado
-			// corrigir mensagem
-			// setMontante(0);
-			// mostrar pagamento de getmontante sendo executado.
-			// Banco.addInsumos(); para add valor do imposto
-			Banco.liberarPedido(this);
-
-			// -> quem faz é o banco
-
-			// msg pagamento confirmado
-		}
-	}
-
-	public String detalharCalculoImposto() {
-		ICMS icms = new ICMS(dadoProduto);
-		icms.receberImpostos(dadoProduto);
-
-		IPI ipi = new IPI(dadoProduto);
-		ipi.receberImpostos(dadoProduto);
-
-		ImpostoFixo impostoFixo = new ImpostoFixo(dadoProduto);
-		impostoFixo.receberImpostos(dadoProduto);
-
-		return Impostos.detalharImpostos();
-	}
-
 	public double getMontante() {
 		return montante;
 	}
 
-	public void setMontante(double montante) {
-		this.montante = montante;
-	}
-
-	//criar metodo do boleto
-	//criar o metodo do pix que mandei no disc
-	
-	//fazer
-	public boolean pagarProduto() {
-		// usar métodos que passou de pix e boleto no disc se quiser pix digite 1, 2
-		// para boleto
-		// pagar (s/n)? se sim transfer realiada return true // pagamento autorizado
-		// chamar a função calcular despesas pedido total para descobri o valor total a
-		// ser pago
-		return false;
+	//ver se precisa:
+	public void setImpostos() {
+		// alterar talvez
+		Impostos.setBaseImposto(0.11, 0.20, getDadosProduto());
 	}
 
 	@Override
 	public DadosProduto getDadosProduto() {
-		// TODO Auto-generated method stub
-		return null;
+		return dadoProduto;
 	}
+
+	// Gera um "QR code" aleatório
+	private static char[][] gerarPix() {
+		char[][] qrCode = new char[SIZE][SIZE];
+		Random random = new Random();
+
+		for (int i = 0; i < SIZE; i++) {
+			for (int j = 0; j < SIZE; j++) {
+				qrCode[i][j] = random.nextBoolean() ? '█' : ' ';
+			}
+		}
+
+		return qrCode;
+	}
+
+	// Imprime o "QR code" no console
+	private static void printPix(char[][] qrCode) {
+		for (char[] row : qrCode) {
+			for (char cell : row) {
+				System.out.print(cell);
+			}
+			System.out.println();
+		}
+	}
+
+	// Gera uma sequência de 44 dígitos para o código de barras do boleto
+	private static String generateCodigoBarras() {
+		Random random = new Random();
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < 44; i++) {
+			sb.append(random.nextInt(10));
+		}
+		return sb.toString();
+	}
+
+	// Imprime a representação ASCII do código de barras
+	private static void printCodigoBarras(String codigoBarras) {
+		System.out.println("-------------------------------------------------");
+		System.out.println("|                    CÓDIGO DE BARRAS                    |");
+		System.out.println("-------------------------------------------------");
+
+		for (int i = 0; i < codigoBarras.length(); i += 4) {
+			String segment = codigoBarras.substring(i, Math.min(i + 4, codigoBarras.length()));
+			for (char c : segment.toCharArray()) {
+				if (c % 2 == 0) {
+					System.out.print("█");
+				} else {
+					System.out.print(" ");
+				}
+			}
+		}
+
+		System.out.println();
+		System.out.println("-------------------------------------------------");
+		System.out.println("Código: " + codigoBarras);
+		System.out.println("-------------------------------------------------");
+	}
+
+	public void pagar(DadosProduto produto) {
+		// lá em cima eu instancio a divida no metodo pagar
+		if (produto.getStatus() == StatusProduto.AGUARDANDO_PAGAMENTO) {
+			// considerando que a dívida já está no estoqueDividas
+			metodoPagamento();
+		} else {
+			System.out.println("O produto não aguarda um pagamento, verifique o seu status.");
+		}
+	}
+
+	// Método para pagar produto chamado pelo cliente ou fornecedor
+
+	public void metodoPagamento() {
+		// Chama o método que especifica o imposto pago e o imposto total (se existir)
+		printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
+		System.out.println("Escolha o método de pagamento: ");
+		System.out.println("1. PIX");
+		System.out.println("2. Boleto");
+
+		int metodo = sc.nextInt();
+		sc.nextLine(); // Consumir a nova linha
+
+		switch (metodo) {
+		case 1:
+			System.out.println("Pagamento via PIX selecionado.");
+			char[][] qrCode = gerarPix();
+			printPix(qrCode);
+			break;
+		case 2:
+			System.out.println("Pagamento via Boleto selecionado.");
+			String codigoBarras = generateCodigoBarras();
+			printCodigoBarras(codigoBarras);
+			break;
+		default:
+			System.out.println("Método de pagamento inválido.");
+			return;
+		}
+
+		System.out.println("Deseja realizar o pagamento? (s/n)");
+		String confirmacao = sc.nextLine();
+
+		if (confirmacao.equalsIgnoreCase("s")) {
+			confirmarPagamento(true);
+		} else {
+			System.out.println("Pagamento não autorizado.");
+		}
+	}
+
+	// Método para realizar o pagamento
+	private void confirmarPagamento(boolean pago) {
+		if (!pago) {
+			System.out.println("Pagamento não confirmado, fim da operação de pagamento.");
+		} else {
+			Impostos.calcularImpostos(dadoProduto, 1);
+			Banco.liberarPedido(this);
+			Estoque.statusPago(getDadosProduto());
+			
+			System.out.println("Pagamento confirmado.");
+		}
+	}
+
 }

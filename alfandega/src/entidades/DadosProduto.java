@@ -212,7 +212,3 @@ public class DadosProduto implements Serializable {
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
 }
-/*
- * @Override public int compareTo(DadosProduto dadoProduto) { return
- * Integer.compare(this.idRastreio, dadoProduto.getIdRastreio()); }
- */

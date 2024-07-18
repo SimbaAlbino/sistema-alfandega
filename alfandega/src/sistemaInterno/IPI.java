@@ -1,7 +1,5 @@
 package sistemaInterno;
 
-import entidades.DadosProduto;
-
 public class IPI extends Impostos {
 	/**
 	 * 
@@ -9,25 +7,24 @@ public class IPI extends Impostos {
 	private static final long serialVersionUID = 1L;
 	public static String TIPO_IMPOSTO = "IPI";
 	private static double taxaIpi;
+	private double precoUnico;
 	// private static double taxaIpi = 0.11;
 
 	public IPI() { // CONST. VAZIO CTRL + SPACE
 
 	}
 
-	public IPI(DadosProduto produto) {
-		super(produto);
+	public IPI(double precoUnico) {
+		super(precoUnico);
 	}
 
 	@Override
 	public void receberImpostos() {
-		adicionarImposto(getTIPO_IMPOSTO(), impostoProduto(getDadosProduto())); // !!!!! USO DO GET
-
+		Banco.adicionarImposto(getTIPO_IMPOSTO(), impostoProduto()); // !!!!! USO DO GET
 	} 
 
-	public static double impostoProduto(DadosProduto produto) {
-		return produto.getTipoProduto().getPrecoUnico() * getTaxaIpi();
-
+	public double impostoProduto() {
+		return getPrecoUnico() * getTaxaIpi();
 	}
 
 	public static String getTIPO_IMPOSTO() {
@@ -40,6 +37,10 @@ public class IPI extends Impostos {
 
 	public static void setTaxaIpi(double taxaIpi) {
 		IPI.taxaIpi = taxaIpi;
+	}
+	
+	public double getPrecoUnico() {
+		return precoUnico;
 	}
 
 }

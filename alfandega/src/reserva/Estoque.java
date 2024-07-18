@@ -208,9 +208,8 @@ public class Estoque implements Serializable {
 		// possivel efetuar o pagamento.
 	}
 
-	public void statusPago(int code) {
-
-		// produto.setStatus(StatusProduto.PAGO);
-		// produto.setRecado(null);
+	public static void statusPago(DadosProduto produto) {
+		produto.setStatus(StatusProduto.PAGO);
+		produto.setRecado(null);
 	}
 }
