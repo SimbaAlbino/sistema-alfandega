@@ -29,7 +29,7 @@ public class AplicarMenu {
 			opcoes = Arrays.asList("Listar produtos fornecidos","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
 			break;
 		case 5:
-			opcoes = Arrays.asList("Editar Produto", "Editar Cliente/Fornecedor", "Editar Funcionario", "Editar Divida", "Registrar Funcionário","Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
+			opcoes = Arrays.asList("Editar Produto", "Editar Cliente/Fornecedor", "Editar Funcionario", "Operações de Banco e Pagamento", "Registrar Funcionário","Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
 			break;
 		case 6:
 			opcoes = Arrays.asList("Documento do Produto", "Notificações do Produto", "Status do Produto", "Remoção do Produto");
@@ -37,6 +37,8 @@ public class AplicarMenu {
 		case 7:
 			opcoes = Arrays.asList("Acessórios", "Automóveis", "Eletrodomésticos", "Ferramentas", "Informática", "Mobília", "Roupa");
 			break;
+		case 8:
+			opcoes = Arrays.asList("Exibir saldo total do banco","Exibir histórico de pagamentos","Exibir valores gerais de impostos","Ler estoque de dívidas","Exibir impostos");
 		default:
 			throw new IllegalArgumentException("Opção inválida, tente novamente");
 		}
@@ -51,7 +53,7 @@ public class AplicarMenu {
 		while (!entrada) {
 			try {
 				do { // Insere a solicitação de usuário
-					System.out.print("%n-> ");
+					System.out.print("\n-> ");
 					String digito = input.nextLine().trim();
 					if (digito.isEmpty()) {
 						throw new IllegalArgumentException("Valor nulo lançado");

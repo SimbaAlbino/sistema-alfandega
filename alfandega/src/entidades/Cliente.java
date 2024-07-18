@@ -2,11 +2,15 @@ package entidades;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import aplicacao.AplicarMenu;
 import reserva.Estoque;
+import sistemaInterno.Dividas;
+import sistemaInterno.EstoqueDivida;
 import utilidade.ModelagemFile;
 
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
@@ -67,8 +71,9 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	}
 
 	@Override
-	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache ) {
-		//recebendo uma lista já filtrada dos produtos do cliente Estoque-Despache.
+	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
+			ArrayList<DadosProduto> produtosDespache) {
+		// recebendo uma lista já filtrada dos produtos do cliente Estoque-Despache.
 		ArrayList<DadosProduto> listaGeralProdutos = new ArrayList<>();
 		for (DadosProduto dadoProduto : produtosEstoque) {
 			// se não estiver no estoque, estará no despache
@@ -124,18 +129,17 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void removerUser(Cliente pessoa) {
 		ArrayList<Cliente> clientes = listarUsuarios(getCaminhoFileUser());
-        try {
-            clientes.removeIf(user -> user.equals(pessoa));
-        } catch (NullPointerException e) {
-            System.out.println("Erro ao listar o arquivo: " + e.getMessage());
-        }
-        ModelagemFile.serializar(caminhoClientesFile, clientes);
-    }
-
+		try {
+			clientes.removeIf(user -> user.equals(pessoa));
+		} catch (NullPointerException e) {
+			System.out.println("Erro ao listar o arquivo: " + e.getMessage());
+		}
+		ModelagemFile.serializar(caminhoClientesFile, clientes);
+	}
 
 	// equals já está sendo usado para o cpf
 	public boolean equalsByEmailAndSenha(String email, String senha) {
@@ -144,6 +148,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 
 	@Override
 	public void operacoesUser() {
+
 		System.out.println("Operações de Cliente: ");
 		System.out.println();
 		int valor = 0;
@@ -162,15 +167,15 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					sc.nextLine();
 					break;
 				case 2:
-					//pagando
+					// pagando
 					System.out.println("Quadro de pagamento: \n");
-					this.pagamento();
+					pagamento();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 3:
 					System.out.println("Quadro de dívidas: \n");
-					//this.listarDividas(null);
+					dividasCliente();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -200,6 +205,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				System.out.println("Entrada inválida. Por favor, insira um número.");
 				sc.nextLine(); // Consumir a entrada inválida
 			}
+			Estoque.atualizarSistema();
 		} while (valor != 5);
 		System.out.println("Fim das operações de usuário.");
 	}
@@ -208,16 +214,19 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	public String toString() {
 		return "[nome=" + nomeCliente + ", cpf=" + cpf + "]";
 	}
-	
-	// parte de gabriel
-	@Override
-	protected void pagamento() {
-		// TODO Auto-generated method stub
 
+	// metodo mostrar dividas por cliente fazer !!!!
+	protected void dividasCliente() {
+		for (Dividas divCliente : EstoqueDivida.encontrarDividasPorCliente(this)) {
+			System.out.println(divCliente);
+		}
 	}
 
 	@Override
 	public void listarDividas() {
-
+		System.out.println("Mostrando Dívidas relacionadas ao cliente.");
+		List<Dividas> dividasUtilziador = EstoqueDivida.listaDividas().stream()
+				.filter(x -> x.getDadosProduto().getCliente().equals(this)).collect(Collectors.toList());
+		dividasUtilziador.forEach(System.out::println);
 	}
 }

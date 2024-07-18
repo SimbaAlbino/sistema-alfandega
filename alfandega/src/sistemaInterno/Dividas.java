@@ -3,7 +3,6 @@ package sistemaInterno;
 import java.util.Random;
 import java.util.Scanner;
 
-import entidades.Cliente;
 import entidades.DadosProduto;
 import reserva.Estoque;
 import reserva.StatusProduto;
@@ -12,11 +11,98 @@ public class Dividas implements Pagamento {
 	private double montante;
 	private DadosProduto dadoProduto;
 	private static final int SIZE = 21; // Tamanho do "QR code"
-	private Scanner sc = new Scanner(System.in);
+	private static Scanner sc = new Scanner(System.in);
 
-	public Dividas(Cliente clientela, DadosProduto dadoProduto) {
+	// ao declarar um produto como taxado, passar a dívida referente no montante -
+	// confirmar
+	// se a dívida não está no estoque de dívidas
+
+	public Dividas(DadosProduto dadoProduto) {
 		this.dadoProduto = dadoProduto;
 		// colocar montante;
+	}
+
+	public void setMontante() {
+		String[] montanteDivida = Impostos.calcularImpostos(getDadosProduto(), 0);
+		this.montante = Double.parseDouble(montanteDivida[4]);
+	}
+
+	public double getMontante() {
+		return montante;
+	}
+
+	// ver se precisa:
+
+	@Override
+	public DadosProduto getDadosProduto() {
+		return dadoProduto;
+	}
+
+	public void pagar() {
+		Banco.loadDadosBanco();
+		// lá em cima eu instancio a divida no metodo pagar
+		if (getDadosProduto().getStatus() == StatusProduto.AGUARDANDO_PAGAMENTO) {
+			// considerando que a dívida já está no estoqueDividas
+			metodoPagamento();
+		} else {
+			System.out.println("O produto não aguarda um pagamento, verifique o seu status.");
+		}
+	}
+
+	// Método para pagar produto chamado pelo cliente ou fornecedor
+
+	public void metodoPagamento() {
+		// Chama o método que especifica o imposto pago e o imposto total (se existir)
+		try {
+			Pagamento.printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
+			System.out.println("Escolha o método de pagamento: ");
+			System.out.println("1. PIX");
+			System.out.println("2. Boleto");
+
+			int metodo = sc.nextInt();
+			sc.nextLine(); // Consumir a nova linha
+
+			switch (metodo) {
+			case 1:
+				System.out.println("Pagamento via PIX selecionado.");
+				char[][] qrCode = gerarPix();
+				printPix(qrCode);
+				break;
+			case 2:
+				System.out.println("Pagamento via Boleto selecionado.");
+				String codigoBarras = generateCodigoBarras();
+				printCodigoBarras(codigoBarras);
+				break;
+			default:
+				System.out.println("Método de pagamento inválido.");
+				return;
+			}
+
+			System.out.println("Deseja realizar o pagamento? (s/n)");
+			char confirmacao = sc.nextLine().toLowerCase().charAt(0);
+
+			if (confirmacao == 's') {
+				confirmarPagamento(true);
+			} else {
+				System.out.println("Pagamento não autorizado.");
+			}
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro ao processar o pagamento: " + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	// Método para realizar o pagamento
+	private void confirmarPagamento(boolean pago) {
+		if (!pago) {
+			System.out.println("Pagamento não confirmado, fim da operação de pagamento.");
+		} else {
+			Impostos.calcularImpostos(dadoProduto, 1);
+			Banco.liberarPedido(this);
+			Estoque.statusPago(getDadosProduto());
+			Estoque.atualizarSistema();
+			System.out.println("Pagamento confirmado.");
+		}
 	}
 
 	@Override
@@ -33,21 +119,6 @@ public class Dividas implements Pagamento {
 			System.out.println("Não há dívida pendente.");
 			return false;
 		}
-	}
-
-	public double getMontante() {
-		return montante;
-	}
-
-	//ver se precisa:
-	public void setImpostos() {
-		// alterar talvez
-		Impostos.setBaseImposto(0.11, 0.20, getDadosProduto());
-	}
-
-	@Override
-	public DadosProduto getDadosProduto() {
-		return dadoProduto;
 	}
 
 	// Gera um "QR code" aleatório
@@ -107,65 +178,9 @@ public class Dividas implements Pagamento {
 		System.out.println("-------------------------------------------------");
 	}
 
-	public void pagar(DadosProduto produto) {
-		// lá em cima eu instancio a divida no metodo pagar
-		if (produto.getStatus() == StatusProduto.AGUARDANDO_PAGAMENTO) {
-			// considerando que a dívida já está no estoqueDividas
-			metodoPagamento();
-		} else {
-			System.out.println("O produto não aguarda um pagamento, verifique o seu status.");
-		}
-	}
-
-	// Método para pagar produto chamado pelo cliente ou fornecedor
-
-	public void metodoPagamento() {
-		// Chama o método que especifica o imposto pago e o imposto total (se existir)
-		printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
-		System.out.println("Escolha o método de pagamento: ");
-		System.out.println("1. PIX");
-		System.out.println("2. Boleto");
-
-		int metodo = sc.nextInt();
-		sc.nextLine(); // Consumir a nova linha
-
-		switch (metodo) {
-		case 1:
-			System.out.println("Pagamento via PIX selecionado.");
-			char[][] qrCode = gerarPix();
-			printPix(qrCode);
-			break;
-		case 2:
-			System.out.println("Pagamento via Boleto selecionado.");
-			String codigoBarras = generateCodigoBarras();
-			printCodigoBarras(codigoBarras);
-			break;
-		default:
-			System.out.println("Método de pagamento inválido.");
-			return;
-		}
-
-		System.out.println("Deseja realizar o pagamento? (s/n)");
-		String confirmacao = sc.nextLine();
-
-		if (confirmacao.equalsIgnoreCase("s")) {
-			confirmarPagamento(true);
-		} else {
-			System.out.println("Pagamento não autorizado.");
-		}
-	}
-
-	// Método para realizar o pagamento
-	private void confirmarPagamento(boolean pago) {
-		if (!pago) {
-			System.out.println("Pagamento não confirmado, fim da operação de pagamento.");
-		} else {
-			Impostos.calcularImpostos(dadoProduto, 1);
-			Banco.liberarPedido(this);
-			Estoque.statusPago(getDadosProduto());
-			
-			System.out.println("Pagamento confirmado.");
-		}
+	@Override
+	public String toString() {
+		return "Dividas: [ montante= " + getMontante() + ", cliente=" + getDadosProduto().getCliente().getNome() + "]";
 	}
 
 }

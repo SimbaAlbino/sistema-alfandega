@@ -71,9 +71,9 @@ public class Programa {
 						}
 						if (usuario.confirmarUser(usuario.loginUser())) {
 							usuario.operacoesUser();
+							//atualizar console depois das operações de usuario dentro do método
 						}
-						//atualizar console depois das operações de usuario
-						Estoque.atualizarSistema();
+						
 					// operações
 				default:
 					break;

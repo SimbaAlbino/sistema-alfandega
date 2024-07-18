@@ -38,6 +38,7 @@ public class ModelagemFile {
             }
         } else {
             System.out.println("Arquivo não encontrado ou está vazio.");
+            return null;
             /*if (!file.exists()) {
             	criarArquivo(caminhoFile);
             }*/

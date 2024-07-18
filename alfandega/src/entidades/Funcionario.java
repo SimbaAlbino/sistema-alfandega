@@ -11,6 +11,7 @@ import aplicacao.AplicarMenu;
 import reserva.Estoque;
 import reserva.EstoqueDespache;
 import reserva.Local;
+import sistemaInterno.Banco;
 import utilidade.ModelagemFile;
 import utilidade.ValidarDados;
 
@@ -283,7 +284,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	                        sc.nextLine(); // Consumir a nova linha pendente
 	                        break;
 	                    case 4:
-	                        System.out.println("Operações de edição de dívida: ");
+	                        System.out.println("Operações de Banco e Pagamentos: ");
+	                        Banco.operacaoFuncionario();
 	                        System.out.println("Pressione Enter para voltar");
 	                        sc.nextLine(); // Consumir a nova linha pendente
 	                        break;
@@ -373,6 +375,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	                System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 7.");
 	                sc.nextLine(); // Consumir a entrada inválida
 	            }
+	            Estoque.atualizarSistema();
+	            
 	        } catch (InterruptedException e) {
 	            System.out.println("Erro no sleep thread.");
 	            sc.nextLine(); // Consumir a nova linha pendente

@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 import aplicacao.AplicarMenu;
 import reserva.Estoque;
 import reserva.EstoqueDespache;
+import sistemaInterno.Dividas;
+import sistemaInterno.EstoqueDivida;
 import tiposProduto.Acessorios;
 import tiposProduto.Automoveis;
 import tiposProduto.Eletrodomesticos;
@@ -233,14 +235,15 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					break;
 				case 2:
 					// pagando
-					this.pagamento();
+					System.out.println("Quadro de pagamento: \n");
+					pagamento();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 3:
-					// this.listarDividas(null);
-					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
 					// os seus produtos fornecidos
+					System.out.println("Dividas relacionadas ao fornecedor.\n");
+					listarDividas();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -269,6 +272,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				System.out.println("Entrada inválida. Por favor, insira um número.");
 				sc.nextLine(); // Consumir a entrada inválida
 			}
+			Estoque.atualizarSistema();
 		} while (valor != 5);
 		System.out.println("Fim das operações de usuário.");
 	}
@@ -354,20 +358,23 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		return "[nomeFornecedor=" + nomeFornecedor + ", emailFornecedor=" + emailFornecedor + "]";
 	}
 
-	@Override
-	protected void pagamento() {
-		// TODO Auto-generated method stub
-		// pagamento fornecerá um cliente
-	}
-
 	public void verifPagamento(Cliente cliente) {
-
+		
 	}
-
+	
 	@Override
 	public void listarDividas() {
-		// TODO Auto-generated method stub
-
+		try {
+			System.out.println("Mostrando Dívidas relacionadas ao fornecedor.");
+			List<Dividas> dividasUtiliziador = EstoqueDivida.listaDividas().stream().filter(x -> x.getDadosProduto().getFornecedor().equals(this)).collect(Collectors.toList());
+			if (dividasUtiliziador != null)
+				dividasUtiliziador.forEach(System.out::println);
+			else
+				System.out.println("Você não possui dívidas vinculadas.");
+		} catch (Exception e) {
+	        System.out.println("A sua listagem de dívidas não é acessível." + e.getMessage());
+	    }
+		
 	}
 
 }

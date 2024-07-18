@@ -175,9 +175,6 @@ public class Estoque implements Serializable {
 			break;
 		case PAGO:
 			canais.moldagemProduto();
-			// REMOVER PRODUTO DO ESTOQUE DE DIVIDA ADD EstoqueDividas.removeDivida
-			// o método que setar como pago deve remover o recado do produto
-			// manda para canais, o valor será verde
 			break;
 		case REJEITADO:
 			// primeiro if significa que o fornecedor não forneceu o documento em 7 dias
@@ -199,13 +196,6 @@ public class Estoque implements Serializable {
 		default:
 			break;
 		}
-	}
-
-	// ver se ainda precisa
-	public void clienteSubtotal() {
-		// subtotal de todos os produtos relacionados ao cliente, tanto o preço total de
-		// compra, quanto o imposto aplicado para cada compra, a partir daqui será
-		// possivel efetuar o pagamento.
 	}
 
 	public static void statusPago(DadosProduto produto) {

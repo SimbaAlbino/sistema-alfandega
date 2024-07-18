@@ -41,13 +41,13 @@ public class EstoqueDivida {
 	    }
 	
 	//metodo para encontrar uma divida a partir de um produto
-	public static Dividas encontrarDividaPorProduto(DadosProduto produto) {
+	public static boolean encontrarDivida(DadosProduto produto) {
         for (Dividas divida : listaDividas()) {
             if (divida.getDadosProduto().equals(produto)) {
-                return divida;
+                return true;
             }
         }
-        return null;
+        return false;
     }
 
 	//metodo para listar todas as dividas do cliente

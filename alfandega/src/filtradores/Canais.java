@@ -6,6 +6,8 @@ import java.time.temporal.ChronoUnit;
 import entidades.DadosProduto;
 import reserva.Estoque;
 import reserva.StatusProduto;
+import sistemaInterno.Dividas;
+import sistemaInterno.EstoqueDivida;
 import tiposProduto.Informatica;
 
 public class Canais {
@@ -83,6 +85,9 @@ public class Canais {
 		case CANAL_AMARELO:
 			getProduto().setStatus(StatusProduto.AGUARDANDO_PAGAMENTO);
 			getProduto().setDataDeOperacao(LocalDate.now());
+			Dividas divida = new Dividas(getProduto());
+			divida.setMontante();
+			EstoqueDivida.addDividas(divida);
 			// chamar a operação de adicionar dívida
 			break;
 		case CANAL_VERDE:

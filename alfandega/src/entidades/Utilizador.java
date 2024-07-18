@@ -7,13 +7,13 @@ import java.util.Scanner;
 import aplicacao.MenuUser;
 import reserva.Estoque;
 import reserva.StatusProduto;
+import sistemaInterno.Dividas;
+import sistemaInterno.EstoqueDivida;
 import utilidade.ValidarDados;
 
 public abstract class Utilizador<T> {
 
 	static Scanner sc = new Scanner(System.in);
-
-	protected abstract void pagamento();
 
 	public abstract void cadastro();
 
@@ -137,6 +137,48 @@ public abstract class Utilizador<T> {
 				System.out.printf("Erro, argumento inválido, %s, reiniciando o cadastro.\n" + e.getMessage());
 			}
 		}
+	}
+	
+	protected void pagamento() {
+		boolean continuar = true;
+		while (continuar) {
+			System.out.println("Informe o código do produto ou pressione Enter para sair: ");
+			try {
+				String input = sc.nextLine();
+
+				// Verificar se o usuário pressionou Enter
+				if (input.isEmpty()) {
+					continuar = false;
+					System.out.println("Saindo...");
+					continue;
+				}
+
+				int code = Integer.parseInt(input);
+
+				if (ValidarDados.validarIdProduto(code)) {
+					try {
+						DadosProduto produto = Estoque.buscarIDBinarySearch(code);
+						if (EstoqueDivida.encontrarDivida(produto)) {
+							Dividas div = new Dividas(produto);
+							div.pagar();
+						} else {
+							System.out.println("O produto informado não está no estoque de dívidas.");
+						}
+					} catch (Exception e) {
+						System.out.println("Erro ao buscar o produto: " + e.getMessage());
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println("Código de produto inválido.");
+				}
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida. Por favor, informe um número.");
+			} catch (Exception e) {
+				System.out.println("Erro geral: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		sc.close();
 	}
 
 }

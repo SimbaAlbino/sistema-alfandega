@@ -69,10 +69,9 @@ public abstract class Impostos implements Serializable {
 		return vetorImposto; // tem que retornar o vetor.
 	}
 
-	public static void setBaseImposto(double ipi, double icms, DadosProduto produto) {
+	public static void setBaseImposto(double ipi, double icms) {
 		IPI.setTaxaIpi(ipi);
 		ICMS.setTaxaIcms(icms);
-		ImpostoFixo.setTaxaImpostoFixo(produto);
 	}
 
 	public DadosProduto getDadosProduto() {
