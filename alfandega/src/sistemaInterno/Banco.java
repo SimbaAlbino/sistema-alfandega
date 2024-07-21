@@ -13,7 +13,6 @@ import java.util.Scanner;
 
 import aplicacao.AplicarMenu;
 import entidades.DadosProduto;
-import reserva.Estoque;
 import utilidade.ModelagemFile;
 
 public class Banco implements Pagamento {

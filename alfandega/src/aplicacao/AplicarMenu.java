@@ -26,7 +26,7 @@ public class AplicarMenu {
 			opcoes = Arrays.asList("Listar produtos associados a conta", "Fazer pagamento", "Dívidas", "Notificações de produto", "Sair da conta");
 			break;
 		case 4:
-			opcoes = Arrays.asList("Listar produtos fornecidos","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
+			opcoes = Arrays.asList("Listar produtos fornecidos","Cadastrar Produto","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
 			break;
 		case 5:
 			opcoes = Arrays.asList("Editar Produto", "Editar Cliente/Fornecedor", "Editar Funcionario", "Operações de Banco e Pagamento", "Registrar Funcionário","Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");

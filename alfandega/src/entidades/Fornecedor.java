@@ -235,19 +235,26 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					break;
 				case 2:
 					// pagando
+					System.out.println("Cadastro de produto: \n");
+					cadastrarProduto();
+					System.out.println("Pressione Enter para voltar");
+					sc.nextLine();
+					break;
+				case 3:
+					// pagando
 					System.out.println("Quadro de pagamento: \n");
 					pagamento();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
-				case 3:
+				case 4:
 					// os seus produtos fornecidos
 					System.out.println("Dividas relacionadas ao fornecedor.\n");
 					listarDividas();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
-				case 4:
+				case 5:
 					// chamar usar o listar produtos para identificar se tem avisos canal e passar
 					// para a função.
 
@@ -256,7 +263,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
-				case 5:
+				case 6:
 					System.out.println("Saindo da conta...");
 					try {
 						Thread.sleep(2000);
