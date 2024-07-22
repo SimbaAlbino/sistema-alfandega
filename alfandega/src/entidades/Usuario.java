@@ -3,6 +3,7 @@ package entidades;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import aplicacao.AplicarMenu;
 import utilidade.ModelagemFile;
 
 public interface Usuario<T> {
@@ -43,6 +44,7 @@ public interface Usuario<T> {
 				dados[0] = sc.next();
 				System.out.print("Senha: ");
 				dados[1] = sc.next();
+				sc.nextLine();
 				if (confirmarUser(dados)) {
 					break;
 				} else {
@@ -54,6 +56,7 @@ public interface Usuario<T> {
 				throw new IllegalArgumentException(
 						"Seus dados não correnspondem ao sistema. Tente novamente mais tarde.");
 			} else {
+				AplicarMenu.clearScreen();
 				System.out.println("Bem-vindo ao Sistema Alfândega.");
 			}
 		} catch (IllegalArgumentException e) {

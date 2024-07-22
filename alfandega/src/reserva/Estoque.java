@@ -167,7 +167,7 @@ public class Estoque implements Serializable {
 			}
 			break;
 		case FISCALIZANDO: {
-			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 3) {
+			if (ChronoUnit.MINUTES.between(dataOperacaoDeProduto, agora) > 3) {
 				canais.moldagemProduto();
 				// manda para canais
 			}
@@ -189,7 +189,8 @@ public class Estoque implements Serializable {
 		case INEXISTENTE:
 			// feito
 			// Remover o produto caso a data de inexistência declarada pelo funcionario.
-			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 3) {
+			// O código deveria mostrar 3 days between, mas para uso didático, coloquei 3
+			if (ChronoUnit.MINUTES.between(dataOperacaoDeProduto, agora) > 3) {
 				removerProdutoEstoque(dadoProduto);
 			}
 			break;

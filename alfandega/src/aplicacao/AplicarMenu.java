@@ -45,14 +45,16 @@ public class AplicarMenu {
 		
 		boolean entrada = false;
 		int request = 4;
-		short contador = 1;
+		short contador;
 		// Exibe opções de solicitação
-		for (String opcao : opcoes) {
-			System.out.printf("%d - %s\n", contador++, opcao);
-		}
-		while (!entrada) {
+		
+		do {
+			contador = 1;
+			for (String opcao : opcoes) {
+				System.out.printf("%d - %s\n", contador++, opcao);
+			}
 			try {
-				do { // Insere a solicitação de usuário
+				 // Insere a solicitação de usuário
 					System.out.print("\n-> ");
 					String digito = input.nextLine().trim();
 					if (digito.isEmpty()) {
@@ -62,15 +64,18 @@ public class AplicarMenu {
 					clearScreen();
 					if (request < 1 || request > opcoes.size()) {
 						System.out.println("Valor fora dos parâmetros, digite entre 1 e " + opcoes.size());
+					} else {
+						entrada = true;
 					}
-				} while ((request < 1) || (request > opcoes.size()));
-				clearScreen();
-				entrada = true;
 			} catch (InputMismatchException e) {
 				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
 				input.nextLine();
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida, por favor insira um número. Digite enter para tentar novamente.");
+				input.nextLine();
 			}
-		}
+		} while (!entrada || (request < 1) || (request > opcoes.size()));
+		clearScreen();
 		return request; // Retorna o valor enum da opção
 	}
 	

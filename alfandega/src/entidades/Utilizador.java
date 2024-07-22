@@ -109,12 +109,17 @@ public abstract class Utilizador<T> {
 				System.out.println("Cadastrar:");
 				System.out.print("Seu nome: ");
 				String nome = sc.nextLine();
+				if (!ValidarDados.validarNome(nome))
+					throw new IllegalArgumentException("Nome inválido");
 				System.out.print("Seu e-mail: ");
 				String email = sc.next();
 				if (!ValidarDados.validarEmail(email))
-					System.out.print("Sua senha: ");
+					throw new IllegalArgumentException("Email inválido");
+				System.out.print("Sua senha: ");
 				String senha = sc.next();
-
+				if (!ValidarDados.validarSenha(senha)) {
+					throw new IllegalArgumentException("senha inválida, precisa conter pelo menos 6 dígitos");
+				}
 				if (status.equals(MenuUser.CLIENTE)) {
 					System.out.print("Seu cpf: ");
 					String cpf = sc.next().replace(".", "").replace("-", "");
@@ -132,9 +137,10 @@ public abstract class Utilizador<T> {
 				} else {
 					System.out.println("Operador não encontrado");
 				}
+				sc.nextLine();
 				opCadastro = false;
 			} catch (IllegalArgumentException e) {
-				System.out.printf("Erro, argumento inválido, %s, reiniciando o cadastro.\n" + e.getMessage());
+				System.out.printf("Erro, argumento inválido, %s, reiniciando o cadastro.\n", e.getMessage());
 			}
 		}
 	}
@@ -169,7 +175,7 @@ public abstract class Utilizador<T> {
 						e.printStackTrace();
 					}
 				} else {
-					System.out.println("Código de produto inválido.");
+					System.out.println("Código de produto inválido. O id deve ter 6 dígitos.");
 				}
 			} catch (NumberFormatException e) {
 				System.out.println("Entrada inválida. Por favor, informe um número.");
@@ -178,7 +184,6 @@ public abstract class Utilizador<T> {
 				e.printStackTrace();
 			}
 		}
-		sc.close();
 	}
 
 }

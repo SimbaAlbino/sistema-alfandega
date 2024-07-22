@@ -1,6 +1,7 @@
 package aplicacao;
 
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import entidades.Cliente;
@@ -11,50 +12,52 @@ import entidades.Utilizador;
 import reserva.Estoque;
 
 public class Programa {
-	
-	//instanciar um unico scanner
+
+	// instanciar um unico scanner
 	final static MenuInicial[] choices = MenuInicial.values();
 	final static MenuUser[] choicesUser = MenuUser.values();
 
 	public static void main(String[] args) {
 		
 		Locale.setDefault(Locale.US);
-		
+
 		Estoque.atualizarSistema();
 		AplicarMenu.titulo();
-		
+
 		Scanner sc = new Scanner(System.in);
 
-		MenuUser conta = choicesUser[AplicarMenu.getRequest(1) - 1];
-		
-		while (conta != MenuUser.FINALIZAR) {
-			if (conta == MenuUser.FINALIZAR) {
-				break;
-			}
+		try {
 
-			MenuInicial operacao = choices[AplicarMenu.getRequest(2) - 1];
+			MenuUser conta = choicesUser[AplicarMenu.getRequest(1) - 1];
 
-			while (operacao != MenuInicial.VOLTAR) {
-				switch (operacao) {
-				case RASTREAR:
-					System.out.printf("%nRastreamento:%n");
-					Utilizador.rastrearProdutos();
+			while (conta != MenuUser.FINALIZAR) {
+				if (conta == MenuUser.FINALIZAR) {
 					break;
-				case CADASTRAR:
-					if (conta == MenuUser.FUNCIONARIO) {
-						System.out.println("Apenas um funcionário pode cadastrar outro funcionário");
-					} else {
-						System.out.printf("%nCadastrar usuário no sistema:%n");
-						System.out.println();
-						Utilizador.identificarCadastro(conta);
-					}
-					// seleciona como deseja cadastrar: usuario, fornecedor
-					// cadastrarCliente(); // cadastra, coloca nos arquivos e volta ao menu com o
-					// break seguinte
+				}
 
-					break;
-				case LOGAR:
-					
+				MenuInicial operacao = choices[AplicarMenu.getRequest(2) - 1];
+
+				while (operacao != MenuInicial.VOLTAR) {
+					switch (operacao) {
+					case RASTREAR:
+						System.out.printf("%nRastreamento:%n");
+						Utilizador.rastrearProdutos();
+						break;
+					case CADASTRAR:
+						if (conta == MenuUser.FUNCIONARIO) {
+							System.out.println("Apenas um funcionário pode cadastrar outro funcionário");
+						} else {
+							System.out.printf("%nCadastrar usuário no sistema:%n");
+							System.out.println();
+							Utilizador.identificarCadastro(conta);
+						}
+						// seleciona como deseja cadastrar: usuario, fornecedor
+						// cadastrarCliente(); // cadastra, coloca nos arquivos e volta ao menu com o
+						// break seguinte
+
+						break;
+					case LOGAR:
+
 						Usuario<?> usuario = null;
 						switch (conta) {
 						case CLIENTE:
@@ -71,31 +74,30 @@ public class Programa {
 						}
 						if (usuario.confirmarUser(usuario.loginUser())) {
 							usuario.operacoesUser();
-							//atualizar console depois das operações de usuario dentro do método
+							// atualizar console depois das operações de usuario dentro do método
 						}
-						
-					// operações
-				default:
-					break;
+					default:
+						break;
+					}
+					AplicarMenu.clearScreen();
+					operacao = choices[AplicarMenu.getRequest(2) - 1]; // Obtém a solicitação do usuário
+					// operacao vai carregar a opcao de usuario
 				}
-				AplicarMenu.clearScreen();
-				operacao = choices[AplicarMenu.getRequest(2) - 1]; // Obtém a solicitação do usuário
-				// if T extends Utilizador else if Funcionario
-				// operacao vai carregar a opcao de usuario
-			}
-			
-			conta = choicesUser[AplicarMenu.getRequest(1) - 1];
-		}
 
-		sc.close();
+				conta = choicesUser[AplicarMenu.getRequest(1) - 1];
+			}
+
+		} catch (NoSuchElementException e) {
+			System.out.println("Nenhum token disponível: " + e.getMessage());
+
+		} catch (IllegalStateException e) {
+			System.out.println("Erro: Scanner está fechado.");
+
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+		} finally {
+			sc.close();
+		}
 	}
 
 }
-
-/*
- * public static void operador(MenuUser status) { if
- * (status.equals(MenuUser.CLIENTE)) { Cliente.operador(); } else if
- * (status.equals(MenuUser.FORNECEDOR)) { Fornecedor.operador(); } else if
- * (status.equals(MenuUser.FUNCIONARIO)) { Funcionario.operador(); } else {
- * System.out.println("Operador não encontrado"); } }
- */

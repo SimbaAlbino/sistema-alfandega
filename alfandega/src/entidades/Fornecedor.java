@@ -138,10 +138,11 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 						}
 					case 8:
 						residencia = sc.nextShort();
+						sc.nextLine();
 					default:
 						break;
 					}
-
+					
 				}
 
 				criarProduto(tipoProduto, preco, quantidade);
@@ -266,7 +267,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				case 6:
 					System.out.println("Saindo da conta...");
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 						System.out.println("Erro no sleep: " + e.getMessage());
 					}
@@ -280,8 +281,8 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				sc.nextLine(); // Consumir a entrada inválida
 			}
 			Estoque.atualizarSistema();
-		} while (valor != 5);
-		System.out.println("Fim das operações de usuário.");
+			System.out.println();
+		} while (valor != 6);
 	}
 
 	@Override

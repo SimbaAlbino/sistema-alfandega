@@ -18,11 +18,15 @@ public class ValidarDados {
 	}
 	
 	public static boolean validarSenha(String senha) {
-		return senha != null && (senha.length() > 6);
+		return senha != null && (senha.length() >= 6);
 	}
 	
 	public static boolean validarIdProduto(Integer id) {
 		String idProduto = "" + id;
 		return idProduto != null && idProduto.matches("\\d{6}");
+	}
+	
+	public static boolean validarNome(String nome) {
+		return nome != null;
 	}
 }

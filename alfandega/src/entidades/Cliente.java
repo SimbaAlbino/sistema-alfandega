@@ -156,7 +156,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 			System.out.print("Escolha uma opção: \n");
 
 			valor = AplicarMenu.getRequest(3);
-			System.out.println(valor);
 			// Verifique se a entrada é um inteiro válido
 			if (valor > 0 || valor < 6) {
 				switch (valor) {
@@ -191,7 +190,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				case 5:
 					System.out.println("Saindo da conta...");
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 						System.out.println("Erro no sleep: " + e.getMessage());
 					}
@@ -206,8 +205,8 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				sc.nextLine(); // Consumir a entrada inválida
 			}
 			Estoque.atualizarSistema();
+			System.out.println();
 		} while (valor != 5);
-		System.out.println("Fim das operações de usuário.");
 	}
 
 	@Override

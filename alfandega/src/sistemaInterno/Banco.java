@@ -103,11 +103,11 @@ public class Banco implements Pagamento {
 		}
 	}
 	
-	public static void operacaoFuncionario() {	    
+	public static void operacaoFuncionario() {
+		loadDadosBanco();
 	    System.out.println("Selecione a operação:");
 
 	    int operacao = AplicarMenu.getRequest(8);
-	    sc.nextLine(); // Consumir a nova linha
 
 	    try {
 	        switch (operacao) {
@@ -183,12 +183,6 @@ public class Banco implements Pagamento {
 		return caminhoBanco;
 	}
 
-	@Override
-	public boolean dividaPendente() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 	public static double getSaldoTotalBanco() {
 		return saldoTotalBanco;
 	}
@@ -204,72 +198,3 @@ public class Banco implements Pagamento {
 	}
 
 }
-
-/*
- * public void executarTestes() {
- * System.out.println("Iniciando Testes do Banco...");
- * 
- * Cliente cliente1 = new Cliente("Gabriel", "el@gmail.com", "123",
- * "123.456.789-00"); Cliente cliente2 = new Cliente("Pedro", "pedro@yahoo.com",
- * "red", "987.654.321-00");
- * 
- * adicionarCliente(cliente1); adicionarCliente(cliente2);
- * 
- * Endereco endereco1 = new Endereco("12345-678", (short) 123); Fornecedor
- * fornecedor1 = new Fornecedor("Fornecedor 1", "fornecedor1@example.com",
- * "senha123");
- * 
- * Produto produto1 = new Acessorios(100.0, 2); Produto produto2 = new
- * Automoveis(50000.0, 1); Produto produto3 = new Acessorios(200.0, 1);
- * 
- * DadosProduto dadosProduto1 = new DadosProduto(cliente1, fornecedor1,
- * produto1, true, endereco1); DadosProduto dadosProduto2 = new
- * DadosProduto(cliente1, fornecedor1, produto2, true, endereco1); DadosProduto
- * dadosProduto3 = new DadosProduto(cliente2, fornecedor1, produto3, true,
- * endereco1);
- * 
- * Dividas divida1 = new Dividas(cliente1);
- * divida1.selecionarProduto(dadosProduto1);
- * divida1.selecionarProduto(dadosProduto2);
- * 
- * Dividas divida2 = new Dividas(cliente2);
- * divida2.selecionarProduto(dadosProduto3);
- * 
- * adicionarDividaParaCliente(cliente1, divida1);
- * adicionarDividaParaCliente(cliente2, divida2);
- * 
- * calcularSaldoTotal(); calcularImpostos();
- * 
- * System.out.println(String.
- * format("Saldo total: %.2f | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f",
- * getSaldoTotal(), getIcmsTotal(), getIpiTotal(), getImpostoFixoTotal()));
- * 
- * divida1.pagarPorPix(10000.0); System.out.println(String.
- * format("Saldo após pagamento parcial de cliente1: %.2f", getSaldoTotal()));
- * 
- * calcularSaldoTotal(); calcularImpostos();
- * 
- * System.out.println( String.
- * format("Saldo após pagamento parcial: %.2f | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f"
- * , getSaldoTotal(), getIcmsTotal(), getIpiTotal(), getImpostoFixoTotal()));
- * 
- * divida2.pagarPorBoleto(200.0); System.out.println(String.
- * format("Saldo após pagamento completo de cliente2: %.2f", getSaldoTotal()));
- * 
- * calcularSaldoTotal(); calcularImpostos();
- * 
- * System.out.println( String.
- * format("Saldo após pagamento completo: %.2f | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f"
- * , getSaldoTotal(), getIcmsTotal(), getIpiTotal(), getImpostoFixoTotal()));
- * 
- * divida1.pagarPorPix(divida1.getMontante()); System.out.println(String.
- * format("Saldo após pagamento completo de cliente1: %.2f", getSaldoTotal()));
- * 
- * calcularSaldoTotal(); calcularImpostos();
- * 
- * System.out.println( String.
- * format("Saldo após pagamento completo: %.2f | ICMS: %.2f | IPI: %.2f | Imposto Fixo: %.2f"
- * , getSaldoTotal(), getIcmsTotal(), getIpiTotal(), getImpostoFixoTotal()));
- * 
- * exibirHistoricoPagamentos(); exibirHistoricoImpostos(); }
- */

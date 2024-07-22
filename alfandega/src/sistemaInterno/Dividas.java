@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import entidades.DadosProduto;
+import entidades.OperacaoException;
 import reserva.Estoque;
 import reserva.StatusProduto;
 
@@ -52,44 +53,49 @@ public class Dividas implements Pagamento {
 	// Método para pagar produto chamado pelo cliente ou fornecedor
 
 	public void metodoPagamento() {
+		boolean fimOp = false;
 		// Chama o método que especifica o imposto pago e o imposto total (se existir)
-		try {
-			Pagamento.printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
-			System.out.println("Escolha o método de pagamento: ");
-			System.out.println("1. PIX");
-			System.out.println("2. Boleto");
+		do {
+			
+			try {
+				Pagamento.printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
+				System.out.println("Escolha o método de pagamento: ");
+				System.out.println("1. PIX");
+				System.out.println("2. Boleto");
+				
+				int metodo = sc.nextInt();
+				sc.nextLine(); // Consumir a nova linha
+				
+				switch (metodo) {
+				case 1:
+					System.out.println("Pagamento via PIX selecionado.");
+					char[][] qrCode = gerarPix();
+					printPix(qrCode);
+					break;
+				case 2:
+					System.out.println("Pagamento via Boleto selecionado.");
+					String codigoBarras = generateCodigoBarras();
+					printCodigoBarras(codigoBarras);
+					break;
+				default:
+					throw new OperacaoException("Método de pagamento inválido");
+				}
+				
+				System.out.println("Deseja realizar o pagamento? (s/n)");
+				char confirmacao = sc.next().toLowerCase().charAt(0);
+				sc.nextLine();
+				if (confirmacao == 's') {
+					confirmarPagamento(true);
+				} else {
+					System.out.println("Pagamento não autorizado.");
+				}
+				fimOp = true;
+			} catch (OperacaoException e) {
+				System.out.println("Ocorreu um erro ao processar o pagamento: " + e.getMessage());
+			} catch (IllegalArgumentException e) {
 
-			int metodo = sc.nextInt();
-			sc.nextLine(); // Consumir a nova linha
-
-			switch (metodo) {
-			case 1:
-				System.out.println("Pagamento via PIX selecionado.");
-				char[][] qrCode = gerarPix();
-				printPix(qrCode);
-				break;
-			case 2:
-				System.out.println("Pagamento via Boleto selecionado.");
-				String codigoBarras = generateCodigoBarras();
-				printCodigoBarras(codigoBarras);
-				break;
-			default:
-				System.out.println("Método de pagamento inválido.");
-				return;
 			}
-
-			System.out.println("Deseja realizar o pagamento? (s/n)");
-			char confirmacao = sc.nextLine().toLowerCase().charAt(0);
-
-			if (confirmacao == 's') {
-				confirmarPagamento(true);
-			} else {
-				System.out.println("Pagamento não autorizado.");
-			}
-		} catch (Exception e) {
-			System.out.println("Ocorreu um erro ao processar o pagamento: " + e.getMessage());
-			e.printStackTrace();
-		}
+		} while (!fimOp);
 	}
 
 	// Método para realizar o pagamento
@@ -105,7 +111,6 @@ public class Dividas implements Pagamento {
 		}
 	}
 
-	@Override
 	public boolean dividaPendente() {
 		return montante != 0;
 	}

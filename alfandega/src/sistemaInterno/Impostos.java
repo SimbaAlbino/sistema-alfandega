@@ -60,11 +60,10 @@ public abstract class Impostos implements Serializable {
 	}
 
 	public static double[] getBaseImpostos() { // vetor
-		double[] vetorImposto = new double[3];
+		double[] vetorImposto = new double[2];
 
 		vetorImposto[0] = IPI.getTaxaIpi();
 		vetorImposto[1] = ICMS.getTaxaIcms();
-		vetorImposto[2] = ImpostoFixo.getTaxaImpostoFixo(); // Ja pode instanciar ja
 
 		return vetorImposto; // tem que retornar o vetor.
 	}
@@ -85,5 +84,12 @@ public abstract class Impostos implements Serializable {
 	public ImpostoFixo getImpostoFixo() {
 		return impostoFixo;
 	}
+
+	@Override
+	public String toString() {
+		return "Impostos [icms=" + icms + ", ipi=" + ipi + "]";
+	}
+	
+	
 
 }

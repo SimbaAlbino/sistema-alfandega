@@ -77,24 +77,27 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 			try {
 
 				System.out.println("Informe as condições de cadastro do funcionario: ");
-				System.out.println("Nome: ");
+				System.out.print("Nome: ");
 				String nome = sc.nextLine();
-				System.out.println("CPF: ");
+				if (!ValidarDados.validarNome(nome)) {
+					throw new OperacaoException("Erro, nome inválido");
+				}
+				System.out.print("CPF: ");
 				String cpf = sc.next();
 				if (!ValidarDados.validarCPF(cpf)) {
 					throw new OperacaoException("Erro, cpf não possui 11 dígitos");
 				}
-				System.out.println("E-mail: ");
+				System.out.print("E-mail: ");
 				String email = sc.nextLine();
 				if (!ValidarDados.validarEmail(email)) {
 					throw new OperacaoException("Erro, email não possui @");
 				}
-				System.out.println("Senha: ");
+				System.out.print("Senha: ");
 				String senha = sc.next();
+				sc.nextLine();
 				if (!ValidarDados.validarSenha(senha)) {
 					throw new OperacaoException("Erro, senha menor que 6 dígitos");
 				}
-
 				Funcionario funcionario = new Funcionario(nome, email, senha, cpf);
 				funcionario.condicaoCadastro(funcionario, getCaminhoFileUser());
 				cadastro = true;
@@ -135,33 +138,38 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 		boolean entrada = false;
 		int request = 4;
-		short contador = 1;
+		short contador;
 		// Exibe opções de solicitação
-		for (String opcao : vetor) {
-			System.out.printf("%d - %s\n", contador++, opcao);
-		}
-		while (!entrada) {
+
+		do { // Insere a solicitação de usuário
+			contador = 1;
+			for (String opcao : vetor) {
+				System.out.printf("%d - %s\n", contador++, opcao);
+			}
 			try {
-				do { // Insere a solicitação de usuário
-					System.out.print("\n-> ");
-					String digito = sc.nextLine().trim();
-					if (digito.isEmpty()) {
-						throw new IllegalArgumentException("Valor nulo lançado");
-					}
-					request = Integer.parseInt(digito);
-					AplicarMenu.clearScreen();
-					if (request < 1 || request > vetor.length) {
-						System.out.println("Valor fora dos parâmetros, digite entre 1 e " + vetor.length);
-					}
-				} while ((request < 1) || (request > vetor.length));
+				System.out.print("\n-> ");
+				String digito = sc.nextLine().trim();
+				if (digito.isEmpty()) {
+					throw new IllegalArgumentException("Valor nulo lançado");
+				}
+				request = Integer.parseInt(digito);
 				AplicarMenu.clearScreen();
-				entrada = true;
+				if (request < 1 || request > vetor.length) {
+					System.out.println("Valor fora dos parâmetros, digite entre 1 e " + vetor.length);
+				} else {
+					entrada = true;
+				}
 			} catch (InputMismatchException e) {
 				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
 				sc.nextLine();
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida, por favor insira um número. Digite enter para tentar novamente.");
+				sc.nextLine();
 			}
-		}
+		} while (!entrada);
+		AplicarMenu.clearScreen();
 		return (byte) request; // Retorna o valor enum da opção
+
 	}
 
 	private static String[] getOptionsForVector(int vetorAtual) {
@@ -181,221 +189,224 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	@Override
 	public void operacoesUser() {
-	    System.out.println();
-	    int valor;
-	    boolean fimOpCase = false;
-	    do {
-	        valor = AplicarMenu.getRequest(5);
-	        try {
-	            if (valor >= 0 && valor <= 7) {
-	                byte desejo;
-	                switch (valor) {
-	                    case 1:
-	                        System.out.println("Edição de produto do estoque: \n");
-	                        System.out.println("Selecione o id do produto para edição: ");
-	                        int code = sc.nextInt();
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        if (!ValidarDados.validarIdProduto(code)) {
-	                            throw new OperacaoException("Id do produto inválida, deve conter 6 dígitos");
-	                        }
-	                        DadosProduto produtoEditar = Estoque.buscarIDBinarySearch(code);
-	                        System.out.println("-Opções de edição-");
-	                        produtoEditar.editarRemessa(AplicarMenu.getRequest(6));
-	                        System.out.println("\nPressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 2:
-	                        System.out.println("Dados do Cliente/Fornecedor do registro: \n");
-	                        do {
-	                            desejo = shortQuests(1);
-	                            if (desejo == 1) {
-	                                byte subDesejo = shortQuests(2);
-	                                if (subDesejo == 1) {
-	                                    Funcionario cl = new Funcionario();
-	                                    cl.listarUsuarios(cl.getCaminhoFileUser());
-	                                } else if (subDesejo == 2) {
-	                                    Fornecedor forn = new Fornecedor();
-	                                    forn.listarUsuarios(forn.getCaminhoFileUser());
-	                                }
-	                            } else if (desejo == 2) {
-	                                byte subDesejo = shortQuests(2);
-	                                if (subDesejo == 1) {
-	                                    System.out.println("Digite o CPF do cliente: ");
-	                                    String cpf = sc.next();
-	                                    sc.nextLine(); // Consumir a nova linha pendente
-	                                    if (!ValidarDados.validarCPF(cpf)) {
-	                                        throw new OperacaoException("Erro, cpf não possui 11 dígitos");
-	                                    }
-	                                    Funcionario cliente = new Funcionario(cpf);
-	                                    cliente.removerUser(cliente);
-	                                } else if (subDesejo == 2) {
-	                                    System.out.println("Digite o email do fornecedor: ");
-	                                    String email = sc.next();
-	                                    sc.nextLine(); // Consumir a nova linha pendente
-	                                    if (!ValidarDados.validarEmail(email)) {
-	                                        throw new OperacaoException("Erro, email não possui @");
-	                                    }
-	                                    Fornecedor fornecedor = new Fornecedor(email);
-	                                    fornecedor.removerUser(fornecedor);
-	                                }
-	                            }
-	                        } while (desejo != 3);
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 3:
-	                        System.out.println("Dados de Funcionario do registro:");
-	                        System.out.println("Selecione uma opção: ");
-	                        while (!fimOpCase) {
-	                            desejo = shortQuests(3);
-	                            if (desejo == 1) {
-	                                System.out.println("Listar funcionarios");
-	                                listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
-	                                fimOpCase = true;
-	                            } else if (desejo == 2) {
-	                                System.out.println("Apagar funcionario do registro");
-	                                System.out.println("Digite o cpf do funcionario: ");
-	                                String cpf = sc.next();
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                if (!ValidarDados.validarCPF(cpf)) {
-	                                    throw new IllegalArgumentException();
-	                                }
-	                                Funcionario funcionario = new Funcionario(cpf);
-	                                System.out.printf(
-	                                    "Tem certeza que deseja deletar o funcionario a seguir (s/n)?\n%s - %s - %s",
-	                                    funcionario.getNome(), funcionario.getEmail(), funcionario.getCpf());
-	                                short contador = 0;
-	                                do {
-	                                    contador++;
-	                                    System.out.println("Digite a sua senha para confirmar operação: ");
-	                                } while (!sc.next().equals(getSenha()) && contador < 4);
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                if (contador < 4) {
-	                                    System.out.println("Funcionario removido");
-	                                } else {
-	                                    System.out.println("Operação cancelada, excedeu tentativas.");
-	                                }
-	                                fimOpCase = true;
-	                            } else {
-	                                System.out.println("Opcao inválida");
-	                            }
-	                        }
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 4:
-	                        System.out.println("Operações de Banco e Pagamentos: ");
-	                        Banco.operacaoFuncionario();
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 5:
-	                        System.out.println("Operações de registro de funcionario");
-	                        cadastrarFuncionario();
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 6:
-	                        System.out.println("Listando Estoque\n");
-	                        for (DadosProduto produto : Estoque.listaProdutosEstoque()) {
-	                            System.out.println(produto);
-	                        }
-	                        System.out.println();
-	                        do {
-	                            desejo = shortQuests(4);
-	                            if (desejo == 1) {
-	                                System.out.println("Listando produtos do cliente");
-	                                System.out.println("Informe o cpf do cliente: ");
-	                                String cpfCliente = sc.next();
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                Cliente cl = new Cliente(cpfCliente);
-	                                List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
-	                                    .filter(x -> x.getArmazenamentoAtual().equals(Local.ESTOQUE))
-	                                    .collect(Collectors.toList());
-	                                produtosEstqCliente.forEach(System.out::println);
-	                            } else if (desejo == 2) {
-	                                System.out.println("Listando produtos do fornecedor");
-	                                System.out.println("Informe o e-mail do fornecedor");
-	                                String emailFornecedor = sc.next();
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                Fornecedor fornecedor = new Fornecedor(emailFornecedor);
-	                                List<DadosProduto> produtosEstqForn = Estoque.listaProdutosEstoque().stream()
-	                                    .filter(x -> x.getFornecedor().equals(fornecedor)
-	                                        && x.getArmazenamentoAtual().equals(Local.ESTOQUE))
-	                                    .collect(Collectors.toList());
-	                                produtosEstqForn.forEach(System.out::println);
-	                            }
-	                        } while (desejo < 1 || desejo > 3);
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 7:
-	                        System.out.println("Listando produtos despachados");
-	                        for (DadosProduto produto : EstoqueDespache.listaProdutosDespache()) {
-	                            System.out.println(produto);
-	                        }
-	                        System.out.println();
-	                        do {
-	                            desejo = shortQuests(4);
-	                            if (desejo == 1) {
-	                                System.out.println("Listando produtos do cliente");
-	                                System.out.println("Informe o cpf do cliente: ");
-	                                String cpfCliente = sc.next();
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                Cliente cl = new Cliente(cpfCliente);
-	                                List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
-	                                    .filter(x -> x.getArmazenamentoAtual().equals(Local.DESPACHE))
-	                                    .collect(Collectors.toList());
-	                                produtosEstqCliente.forEach(System.out::println);
-	                            } else if (desejo == 2) {
-	                                System.out.println("Listando produtos do fornecedor");
-	                                System.out.println("Informe o e-mail do fornecedor");
-	                                String emailFornecedor = sc.next();
-	                                sc.nextLine(); // Consumir a nova linha pendente
-	                                Fornecedor fornecedor = new Fornecedor(emailFornecedor);
-	                                List<DadosProduto> produtosEstqForn = EstoqueDespache.listaProdutosDespache().stream()
-	                                    .filter(x -> x.getFornecedor().equals(fornecedor)
-	                                        && x.getArmazenamentoAtual().equals(Local.DESPACHE))
-	                                    .collect(Collectors.toList());
-	                                produtosEstqForn.forEach(System.out::println);
-	                            }
-	                        } while (desejo != 3);
-	                        System.out.println("Pressione Enter para voltar");
-	                        sc.nextLine(); // Consumir a nova linha pendente
-	                        break;
-	                    case 8:
-	                        System.out.println("Fim das operações de usuário.");
-	                        Thread.sleep(2000);
-	                        break;
-	                    default:
-	                        System.out.println("Opção inválida. Tente novamente.");
-	                        break;
-	                }
-	            } else {
-	                System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 7.");
-	                sc.nextLine(); // Consumir a entrada inválida
-	            }
-	            Estoque.atualizarSistema();
-	            
-	        } catch (InterruptedException e) {
-	            System.out.println("Erro no sleep thread.");
-	            sc.nextLine(); // Consumir a nova linha pendente
-	        } catch (OperacaoException e) {
-	            System.out.println(
-	                "Erro na operação de usuário: " + e.getMessage() + ". Digite enter para tentar novamente.");
-	            sc.nextLine(); // Consumir a nova linha pendente
-	        } catch (InputMismatchException e) {
-	            System.out.println("Erro de input, o valor digitado não foi aceito, " + e.getMessage()
-	                + "Pressione enter para tentar novamente");
-	            sc.nextLine(); // Consumir a nova linha pendente
-	        } catch (IllegalArgumentException e) {
-	            System.out.println(
-	                "Erro argumento indevido, " + e.getMessage() + "Pressione enter para tentar novamente");
-	            sc.nextLine(); // Consumir a nova linha pendente
-	        }
-	    } while (valor != 8);
-	}
+		System.out.println();
+		int valor;
+		boolean fimOpCase = false;
+		do {
+			valor = AplicarMenu.getRequest(5);
+			try {
+				if (valor >= 0 && valor <= 7) {
+					byte desejo;
+					switch (valor) {
+					case 1:
+						System.out.println("Edição de produto do estoque: \n");
+						System.out.println("Selecione o id do produto para edição: ");
+						int code = sc.nextInt();
+						sc.nextLine(); // Consumir a nova linha pendente
+						if (!ValidarDados.validarIdProduto(code)) {
+							throw new OperacaoException("Id do produto inválida, deve conter 6 dígitos");
+						}
+						DadosProduto produtoEditar = Estoque.buscarIDBinarySearch(code);
+						System.out.println("-Opções de edição-");
+						produtoEditar.editarRemessa(AplicarMenu.getRequest(6));
+						System.out.println("\nPressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 2:
+						System.out.println("Dados do Cliente/Fornecedor do registro: \n");
+						do {
+							desejo = shortQuests(1);
+							byte subDesejo = shortQuests(2);
+							if (desejo == 1) {
+								if (subDesejo == 1) {
+									Cliente cl = new Cliente();
+									cl.listarUsuarios(cl.getCaminhoFileUser()).forEach(System.out::println);
+								} else if (subDesejo == 2) {
+									Fornecedor forn = new Fornecedor();
+									forn.listarUsuarios(forn.getCaminhoFileUser()).forEach(System.out::println);
+								}
+								System.out.println("\nPressione Enter para voltar");
+								sc.nextLine();
+							} else if (desejo == 2) {
+								if (subDesejo == 1) {
+									System.out.println("Digite o CPF do cliente: ");
+									String cpf = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									if (!ValidarDados.validarCPF(cpf)) {
+										throw new OperacaoException("Erro, cpf não possui 11 dígitos");
+									}
+									Cliente cliente = new Cliente(cpf);
+									System.out.println("Cliente removido com sucesso!");
+									cliente.removerUser(cliente);
+								} else if (subDesejo == 2) {
+									System.out.println("Digite o email do fornecedor: ");
+									String email = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									if (!ValidarDados.validarEmail(email)) {
+										throw new OperacaoException("Erro, email não possui @");
+									}
+									Fornecedor fornecedor = new Fornecedor(email);
+									fornecedor.removerUser(fornecedor);
+									System.out.println("\nFornecedor removido com sucesso!\n");
 
+								}
+							}
+						} while (desejo != 3);
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 3:
+						System.out.println("Dados de Funcionario do registro:");
+						System.out.println("Selecione uma opção: ");
+						while (!fimOpCase) {
+							desejo = shortQuests(3);
+							if (desejo == 1) {
+								System.out.println("Listar funcionarios");
+								listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
+								fimOpCase = true;
+							} else if (desejo == 2) {
+								System.out.println("Apagar funcionario do registro");
+								System.out.println("Digite o cpf do funcionario: ");
+								String cpf = sc.next();
+								sc.nextLine(); // Consumir a nova linha pendente
+								if (!ValidarDados.validarCPF(cpf)) {
+									throw new IllegalArgumentException();
+								}
+								Funcionario funcionario = new Funcionario(cpf);
+								System.out.printf(
+										"Tem certeza que deseja deletar o funcionario a seguir (s/n)?\n%s - %s - %s",
+										funcionario.getNome(), funcionario.getEmail(), funcionario.getCpf());
+								short contador = 0;
+								do {
+									contador++;
+									System.out.println("Digite a sua senha para confirmar operação: ");
+								} while (!sc.next().equals(getSenha()) && contador < 4);
+								sc.nextLine(); // Consumir a nova linha pendente
+								if (contador < 4) {
+									System.out.println("Funcionario removido");
+								} else {
+									System.out.println("Operação cancelada, excedeu tentativas.");
+								}
+								fimOpCase = true;
+							} else if (desejo != 3) {
+								System.out.println("Opcao inválida");
+							}
+						}
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 4:
+						System.out.println("Operações de Banco e Pagamentos: ");
+						Banco.operacaoFuncionario();
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 5:
+						System.out.println("Operações de registro de funcionario");
+						cadastrarFuncionario();
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 6:
+						System.out.println("Listando Estoque\n");
+						for (DadosProduto produto : Estoque.listaProdutosEstoque()) {
+							System.out.println(produto);
+						}
+						System.out.println();
+						do {
+							desejo = shortQuests(4);
+							if (desejo == 1) {
+								System.out.println("Listando produtos do cliente");
+								System.out.println("Informe o cpf do cliente: ");
+								String cpfCliente = sc.next();
+								sc.nextLine(); // Consumir a nova linha pendente
+								Cliente cl = new Cliente(cpfCliente);
+								List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
+										.filter(x -> x.getArmazenamentoAtual().equals(Local.ESTOQUE))
+										.collect(Collectors.toList());
+								produtosEstqCliente.forEach(System.out::println);
+							} else if (desejo == 2) {
+								System.out.println("Listando produtos do fornecedor");
+								System.out.println("Informe o e-mail do fornecedor");
+								String emailFornecedor = sc.next();
+								sc.nextLine(); // Consumir a nova linha pendente
+								Fornecedor fornecedor = new Fornecedor(emailFornecedor);
+								List<DadosProduto> produtosEstqForn = Estoque.listaProdutosEstoque().stream()
+										.filter(x -> x.getFornecedor().equals(fornecedor)
+												&& x.getArmazenamentoAtual().equals(Local.ESTOQUE))
+										.collect(Collectors.toList());
+								produtosEstqForn.forEach(System.out::println);
+							}
+						} while (desejo < 1 || desejo > 3);
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 7:
+						System.out.println("Listando produtos despachados");
+						for (DadosProduto produto : EstoqueDespache.listaProdutosDespache()) {
+							System.out.println(produto);
+						}
+						System.out.println();
+						do {
+							desejo = shortQuests(4);
+							if (desejo == 1) {
+								System.out.println("Listando produtos do cliente");
+								System.out.println("Informe o cpf do cliente: ");
+								String cpfCliente = sc.next();
+								sc.nextLine(); // Consumir a nova linha pendente
+								Cliente cl = new Cliente(cpfCliente);
+								List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
+										.filter(x -> x.getArmazenamentoAtual().equals(Local.DESPACHE))
+										.collect(Collectors.toList());
+								produtosEstqCliente.forEach(System.out::println);
+							} else if (desejo == 2) {
+								System.out.println("Listando produtos do fornecedor");
+								System.out.println("Informe o e-mail do fornecedor");
+								String emailFornecedor = sc.next();
+								sc.nextLine(); // Consumir a nova linha pendente
+								Fornecedor fornecedor = new Fornecedor(emailFornecedor);
+								List<DadosProduto> produtosEstqForn = EstoqueDespache.listaProdutosDespache().stream()
+										.filter(x -> x.getFornecedor().equals(fornecedor)
+												&& x.getArmazenamentoAtual().equals(Local.DESPACHE))
+										.collect(Collectors.toList());
+								produtosEstqForn.forEach(System.out::println);
+							}
+						} while (desejo != 3);
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine(); // Consumir a nova linha pendente
+						break;
+					case 8:
+						System.out.println("Fim das operações de usuário.");
+						Thread.sleep(2000);
+						break;
+					default:
+						System.out.println("Opção inválida. Tente novamente.");
+						break;
+					}
+				} else {
+					System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 7.");
+					sc.nextLine(); // Consumir a entrada inválida
+				}
+				Estoque.atualizarSistema();
+				System.out.println();
+			} catch (InterruptedException e) {
+				System.out.println("Erro no sleep thread.");
+				sc.nextLine(); // Consumir a nova linha pendente
+			} catch (OperacaoException e) {
+				System.out.println(
+						"Erro na operação de usuário: " + e.getMessage() + ". Digite enter para tentar novamente.");
+				sc.nextLine(); // Consumir a nova linha pendente
+			} catch (InputMismatchException e) {
+				System.out.println("Erro de input, o valor digitado não foi aceito, " + e.getMessage()
+						+ "Pressione enter para tentar novamente");
+				sc.nextLine(); // Consumir a nova linha pendente
+			} catch (IllegalArgumentException e) {
+				System.out.println(
+						"Erro argumento indevido, " + e.getMessage() + "Pressione enter para tentar novamente");
+				sc.nextLine(); // Consumir a nova linha pendente
+			}
+		} while (valor != 8);
+	}
 
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
@@ -417,10 +428,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	@Override
 	public String toString() {
-		return "[nomeAdm=" + nomeAdm + ", cpf=" + cpf + "]";
+		return "Funcionario: " + nomeAdm + ", CPF:" + cpf;
 	}
-	
-	
 
 	// criar metodo cadastrar funcionario, pois ele só podera ser criado a partir de
 	// outro funcionario.
