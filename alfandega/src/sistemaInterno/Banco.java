@@ -35,7 +35,7 @@ public class Banco implements Pagamento {
 
 	public static void saveDadosBanco() {
 		DadosBanco dadosBanco = new DadosBanco(saldoTotalBanco, historicoPagamentos, impostosMap, imposto);
-		try (FileOutputStream fileOut = new FileOutputStream(caminhoBanco);
+		try (FileOutputStream fileOut = new FileOutputStream(getCaminhoBanco());
 				ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
 			out.writeObject(dadosBanco);
 			System.out.println("Dados do banco serializados com sucesso.");
@@ -45,7 +45,7 @@ public class Banco implements Pagamento {
 	}
 
 	public static void loadDadosBanco() {
-		try (FileInputStream fileIn = new FileInputStream(caminhoBanco);
+		try (FileInputStream fileIn = new FileInputStream(getCaminhoBanco());
 				ObjectInputStream in = new ObjectInputStream(fileIn)) {
 			DadosBanco dadosBanco = (DadosBanco) in.readObject();
 			saldoTotalBanco = dadosBanco.getSaldoTotalBanco();

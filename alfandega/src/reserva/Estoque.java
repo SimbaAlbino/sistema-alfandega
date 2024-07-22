@@ -81,9 +81,12 @@ public class Estoque implements Serializable {
 
 	public final static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
-		totalProdutos = listaProdutos.size();
+		try {
+			totalProdutos = listaProdutos.size();
+		} catch (NullPointerException e) {
+			System.out.println("Corrija o caminho dos arquivos, reinicie ou a lista de estoque estará vazia.");
+		}
 		return listaProdutos;
-		// construir ou retornar
 	}
 
 	public static DadosProduto buscarIDBinarySearch(Integer code) {

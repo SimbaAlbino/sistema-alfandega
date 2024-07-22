@@ -32,7 +32,12 @@ public class EstoqueDespache implements Serializable {
 
 	public static ArrayList<DadosProduto> listaProdutosDespache() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoDespacheProduto());
-		totalProdutosDespache = listaProdutos.size();
+		try {
+			totalProdutosDespache = listaProdutos.size();
+		}
+		catch (NullPointerException e) {
+			System.out.println("Corrija o caminho dos arquivos, reinicie ou a lista de estoque estará vazia.");
+		}
 		return listaProdutos;
 	}
 
