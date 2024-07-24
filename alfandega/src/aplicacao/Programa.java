@@ -1,21 +1,15 @@
 package aplicacao;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import entidades.Cliente;
-import entidades.DadosProduto;
 import entidades.Fornecedor;
 import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
-import filtradores.Canais;
 import reserva.Estoque;
-import reserva.StatusProduto;
-import sistemaInterno.Banco;
-import utilidade.ModelagemFile;
 
 public class Programa {
 
@@ -26,10 +20,6 @@ public class Programa {
     public static void main(String[] args) {
         /*
         // Código comentado para teste de moldagem de produto
-        ArrayList<DadosProduto> dp = Estoque.listaProdutosEstoque();
-        Canais canais = new Canais(dp.get(0));
-        canais.moldagemProduto();
-        ModelagemFile.serializar("C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt", dp);
         */
         
         // Configurar o Locale para US
@@ -43,9 +33,6 @@ public class Programa {
 
         // Inicializar Scanner para entrada de dados do usuário
         Scanner sc = new Scanner(System.in);
-        
-        // Exibir histórico de pagamentos
-        Banco.exibirHistoricoPagamentos();
 
         try {
             // Solicitar o tipo de conta do usuário

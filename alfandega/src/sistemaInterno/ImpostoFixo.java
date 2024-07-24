@@ -7,13 +7,11 @@ public class ImpostoFixo extends Impostos {
 	/**
 	 * Serial version UID para controle de versão da serialização
 	 */
-	private static final long serialVersionUID = 1L;
-
 	// Tipo de imposto específico para Imposto Fixo
 	public static final String TIPO_IMPOSTO = "Imposto Fixo";
 
 	// Taxa fixa do imposto
-	private static double taxaImpostoFixo;
+	private double taxaImpostoFixo;
 
 	// Produto relacionado ao imposto
 	private DadosProduto produto;
@@ -29,9 +27,9 @@ public class ImpostoFixo extends Impostos {
 
 	// Implementação do método abstrato da classe pai para receber impostos
 	@Override
-	public void receberImpostos() {
+	public void receberImpostos(int qnt) {
 		// Adiciona o valor do imposto calculado ao mapa de impostos no banco
-		Banco.adicionarImposto(getTipoImposto(), impostoProduto());
+		Banco.adicionarImposto(getTipoImposto(), impostoProduto() * qnt);
 	}
 
 	// Método para calcular o valor do imposto sobre o produto
@@ -41,7 +39,7 @@ public class ImpostoFixo extends Impostos {
 	}
 
 	// Método getter para obter a taxa de imposto fixo
-	public static double getTaxaImpostoFixo() {
+	public double getTaxaImpostoFixo() {
 		return taxaImpostoFixo;
 	}
 
@@ -51,8 +49,8 @@ public class ImpostoFixo extends Impostos {
 	}
 
 	// Método setter para definir a taxa de imposto fixo baseada no produto
-	public static void setTaxaImpostoFixo(DadosProduto produto) {
-		ImpostoFixo.taxaImpostoFixo = produto.getTipoProduto().getTaxaUnica();
+	public void setTaxaImpostoFixo(DadosProduto produto) {
+		this.taxaImpostoFixo = produto.getTipoProduto().getTaxaUnica();
 	}
 
 	// Método getter para obter o produto relacionado ao imposto

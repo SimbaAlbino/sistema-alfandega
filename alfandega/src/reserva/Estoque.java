@@ -50,9 +50,21 @@ public class Estoque implements Serializable {
 	
 	// Remove um produto do estoque
 	public synchronized static void removerProdutoEstoque(DadosProduto produto) {
-		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
-		estoqueGeral.remove(produto);
-		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
+	    ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
+	    try {
+	        // Verifica se o produto está na lista antes de tentar removê-lo
+	        if (estoqueGeral.contains(produto)) {
+	            estoqueGeral.remove(produto);
+	            produto.setArmazenamentoAtual(Local.DESPACHE);
+	            // Serializa a lista atualizada
+	            ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
+	            System.out.println("Produto removido do estoque com sucesso.");
+	        } else {
+	            System.out.println("Produto não encontrado no estoque.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Erro ao remover o produto do estoque: " + e.getMessage());
+	    }
 	}
 
 	
@@ -61,12 +73,6 @@ public class Estoque implements Serializable {
 		try {
 		    EstoqueDespache.addProduto(produto);
 		    produto.setArmazenamentoAtual(Local.DESPACHE);
-
-		    Dividas divida = EstoqueDivida.encontrarDividaProduto(produto);
-		    if (divida != null) {
-		        EstoqueDivida.removerDivida(divida);
-		    }
-
 		    removerProdutoEstoque(produto);
 		} catch (Exception e) {
 		    System.out.println("Erro ao despachar o produto: " + e.getMessage());
@@ -183,8 +189,10 @@ public class Estoque implements Serializable {
 		Canais canais = new Canais(dadoProduto);
 		switch (dadoProduto.getStatus()) {
 		case FISCALIZANDO: {
+			canais.moldagemProduto();
+			
 			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
-				canais.moldagemProduto();
+			
 				// manda para canais
 			}
 		}

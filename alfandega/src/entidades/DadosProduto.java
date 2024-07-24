@@ -123,7 +123,7 @@ public class DadosProduto implements Serializable {
 		if (this.getArmazenamentoAtual() == Local.ESTOQUE) {
 			switch (this.getStatus()) {
 			case REJEITADO:
-				return "🔴" + "";
+				return "🔴";
 			case FISCALIZANDO:
 				return "⚫";
 			case AGUARDANDO_PAGAMENTO:
@@ -134,6 +134,7 @@ public class DadosProduto implements Serializable {
 		} else if (this.getArmazenamentoAtual() == Local.DESPACHE) {
 			return "🟢";
 		}
+		System.out.println("Produto sem etiqueta");
 		return "";
 	}
 

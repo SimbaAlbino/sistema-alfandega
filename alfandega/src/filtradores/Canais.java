@@ -65,7 +65,7 @@ public class Canais {
 		} else if ((getProduto().getStatus() == StatusProduto.FISCALIZANDO
 				&& getProduto().getTipoProduto() instanceof Informatica)
 				|| (getProduto().getStatus() == StatusProduto.FISCALIZANDO
-						&& getProduto().getTipoProduto().getPrecoUnico() < getMinPrecoTax())
+						&& (getProduto().getTipoProduto().getPrecoUnico() * getProduto().getTipoProduto().getQuantidade()) < getMinPrecoTax())
 				|| getProduto().getStatus() == StatusProduto.PAGO) {
 			// libera se for produto de informática, ou preço unico do produto for menor que
 			// 250 reais, ou status do produto for pago

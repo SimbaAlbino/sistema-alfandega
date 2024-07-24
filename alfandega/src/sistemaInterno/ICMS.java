@@ -3,9 +3,8 @@ package sistemaInterno;
 public class ICMS extends Impostos {
 	
 	public static String TIPO_IMPOSTO = "ICMS";
-	private static double taxaIcms = 0.2;
+	private  double taxaIcms = 0.020;
 	private double precoUnico;
-	// private static double taxaIcms = 0.20;
 
 	public ICMS() {
 	}
@@ -27,12 +26,12 @@ public class ICMS extends Impostos {
 		return TIPO_IMPOSTO;
 	}
 
-	public static double getTaxaIcms() {
+	public double getTaxaIcms() {
 		return taxaIcms;
 	}
 
-	public static void setTaxaIcms(double taxaIcms) {
-		ICMS.taxaIcms = taxaIcms;
+	public void setTaxaIcms(double taxaIcms) {
+		this.taxaIcms = taxaIcms;
 	}
 	
 	public double getPrecoUnico() {

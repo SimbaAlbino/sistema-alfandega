@@ -1,35 +1,30 @@
 package sistemaInterno;
 
 public class IPI extends Impostos {
-	/**
-	 * Serial version UID para controle de versão da serialização
-	 */
-	private static final long serialVersionUID = 1L;
-
 	// Tipo do imposto, específico para IPI
 	public static String TIPO_IMPOSTO = "IPI";
 
 	// Taxa do imposto IPI
-	private static double taxaIpi;
+	private double taxaIpi = 0.011;
 
 	// Preço unitário do produto ao qual o imposto será aplicado
 	private double precoUnico;
 
 	// Construtor vazio
 	public IPI() {
-		
+
 	}
 
 	// Construtor que aceita o preço único do produto
 	public IPI(double precoUnico) {
-		super(precoUnico); // Chama o construtor da classe pai (Impostos)
+		this.precoUnico = precoUnico; // Chama o construtor da classe pai (Impostos)
 	}
 
 	// Método que recebe e adiciona o imposto ao banco
 	@Override
-	public void receberImpostos() {
+	public void receberImpostos(int qnt) {
 		// Adiciona o valor do imposto calculado ao mapa de impostos no banco
-		Banco.adicionarImposto(getTIPO_IMPOSTO(), impostoProduto());
+		Banco.adicionarImposto(getTIPO_IMPOSTO(), impostoProduto() * qnt);
 	}
 
 	// Método que calcula o valor do imposto do produto
@@ -44,16 +39,16 @@ public class IPI extends Impostos {
 	}
 
 	// Método getter para obter a taxa de IPI
-	public static double getTaxaIpi() {
+	public double getTaxaIpi() {
 		return taxaIpi;
 	}
 
 	// Método setter para definir a taxa de IPI
-	public static void setTaxaIpi(double taxaIpi) {
-		IPI.taxaIpi = taxaIpi;
+	public void setTaxaIpi(double taxaIpi) {
+		this.taxaIpi = taxaIpi;
 	}
 
-	// Método getter para obter o preço  único
+	// Método getter para obter o preço único
 	public double getPrecoUnico() {
 		return precoUnico;
 	}

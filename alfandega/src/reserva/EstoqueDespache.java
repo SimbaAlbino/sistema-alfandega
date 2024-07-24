@@ -29,6 +29,7 @@ public class EstoqueDespache implements Serializable {
 	public static void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
 		if (listaProdutosDespache() != null) {
+			produto.setArmazenamentoAtual(Local.DESPACHE);
 			estoqueGeral = listaProdutosDespache();
 		}
 		estoqueGeral.add(produto);

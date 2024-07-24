@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.Scanner;
 
 import aplicacao.AplicarMenu;
 import entidades.DadosProduto;
-import utilidade.ModelagemFile;
 
 public class Banco implements Pagamento {
 	private static Impostos imposto; // Objeto Impostos que gerencia as taxas de impostos
@@ -71,13 +69,15 @@ public class Banco implements Pagamento {
 	    saldoTotalBanco = 0.0;  // Defina o valor padrão desejado
 	    historicoPagamentos = new ArrayList<>();  // Supondo que seja uma lista
 	    impostosMap = new HashMap<>();  // Supondo que seja um mapa
-
+	    saveDadosBanco();
 	}
 
 
 	// Método para calcular o imposto total a partir do mapa de impostos
 	public static void adicionarImposto(String chave, double valor) {
+		loadDadosBanco();
 		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
+		saveDadosBanco();
 	}
 
 	// Método para calcular o imposto total a partir do map
@@ -102,8 +102,10 @@ public class Banco implements Pagamento {
 
 	// Método para adicionar o histórico de pagamentos
 	public static void addHistoricoPagamento(String[] vetorImpostosCalc) {
+		loadDadosBanco();
 		ArrayList<String[]> estoqueGeral = listaHistoricoPagamentos();
 		estoqueGeral.add(vetorImpostosCalc);
+		saveDadosBanco();
 		//
 	}
 

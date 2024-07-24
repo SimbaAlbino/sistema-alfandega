@@ -68,7 +68,7 @@ public abstract class Utilizador<T> {
 		System.out.println("Total de registros: " + listaTodosProdutos.size());
 		System.out.println();
 		System.out.println("🟡 - deve realizar pagamento.");
-		System.out.println("🟢 - produto aprovado");
+		System.out.println("🟢 - produto liberado");
 		System.out.println("🔴 - exige documento.");
 		System.out.println("⚫ - fiscalizando\n");
 
