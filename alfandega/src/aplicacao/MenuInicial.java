@@ -1,6 +1,7 @@
 package aplicacao;
 
-public enum MenuInicial {
+public enum MenuInicial { //declarar enum
+	//Definicoes das Constaantes Enum
 	RASTREAR(1),
 	CADASTRAR(2),
 	LOGAR(3),
@@ -8,7 +9,7 @@ public enum MenuInicial {
 	
     private final int value; // Opção atual de menu
 
-    // Construtor
+    // Construtor da Enum
     private MenuInicial(int value) {
         this.value = value;
     }

@@ -15,21 +15,22 @@ import tiposProduto.Produto;
 public class DadosProduto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	// Atributos da classe
 
-	private Integer idRastreio;
-	private Cliente cliente;
-	private Fornecedor fornecedor;
-	private Produto tipoProduto;
-	private boolean documentos;
-	private Endereco endereco;
+	private Integer idRastreio; // ID de rastreio do produto
+	private Cliente cliente; // Cliente associado ao produto
+	private Fornecedor fornecedor; // Fornecedor associado ao produto
+	private Produto tipoProduto; // Tipo de produto
+	private boolean documentos; // Indica se o produto possui documentos
+	private Endereco endereco; // Endereço associado ao produto
 	private LocalDate dataDeOperacao = LocalDate.now();
-	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // VALOR INICIAL
+	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // STATUS INICIAL
 	private String recado = null;
 	private Local armazenamentoAtual;
 	// add construtor e getters
 
 	transient Scanner sc = new Scanner(System.in);
-	
+
 	public DadosProduto() {
 		// TODO Auto-generated constructor stub
 	}
@@ -48,6 +49,7 @@ public class DadosProduto implements Serializable {
 		this.idRastreio = idRastreio;
 	}
 
+	// Getters para os atributos da classe
 	public Integer getIdRastreio() {
 		return idRastreio;
 	}
@@ -76,6 +78,7 @@ public class DadosProduto implements Serializable {
 		return dataDeOperacao;
 	}
 
+	// Setter para a data de operação
 	public void setDataDeOperacao(LocalDate dataDeOperacao) {
 		this.dataDeOperacao = dataDeOperacao;
 	}
@@ -88,6 +91,7 @@ public class DadosProduto implements Serializable {
 		return recado;
 	}
 
+	// Setter para o status do produto
 	public void setStatus(StatusProduto status) {
 		this.status = status;
 	}
@@ -101,10 +105,12 @@ public class DadosProduto implements Serializable {
 		return armazenamentoAtual;
 	}
 
+	// Setter para o local de armazenamento atual
 	public void setArmazenamentoAtual(Local armazenamentoAtual) {
 		this.armazenamentoAtual = armazenamentoAtual;
 	}
 
+	// Método para gerar um ID de rastreio aleatóri
 	public void gerarIdRastreio() {
 		Random random = new Random();
 		int idGerado = random.nextInt(999999);
@@ -112,7 +118,7 @@ public class DadosProduto implements Serializable {
 		this.idRastreio = idGerado;
 	}
 
-	// Default para o utilizador conseguir usar
+	// Default para o utilizador conseguir usar - ICONES
 	String getIconeStatus() {
 		if (this.getArmazenamentoAtual() == Local.ESTOQUE) {
 			switch (this.getStatus()) {
@@ -131,7 +137,7 @@ public class DadosProduto implements Serializable {
 		return "";
 	}
 
-	// continuar
+	// continuar - Método para editar informações da remessa
 	public void editarRemessa(int caso) throws InterruptedException, InputMismatchException {
 		switch (caso) {
 		case 1:
@@ -251,11 +257,14 @@ public class DadosProduto implements Serializable {
 
 	}
 
+	// Método hashCode para geração de hash baseado em cliente, documentos,
+	// fornecedor e ID de rastreio
 	@Override
 	public int hashCode() {
 		return Objects.hash(cliente, documentos, fornecedor, idRastreio);
 	}
 
+	// Método equals para comparação de objetos DadosProduto
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -269,6 +278,7 @@ public class DadosProduto implements Serializable {
 				&& Objects.equals(fornecedor, other.fornecedor) && Objects.equals(idRastreio, other.idRastreio);
 	}
 
+	// Método toString para retornar uma string representando o objeto DadosProduto
 	@Override
 	public String toString() {
 		return String.format("%d %s %s %s", getIdRastreio(), getCliente().getCpf(), getStatus(), getDataDeOperacao());

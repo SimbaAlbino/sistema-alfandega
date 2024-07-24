@@ -19,20 +19,24 @@ public class Estoque implements Serializable {
 
 	// ideia: ao iniciar as operações, todos os estoque desserializam os produtos,
 	// ao selecionar a opção finalizar, os produtos são serializados.
-	private static long totalProdutos;
+	
+	private static long totalProdutos; // Total de produtos no estoque
 
 	private static final long serialVersionUID = 1L;
 
 	private transient static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
 
+	// Obtém o caminho do arquivo de estoque de produtos
 	public static String getCaminhoEstoqueProduto() {
 		return caminhoEstoqueproduto;
 	}
 
+	// Obtém o total de produtos no estoque
 	public static long getTotalProdutosEstoque() {
 		return totalProdutos;
 	}
-
+	
+	// Adiciona um produto ao estoque
 	public synchronized static void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		if (produto != null) {
@@ -43,14 +47,16 @@ public class Estoque implements Serializable {
 			System.out.println("Produto não foi estocado, pois está vazio.");
 		}
 	}
-
+	
+	// Remove um produto do estoque
 	public synchronized static void removerProdutoEstoque(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
 		estoqueGeral.remove(produto);
 		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
 	}
 
-	// o código já está atualizado
+	
+	// Despacha um produto para fora do estoque
 	public static void despacharProduto(DadosProduto produto) {
 		try {
 		    EstoqueDespache.addProduto(produto);
@@ -95,7 +101,7 @@ public class Estoque implements Serializable {
 			
 	}
 
-
+	// Lista os produtos no estoque
 	public static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
 		if (listaProdutos != null)
@@ -104,7 +110,8 @@ public class Estoque implements Serializable {
 			return new ArrayList<>();
 		return listaProdutos;
 	}
-
+	
+	// Busca um produto no estoque ou despache pelo ID usando busca binária
 	public static DadosProduto buscarIDBinarySearch(Integer code) {
 		// Desserializar do Estoque e do Despache
 		List<DadosProduto> produtosEstoque = listaProdutosEstoque();

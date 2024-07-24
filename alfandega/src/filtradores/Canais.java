@@ -12,34 +12,42 @@ import tiposProduto.Informatica;
 
 public class Canais {
 
-	private CanalCor cor;
-	private DadosProduto produto;
-	private double minPrecoTax = 250;
+	private CanalCor cor; // Cor do canal associado ao status do produto
+	private DadosProduto produto; // Produto a ser processado
+	private double minPrecoTax = 250; // Preço mínimo para aplicação de taxas
 
+	
+	// Construtor para inicializar o produto
 	public Canais(DadosProduto produto) {
 		this.produto = produto;
 	}
 
+	// Getter para a cor do canal
 	public CanalCor getCor() {
 		return cor;
 	}
 
+	// Setter para a cor do canal
 	public void setCor(CanalCor canal) {
 		this.cor = canal;
 	}
 
+	// Getter para o produto
 	public DadosProduto getProduto() {
 		return produto;
 	}
 
+	// Getter para o preço mínimo de taxa
 	public double getMinPrecoTax() {
 		return minPrecoTax;
 	}
-
+	
+	// Setter para o preço mínimo de taxa
 	public void setMinPrecoTax(double minPrecoTax) {
 		this.minPrecoTax = minPrecoTax;
 	}
 
+	// Método para determinar a cor do canal com base no status do produto
 	public CanalCor coloracaoStatusObj() {
 		if (getProduto().isDocumentos() == false && getProduto().getStatus() == StatusProduto.FISCALIZANDO) {
 			this.cor = CanalCor.CANAL_CINZA;
@@ -73,6 +81,7 @@ public class Canais {
 
 	}
 
+	// Método para moldar o status do produto com base na cor do canal
 	// aqui o status é alterado
 	public void moldagemProduto() {
 		// emitir avisos ou nota fiscal

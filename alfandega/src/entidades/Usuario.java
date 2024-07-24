@@ -10,17 +10,21 @@ public interface Usuario<T> {
 
 	static Scanner sc = new Scanner(System.in);
 
-	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
-			ArrayList<DadosProduto> produtosDespache);
+	// Lista os produtos associados ao usuário
+	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache);
 
+	// Realiza as operações específicas de um usuário
 	void operacoesUser();
 
+	// Remove um usuário específico
 	void removerUser(T pessoa);
 
 	// cada usuario terá seu confirmarUser dentro de sua classe para a senha e email
 	// serem restritos à classe.
+	// Confirma a existência do usuário no sistema
 	T confirmarUser(String[] dadosEntrada);
 
+	// Apaga um usuário do sistema
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
 		pessoas = (ArrayList<?>) ModelagemFile.desserializar(caminho);
@@ -33,6 +37,7 @@ public interface Usuario<T> {
 		// esse método apagarUser
 	}
 
+	// Realiza o login do usuário
 	default String[] loginUser() {
 		Scanner sc = null;
 		String[] dados = new String[2];
@@ -82,10 +87,12 @@ public interface Usuario<T> {
 			System.out.println("Usuário cadastrado");
 		}
 	}
-
+	
+	// Retorna o nome do usuário
 	String getNome();
 
 	// alterar para funcionar com a serialização
+	// Imprime a lista de usuários
 	default void printarUsers(ArrayList<? extends Usuario<T>> lista) {
 		// utilidade. desserializar();
 		System.out.printf("Lista de todos os %s: %n", getClass().getSimpleName());
@@ -100,7 +107,8 @@ public interface Usuario<T> {
 		}
 	}
 
-	// ArrayList<T> cadastroAttUser();
+	// Lista os usuários do sistema
+
 	default ArrayList<T> listarUsuarios(String caminho) {
 		ArrayList<T> listaPessoas = null;
 		try {

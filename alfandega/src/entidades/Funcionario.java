@@ -26,26 +26,27 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	private String senha;
 	private String cpf;
 
-	// Pensar em criar um sistema de pagamento para o funcionário.
-
+	// Caminho do arquivo onde os dados dos funcionários são armazenados
 	private transient String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
 
 	// Construtor para o menu
 	public Funcionario() {
 	}
-
+	// Construtor para criar um novo funcionário com nome, email, senha e CPF
 	public Funcionario(String nomeAdm, String email, String senha, String cpf) {
 		this.nomeAdm = nomeAdm;
 		this.email = email;
 		this.senha = senha;
 		this.cpf = cpf;
 	}
-
+	
+	// Construtor para login do funcionário
 	public Funcionario(String email, String senha) {
 		this.email = email;
 		this.senha = senha;
 	}
-
+	
+	// Construtor para identificar funcionário por CPF
 	public Funcionario(String cpf) {
 		this.cpf = cpf;
 	}
@@ -71,6 +72,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		return senha;
 	}
 
+	// Método para cadastrar um novo funcionário
 	public void cadastrarFuncionario() {
 		boolean cadastro = false;
 		do {
@@ -110,6 +112,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	}
 
+	// Método auxiliar para comparar email e senha
 	public boolean equalsByEmailAndSenha(String email, String senha) {
 		return this.email.equals(email) && this.senha.equals(senha);
 	}
@@ -130,6 +133,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		return null;
 	}
 
+	
+	// Método para obter uma solicitação do usuário
 	public static byte shortQuests(int vetorAtual) {
 		String[] vetor = getOptionsForVector(vetorAtual);
 		if (vetor.length == 0) {
@@ -172,6 +177,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	}
 
+	// Método para obter opções de menu com base no vetor atual
 	private static String[] getOptionsForVector(int vetorAtual) {
 		switch (vetorAtual) {
 		case 1:

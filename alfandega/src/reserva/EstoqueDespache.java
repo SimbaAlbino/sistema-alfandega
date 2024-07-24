@@ -15,14 +15,17 @@ public class EstoqueDespache implements Serializable {
 	private transient static String caminhoDespacheProduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDespache.txt";
 	private static long totalProdutosDespache;
 
+	// Obtém o total de produtos no despache
 	public static long getTotalProdutosDespache() {
 		return totalProdutosDespache;
 	}
 
+	// Obtém o caminho do arquivo de despache de produtos
 	public static String getCaminhoDespacheProduto() {
 		return caminhoDespacheProduto;
 	}
-	
+
+	// Adiciona um produto ao despache
 	public static void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
 		if (listaProdutosDespache() != null) {
@@ -32,6 +35,7 @@ public class EstoqueDespache implements Serializable {
 		ModelagemFile.serializar(getCaminhoDespacheProduto(), estoqueGeral);
 	}
 
+	// Lista os produtos no despache
 	public static ArrayList<DadosProduto> listaProdutosDespache() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoDespacheProduto());
 		if (listaProdutos != null)
@@ -41,7 +45,7 @@ public class EstoqueDespache implements Serializable {
 		return listaProdutos;
 	}
 
-	
+	// Atualiza o despache, removendo produtos com mais de 30 dias
 	public static void atualizarDespache() {
 		ArrayList<DadosProduto> estoqueGeral = ModelagemFile.desserializar(getCaminhoDespacheProduto());
 		if (estoqueGeral != null) {
@@ -56,8 +60,5 @@ public class EstoqueDespache implements Serializable {
 			ModelagemFile.serializar(caminhoDespacheProduto, estoqueGeral);
 		}
 	}
-	
-	
-	
-	
+
 }

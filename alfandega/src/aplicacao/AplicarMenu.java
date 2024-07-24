@@ -16,30 +16,40 @@ public class AplicarMenu {
 		List<String> opcoes = null;
 		switch (vetorAtual) {
 		case 1:
+			// Menu para opções de usuário
 			opcoes = Arrays.asList("Cliente", "Fornecedor", "Funcionario", "Finalizar");
 			break;
 		case 2:
+			// Menu para operações de rastreamento, cadastro, login, etc.
+
 			opcoes = Arrays.asList("Rastrear um produto por id", "Cadastro", "Login", "Voltar");
 			break;
 		case 3 :
+			// Menu para operações do cliente
 			opcoes = Arrays.asList("Listar produtos associados a conta", "Fazer pagamento", "Dívidas", "Notificações de produto", "Sair da conta");
 			break;
 		case 4:
+			// Menu para operações do fornecedor
 			opcoes = Arrays.asList("Listar produtos fornecidos","Cadastrar Produto","Fazer pagamento","Dívidas","Notificações de produto", "Sair da conta");
 			break;
 		case 5:
+			// Menu para operações do funcionário
 			opcoes = Arrays.asList("Editar Produto", "Editar Cliente/Fornecedor", "Editar Funcionario", "Operações de Banco e Pagamento", "Registrar Funcionário","Listar produtos do estoque", "Listar produtos despachados", "Sair da conta");
 			break;
 		case 6:
+			// Menu para edição de produto
 			opcoes = Arrays.asList("Documento do Produto", "Notificações do Produto", "Status do Produto", "Remoção do Produto");
 			break;
 		case 7:
+			// Menu para categorias de produtos
 			opcoes = Arrays.asList("Acessórios", "Automóveis", "Eletrodomésticos", "Ferramentas", "Informática", "Mobília", "Roupa");
 			break;
 		case 8:
+			// Menu para operações de banco
 			opcoes = Arrays.asList("Exibir saldo total do banco","Exibir histórico de pagamentos","Exibir valores gerais de impostos","Ler estoque de dívidas","Exibir impostos");
 			break;
 		default:
+			// Lança uma exceção se a opção for inválida
 			throw new IllegalArgumentException("Opção inválida, tente novamente");
 		}
 		
@@ -51,6 +61,7 @@ public class AplicarMenu {
 		do {
 			contador = 1;
 			for (String opcao : opcoes) {
+				// Exibe cada opção numerada no menu
 				System.out.printf("%d - %s\n", contador++, opcao);
 			}
 			try {
@@ -82,7 +93,7 @@ public class AplicarMenu {
 	 // Retorna o valor enum da opção
 		//pesquisar como pegar 2 tipos de erros em um código entre parÊnteses()
 	
-	public static void clearScreen() {
+	public static void clearScreen() { 	// Limpar a tela
 		for (int i = 0; i < 50; ++i) System.out.println();
 	}
 	

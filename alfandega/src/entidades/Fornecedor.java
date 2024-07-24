@@ -42,7 +42,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public Fornecedor() {
 	}
 
-	// aplicar nome email e senha como parâmetros em utilizador?
+	// Construtor com nome, email e senha
 	public Fornecedor(String nomeFornecedor, String emailFornecedor, String senha) {
 		this.nomeFornecedor = nomeFornecedor;
 		this.emailFornecedor = emailFornecedor;
@@ -55,7 +55,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		this.senha = senha;
 	}
 
-	// passando para o Funcionario apagar a conta
+	 // Construtor para identificar fornecedor por email
 	public Fornecedor(String emailFornecedor) {
 		this.emailFornecedor = emailFornecedor;
 	}
@@ -77,6 +77,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		return senha;
 	}
 
+	// Método para cadastrar um produto
 	public void cadastrarProduto() {
 		boolean fimOp = false, temDoc = false;
 		String cpfCliente = null, cep = null, valorString = null;
@@ -149,7 +150,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					System.out.println();
 				}
 
-				// talvez fazer um vetor para percorrer
 
 				DadosProduto produto = new DadosProduto(new Cliente(cpfCliente), this,
 						criarProduto(tipoProduto, preco, quantidade), temDoc, new Endereco(cep, residencia));
@@ -173,6 +173,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		System.out.println("Produto cadastrado no estoque\n");
 	}
 
+    // Método privado para criar um produto com base no tipo
 	private static Produto criarProduto(int tipoProduto, double preco, int quantidade) throws IllegalArgumentException {
 		Map<Integer, Produto> tipoProdutoMap = new HashMap<>();
 		// armazenar entradas chave-valor como um dicionário de um valor, único.
@@ -212,7 +213,8 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		}
 		return null;
 	}
-
+	
+    // Método para comparar email e senha
 	public boolean equalsByEmailAndSenha(String email, String senha) {
 		return this.emailFornecedor.equals(email) && this.senha.equals(senha);
 	}

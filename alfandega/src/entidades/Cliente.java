@@ -15,7 +15,7 @@ import utilidade.ModelagemFile;
 public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Serializable {
 
 	// alterar os construtores usando this
-
+	// Declaração de variáveis e constantes
 	private static final long serialVersionUID = 1L;
 	private String nomeCliente;
 	private String email;
@@ -69,6 +69,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return caminhoClientesFile;
 	}
 
+	// Método para listar os produtos do cliente
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
 			ArrayList<DadosProduto> produtosDespache) {
@@ -86,16 +87,19 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 
 	// avisoscanal receberá o listar produtos()
 
+	// Método para cadastro do cliente
 	@Override
 	public void cadastro() {
 		condicaoCadastro(this, caminhoClientesFile);
 	}
 
+	// Método para gerar o hash code do cliente baseado no CPF
 	@Override
 	public int hashCode() {
 		return Objects.hash(cpf);
 	}
 
+	// Método para comparar dois objetos Cliente
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -130,6 +134,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return null;
 	}
 
+	// Método para remover o usuário (cliente)
 	@Override
 	public void removerUser(Cliente pessoa) {
 		ArrayList<Cliente> clientes = listarUsuarios(getCaminhoFileUser());
@@ -140,12 +145,13 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		}
 		ModelagemFile.serializar(caminhoClientesFile, clientes);
 	}
-
-	// equals já está sendo usado para o cpf
+	// Método para comparar email e senha
+	
 	public boolean equalsByEmailAndSenha(String email, String senha) {
-		return this.email.equals(email) && this.senha.equals(senha);
+		return this.email.equals(email) && this.senha.equals(senha); //// equals já está sendo usado para o cpf
 	}
 
+	// Método para executar operações de usuário
 	@Override
 	public void operacoesUser() {
 		System.out.println("Operações de Cliente: ");
@@ -207,11 +213,13 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		} while (valor != 5);
 	}
 
+	// Método toString para retornar as informações do cliente
 	@Override
 	public String toString() {
 		return "[nome=" + nomeCliente + ", cpf=" + cpf + "]";
 	}
 
+	// Método para listar as dívidas do cliente
 	@Override
 	public void listarDividas() {
 		System.out.println("Mostrando Dívidas relacionadas ao cliente.");

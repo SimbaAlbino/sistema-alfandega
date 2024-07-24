@@ -16,14 +16,17 @@ public abstract class Utilizador<T> {
 
 	static Scanner sc = new Scanner(System.in);
 
+	// Método abstrato para cadastro do utilizador
 	public abstract void cadastro();
 
+	// Método abstrato para listar dívidas do utilizador
 	public abstract void listarDividas();
 
+	// Sobrescrita dos métodos equals e hashCode
 	public abstract boolean equals(Object obj);
-
 	public abstract int hashCode();
 
+	// Rastreia produtos por ID
 	public static void rastrearProdutos() {
 		// definir como null pra conseguirmos retornar um parâmetro
 		DadosProduto resultado = null;
@@ -59,7 +62,8 @@ public abstract class Utilizador<T> {
 			sc.nextLine();
 		}
 	}
-
+	
+	// Imprime a lista de produtos
 	public static void printarProdutos(ArrayList<DadosProduto> listaTodosProdutos) {
 		System.out.println("Total de registros: " + listaTodosProdutos.size());
 		System.out.println();
@@ -81,7 +85,8 @@ public abstract class Utilizador<T> {
 			System.out.println();
 		}
 	}
-
+	
+	// Método para exibir avisos de produtos
 	public void avisosCanal(ArrayList<DadosProduto> produtosListados) {
 		// contador para o total de produtos
 		long contador = 0;
@@ -107,6 +112,7 @@ public abstract class Utilizador<T> {
 		// funcionario, mensagem;
 	}
 
+	// Método para identificar e cadastrar usuário
 	public static void identificarCadastro(MenuUser status) {
 		boolean opCadastro = true;
 		while (opCadastro) {
@@ -150,6 +156,7 @@ public abstract class Utilizador<T> {
 		}
 	}
 
+	// Método para realizar pagamento de produtos
 	protected void pagamento() {
 		boolean continuar = true;
 		do {
