@@ -1,6 +1,7 @@
 package tiposProduto;
 
 public class Mobilia extends Produto {
+	private static final long serialVersionUID = 1L;
 	private static final float TAXA_UNICA = 0.18f;
 
 	public Mobilia(double precoUnico, int quantidade) {
