@@ -208,9 +208,9 @@ public class Estoque implements Serializable {
 			Canais canais = new Canais(produto);
 			switch (produto.getStatus()) {
 			case FISCALIZANDO: {
-				canais.moldagemProduto();
-				
-				//if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
+				if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
+					canais.moldagemProduto();
+				}
 		
 			}
 				break;
