@@ -10,7 +10,6 @@ import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
 import reserva.Estoque;
-import reserva.EstoqueDespache;
 
 public class Programa {
 
@@ -19,8 +18,6 @@ public class Programa {
 	final static MenuUser[] choicesUser = MenuUser.values();
 
 	public static void main(String[] args) {
-		
-		EstoqueDespache.listaProdutosDespache();
 		
 		Locale.setDefault(Locale.US);
 
@@ -75,10 +72,16 @@ public class Programa {
 						default:
 							throw new IllegalArgumentException("Tipo de usuário inválido");
 						}
-						if (usuario.confirmarUser(usuario.loginUser())) {
-							usuario.operacoesUser();
-							// atualizar console depois das operações de usuario dentro do método
-						}
+						 // Solicitar email e senha
+	                    String[] dadosLogin = usuario.loginUser();
+	                    
+	                    // Confirmar usuário
+	                    Usuario<?> usuarioAutenticado = (Usuario<?>) usuario.confirmarUser(dadosLogin);
+	                    if (usuarioAutenticado != null) {
+	                        usuarioAutenticado.operacoesUser();
+	                    } else {
+	                        System.out.println("Email ou senha inválidos.");
+	                    }
 					default:
 						break;
 					}

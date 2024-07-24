@@ -115,7 +115,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	}
 
 	@Override
-	public boolean confirmarUser(String[] dadosEntrada) {
+	public Funcionario confirmarUser(String[] dadosEntrada) {
 		ArrayList<Funcionario> funcionarios = listarUsuarios(getCaminhoFileUser());
 		if (funcionarios == null) {
 			System.out.println("Não existe este cadastro no registro.");
@@ -123,11 +123,11 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 			Funcionario funcionario = new Funcionario(dadosEntrada[0], dadosEntrada[1]);
 			for (Funcionario pessoa : funcionarios) {
 				if (pessoa.equalsByEmailAndSenha(funcionario.getEmail(), funcionario.getSenha())) {
-					return true;
+					return pessoa;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public static byte shortQuests(int vetorAtual) {

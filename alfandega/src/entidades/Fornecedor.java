@@ -153,6 +153,8 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 				DadosProduto produto = new DadosProduto(new Cliente(cpfCliente), this, criarProduto(tipoProduto, preco, quantidade),
 						temDoc, new Endereco(cep, residencia));
+				
+				System.out.println(produto.getCliente().getCpf());
 				produto.gerarIdRastreio();
 				Estoque.addProduto(produto);
 				fimOp = true;
@@ -197,7 +199,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	}
 
 	@Override
-	public boolean confirmarUser(String[] dadosEntrada) {
+	public Fornecedor confirmarUser(String[] dadosEntrada) {
 		ArrayList<Fornecedor> fornecedores = listarUsuarios(getCaminhoFileUser());
 		if (fornecedores == null) {
 			System.out.println("Não existe este cadastro no registro.");
@@ -205,11 +207,11 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			Fornecedor fornecedor = new Fornecedor(dadosEntrada[0], dadosEntrada[1]);
 			for (Fornecedor pessoa : fornecedores) {
 				if (pessoa.equalsByEmailAndSenha(fornecedor.getEmailFornecedor(), fornecedor.getSenha())) {
-					return true;
+					return pessoa;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public boolean equalsByEmailAndSenha(String email, String senha) {

@@ -73,7 +73,6 @@ public abstract class Utilizador<T> {
 		System.out.println();
 		System.out.println(
 				"--------------------------------------------------------------------------------------------");
-
 		// Exibição dos produtos
 		for (DadosProduto dadoProduto : listaTodosProdutos) {
 			System.out.printf(format, dadoProduto.getIconeStatus(), dadoProduto.getIdRastreio(),

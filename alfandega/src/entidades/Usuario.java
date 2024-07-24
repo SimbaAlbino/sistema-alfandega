@@ -18,7 +18,7 @@ public interface Usuario<T> {
 
 	// cada usuario terá seu confirmarUser dentro de sua classe para a senha e email
 	// serem restritos à classe.
-	boolean confirmarUser(String[] dadosEntrada);
+	T confirmarUser(String[] dadosEntrada);
 
 	default void apagarUser(String caminho, T classChamada) {
 		ArrayList<?> pessoas = new ArrayList<>();
@@ -45,7 +45,7 @@ public interface Usuario<T> {
 				System.out.print("Senha: ");
 				dados[1] = sc.next();
 				sc.nextLine();
-				if (confirmarUser(dados)) {
+				if (confirmarUser(dados) != null) {
 					break;
 				} else {
 					System.out.println("E-mail/Senha errados, tente novamente!");

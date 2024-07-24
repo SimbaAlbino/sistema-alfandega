@@ -114,8 +114,9 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar
 	// produtos precisamos encontrar por Cliente
 
+
 	@Override
-	public boolean confirmarUser(String[] dadosEntrada) {
+	public Cliente confirmarUser(String[] dadosEntrada) {
 		ArrayList<Cliente> clientes = listarUsuarios(getCaminhoFileUser());
 		if (clientes == null) {
 			System.out.println("Não existe este cadastro no registro.");
@@ -123,11 +124,11 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 			Cliente cliente = new Cliente(dadosEntrada[0], dadosEntrada[1]);
 			for (Cliente pessoa : clientes) {
 				if (pessoa.equalsByEmailAndSenha(cliente.getEmail(), cliente.getSenha())) {
-					return true;
+					return pessoa;
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	@Override
@@ -148,7 +149,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 
 	@Override
 	public void operacoesUser() {
-
 		System.out.println("Operações de Cliente: ");
 		System.out.println();
 		int valor = 0;
