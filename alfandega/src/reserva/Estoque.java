@@ -21,7 +21,7 @@ public class Estoque implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
+	private transient static String caminhoEstoqueproduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt";
 
 	public static String getCaminhoEstoqueProduto() {
 		return caminhoEstoqueproduto;
@@ -33,10 +33,13 @@ public class Estoque implements Serializable {
 
 	public synchronized static void addProduto(DadosProduto produto) {
 		ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
-		estoqueGeral.add(produto);
-		ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
-		produto.setArmazenamentoAtual(Local.ESTOQUE);
-		//
+		if (produto != null) {
+		    estoqueGeral.add(produto);
+		    produto.setArmazenamentoAtual(Local.ESTOQUE);
+		    ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
+		} else {
+			System.out.println("Produto não foi estocado, pois está vazio.");
+		}
 	}
 
 	public synchronized static void removerProdutoEstoque(DadosProduto produto) {
@@ -55,13 +58,15 @@ public class Estoque implements Serializable {
 	// a att do código será no começo e final da operação
 	public static void atualizarSistema() {
 		// aplicar um design bonito de carregando
-		for (DadosProduto produto : listaProdutosEstoque()) {
-			attCanaisFiltro(produto);
+		if (listaProdutosEstoque() != null) {
+			for (DadosProduto produto : listaProdutosEstoque()) {
+				attCanaisFiltro(produto);
+			}
+			ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutosEstoque());
 		}
 		EstoqueDespache.atualizarDespache();
-		ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutosEstoque());
 
-		int totalSteps = 30; // Total de etapas da barra de carregamento
+		int totalSteps = 20; // Total de etapas da barra de carregamento
 
 		System.out.print("Carregando Sistema: [");
 
@@ -79,13 +84,12 @@ public class Estoque implements Serializable {
 	}
 
 
-	public final static ArrayList<DadosProduto> listaProdutosEstoque() {
+	public static ArrayList<DadosProduto> listaProdutosEstoque() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoEstoqueProduto());
-		try {
+		if (listaProdutos != null)
 			totalProdutos = listaProdutos.size();
-		} catch (NullPointerException e) {
-			System.out.println("Corrija o caminho dos arquivos, reinicie ou a lista de estoque estará vazia.");
-		}
+		else
+			return null;
 		return listaProdutos;
 	}
 
@@ -170,7 +174,7 @@ public class Estoque implements Serializable {
 			}
 			break;
 		case FISCALIZANDO: {
-			if (ChronoUnit.MINUTES.between(dataOperacaoDeProduto, agora) > 3) {
+			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
 				canais.moldagemProduto();
 				// manda para canais
 			}
@@ -193,7 +197,7 @@ public class Estoque implements Serializable {
 			// feito
 			// Remover o produto caso a data de inexistência declarada pelo funcionario.
 			// O código deveria mostrar 3 days between, mas para uso didático, coloquei 3
-			if (ChronoUnit.MINUTES.between(dataOperacaoDeProduto, agora) > 3) {
+			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 1) {
 				removerProdutoEstoque(dadoProduto);
 			}
 			break;

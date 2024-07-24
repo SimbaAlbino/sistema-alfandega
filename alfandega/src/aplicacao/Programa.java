@@ -10,6 +10,7 @@ import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
 import reserva.Estoque;
+import reserva.EstoqueDespache;
 
 public class Programa {
 
@@ -18,6 +19,8 @@ public class Programa {
 	final static MenuUser[] choicesUser = MenuUser.values();
 
 	public static void main(String[] args) {
+		
+		EstoqueDespache.listaProdutosDespache();
 		
 		Locale.setDefault(Locale.US);
 

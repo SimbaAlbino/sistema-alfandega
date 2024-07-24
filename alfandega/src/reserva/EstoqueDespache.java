@@ -12,7 +12,7 @@ import utilidade.ModelagemFile;
 public class EstoqueDespache implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static String caminhoDespacheProduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDespache.txt";
+	private transient static String caminhoDespacheProduto = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDespache.txt";
 	private static long totalProdutosDespache;
 
 	public static long getTotalProdutosDespache() {
@@ -24,36 +24,37 @@ public class EstoqueDespache implements Serializable {
 	}
 	
 	public static void addProduto(DadosProduto produto) {
-		ArrayList<DadosProduto> estoqueGeral = listaProdutosDespache();
+		ArrayList<DadosProduto> estoqueGeral = new ArrayList<>();
+		if (listaProdutosDespache() != null) {
+			estoqueGeral = listaProdutosDespache();
+		}
 		estoqueGeral.add(produto);
 		ModelagemFile.serializar(getCaminhoDespacheProduto(), estoqueGeral);
-		//
 	}
 
 	public static ArrayList<DadosProduto> listaProdutosDespache() {
 		ArrayList<DadosProduto> listaProdutos = ModelagemFile.desserializar(getCaminhoDespacheProduto());
-		try {
+		if (listaProdutos != null)
 			totalProdutosDespache = listaProdutos.size();
-		}
-		catch (NullPointerException e) {
-			System.out.println("Corrija o caminho dos arquivos, reinicie ou a lista de estoque estará vazia.");
-		}
+		else
+			return null;
 		return listaProdutos;
 	}
 
 	
 	public static void atualizarDespache() {
 		ArrayList<DadosProduto> estoqueGeral = ModelagemFile.desserializar(getCaminhoDespacheProduto());
-
-		Iterator<DadosProduto> iterator = estoqueGeral.iterator();
-		while (iterator.hasNext()) {
-			DadosProduto produto = iterator.next();
-			if (ChronoUnit.DAYS.between(produto.getDataDeOperacao(), LocalDate.now()) > 30) {
-				iterator.remove();
+		if (estoqueGeral != null) {
+			Iterator<DadosProduto> iterator = estoqueGeral.iterator();
+			while (iterator.hasNext()) {
+				DadosProduto produto = iterator.next();
+				if (ChronoUnit.DAYS.between(produto.getDataDeOperacao(), LocalDate.now()) > 30) {
+					iterator.remove();
+				}
 			}
-		}
 
-		ModelagemFile.serializar(caminhoDespacheProduto, estoqueGeral);
+			ModelagemFile.serializar(caminhoDespacheProduto, estoqueGeral);
+		}
 	}
 	
 	

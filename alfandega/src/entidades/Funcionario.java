@@ -19,7 +19,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	static Scanner sc = new Scanner(System.in);
+	static transient Scanner sc = new Scanner(System.in);
 
 	private String nomeAdm;
 	private String email;
@@ -28,7 +28,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 	// Pensar em criar um sistema de pagamento para o funcionário.
 
-	private String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
+	private transient String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
 
 	// Construtor para o menu
 	public Funcionario() {
@@ -411,7 +411,6 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	@Override
 	public ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
 			ArrayList<DadosProduto> produtosDespache) {
-
 		return null;
 	}
 

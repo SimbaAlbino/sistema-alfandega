@@ -18,6 +18,10 @@ public abstract class Utilizador<T> {
 	public abstract void cadastro();
 
 	public abstract void listarDividas();
+	
+	public abstract boolean equals(Object obj);
+	
+	public abstract int hashCode();
 
 	public static void rastrearProdutos() {
 		// definir como null pra conseguirmos retornar um parâmetro
@@ -55,32 +59,27 @@ public abstract class Utilizador<T> {
 		}
 	}
 
-	
-
 	public static void printarProdutos(ArrayList<DadosProduto> listaTodosProdutos) {
-	    System.out.println("Total de registros: " + listaTodosProdutos.size());
-	    System.out.println();
-	    System.out.println("🟡 - deve realizar pagamento.");
-	    System.out.println("🟢 - produto aprovado");
-	    System.out.println("🔴 - exige documento.");
-	    System.out.println("⚫ - fiscalizando\n");
+		System.out.println("Total de registros: " + listaTodosProdutos.size());
+		System.out.println();
+		System.out.println("🟡 - deve realizar pagamento.");
+		System.out.println("🟢 - produto aprovado");
+		System.out.println("🔴 - exige documento.");
+		System.out.println("⚫ - fiscalizando\n");
 
-	    // Cabeçalhos das colunas
-	    String format = "%-8s %-20s %-15s %-20s %-20s";
-	    System.out.printf(format, "Aviso", "ID", "CPF Vinculado", "Situação Atual", "Data da Situação");
-	    System.out.println();
-	    System.out.println("--------------------------------------------------------------------------------------------");
+		// Cabeçalhos das colunas
+		String format = "%-8s %-20s %-15s %-20s %-20s";
+		System.out.printf(format, "Aviso", "ID", "CPF Vinculado", "Situação Atual", "Data da Situação");
+		System.out.println();
+		System.out.println(
+				"--------------------------------------------------------------------------------------------");
 
-	    // Exibição dos produtos
-	    for (DadosProduto dadoProduto : listaTodosProdutos) {
-	        System.out.printf(format, 
-	            dadoProduto.getIconeStatus(), 
-	            dadoProduto.getIdRastreio(), 
-	            dadoProduto.getCliente().getCpf(), 
-	            dadoProduto.getStatus(), 
-	            dadoProduto.getDataDeOperacao());
-	        System.out.println();
-	    }
+		// Exibição dos produtos
+		for (DadosProduto dadoProduto : listaTodosProdutos) {
+			System.out.printf(format, dadoProduto.getIconeStatus(), dadoProduto.getIdRastreio(),
+					dadoProduto.getCliente().getCpf(), dadoProduto.getStatus(), dadoProduto.getDataDeOperacao());
+			System.out.println();
+		}
 	}
 
 	public void avisosCanal(ArrayList<DadosProduto> produtosListados) {
@@ -97,6 +96,9 @@ public abstract class Utilizador<T> {
 		System.out.println();
 		if (contador == 0) {
 			System.out.println("Você não possui avisos de urgência estendidos do produto.");
+		}
+		if (produtosListados.isEmpty() || produtosListados == null) {
+			System.out.println("\nNão há registro de produtos em seu nome\n");
 		}
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
@@ -144,7 +146,7 @@ public abstract class Utilizador<T> {
 			}
 		}
 	}
-	
+
 	protected void pagamento() {
 		boolean continuar = true;
 		while (continuar) {

@@ -12,11 +12,13 @@ public class EstoqueDivida {
 
 	private static long totalDividas;
 
-	private static String caminhoEstoqueDividas = "C:\\Users\\Pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDivida.txt";
+	private transient static String caminhoEstoqueDividas = "C:\\Users\\Pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDivida.txt";
 
 	public static ArrayList<Dividas> listaDividas() {
 		ArrayList<Dividas> listaDividas = ModelagemFile.desserializar(getCaminhoBanco());
-		totalDividas = listaDividas.size();
+		if (listaDividas != null) {
+			totalDividas = listaDividas.size();
+		}
 		return listaDividas;
 	}
 

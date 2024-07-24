@@ -29,7 +29,11 @@ public class DadosProduto implements Serializable {
 	private Local armazenamentoAtual;
 	// add construtor e getters
 
-	Scanner sc = new Scanner(System.in);
+	transient Scanner sc = new Scanner(System.in);
+	
+	public DadosProduto() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public DadosProduto(Cliente cliente, Fornecedor fornecedor, Produto tipoProduto, boolean documentos,
 			Endereco endereco) {

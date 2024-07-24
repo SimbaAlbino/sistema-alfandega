@@ -20,7 +20,7 @@ public class Banco implements Pagamento {
 	private static double saldoTotalBanco;
 	private static List<String[]> historicoPagamentos;
 	public static Map<String, Double> impostosMap = new HashMap<>();
-	private static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
+	private transient static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
 	
 	static Scanner sc = new Scanner(System.in);
 

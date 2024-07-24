@@ -1,7 +1,6 @@
 package aplicacao;
 
 import java.util.Arrays;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,7 +8,7 @@ public class AplicarMenu {
 	
 	//
 	
-	private static Scanner input = new Scanner(System.in);
+	private transient static Scanner sc = new Scanner(System.in);
 	
 	
 	// Obtém a solicitação do usuário
@@ -56,7 +55,7 @@ public class AplicarMenu {
 			try {
 				 // Insere a solicitação de usuário
 					System.out.print("\n-> ");
-					String digito = input.nextLine().trim();
+					String digito = sc.nextLine().trim();
 					if (digito.isEmpty()) {
 						throw new IllegalArgumentException("Valor nulo lançado");
 					}
@@ -67,12 +66,12 @@ public class AplicarMenu {
 					} else {
 						entrada = true;
 					}
-			} catch (InputMismatchException e) {
-				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
-				input.nextLine();
 			} catch (NumberFormatException e) {
 				System.out.println("Entrada inválida, por favor insira um número. Digite enter para tentar novamente.");
-				input.nextLine();
+				sc.nextLine();
+			} catch (IllegalArgumentException e) {
+				System.err.printf("Entrada inválida, %s, digite enter para tentar novamente.\n", e.getMessage());
+				sc.nextLine();
 			}
 		} while (!entrada || (request < 1) || (request > opcoes.size()));
 		clearScreen();

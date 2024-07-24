@@ -1,7 +1,6 @@
 package entidades;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -31,15 +30,13 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 	private static final long serialVersionUID = 1L;
 
-	static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-	static Scanner sc = new Scanner(System.in);
+	static transient Scanner sc = new Scanner(System.in);
 
 	private String nomeFornecedor;
 	private String emailFornecedor;
 	private String senha;
 
-	private String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
+	private transient String caminhoFornecedoresFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFornecedores.txt";
 
 	// Construtor vazio para o menu
 	public Fornecedor() {
@@ -81,37 +78,37 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	}
 
 	public void cadastrarProduto() {
-		Produto categoriaProduto = null;
 		boolean fimOp = false, temDoc = false;
-		String nomeCliente = null, cpfCliente = null, cep = null, valorString = null;
+		String cpfCliente = null, cep = null, valorString = null;
 		int quantidade = 0;
 		double preco = 0;
 		Integer tipoProduto = null;
 		short residencia = 0;
-		short iterador = 0;
+		short iterador = 1;
 
-		String[] perguntas = { "Digite o nome do Cliente: ", "Digite o CPF",
-				"Próxima etapa (Descrição do Produto): \nTipo de produto: ", "Qual o preço da unidade? ",
+		String[] perguntas = { "Digite o CPF do Cliente: ",
+				"Próxima etapa (Descrição do Produto): \nTipo de produto: \n", "Qual o preço da unidade? ",
 				"Qual a quantidade? ", "Você adicionou documentos ( S | N )? ", "Digite o cep: ",
 				"Digite o número da residência: " };
 
 		while (!fimOp) {
 			try {
-
-				for (; iterador < perguntas.length; iterador++) {
-					System.out.print(perguntas[iterador]);
+				for (; iterador <= perguntas.length; iterador++) {
+					System.out.print(perguntas[iterador - 1]);
 					switch (iterador) {
 					case 1:
-						nomeCliente = sc.nextLine();
-					case 2:
-						cpfCliente = sc.next().replace(".", "").replace("-", "");
+						cpfCliente = sc.next().trim().replace(".", "").replace("-", "");
+						sc.nextLine();
 						if (!ValidarDados.validarCPF(cpfCliente)) {
 							throw new IllegalArgumentException("os dígitos de cpf ultrapassam 11");
 						}
-					case 3:
+						break;
+					case 2:
 						tipoProduto = AplicarMenu.getRequest(7); // fazer um get com todos os tipos de produto
-					case 4:
+						break;
+					case 3:
 						valorString = sc.next();
+						sc.nextLine();
                         // Substituir a vírgula por ponto
                         valorString = valorString.replace(',', '.');
                         try {
@@ -120,10 +117,13 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
                             throw new IllegalArgumentException("Formato de preço inválido");
                         }
                         break;
-					case 5:
+					case 4:
 						quantidade = sc.nextInt();
-					case 6:
+						sc.nextLine();
+						break;
+					case 5:
 						String resposta = sc.next().toUpperCase();
+						sc.nextLine();
 						if (resposta.charAt(0) == 'S') {
 							temDoc = true;
 						} else if (resposta.charAt(0) == 'N') {
@@ -131,26 +131,29 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 						} else {
 							throw new IllegalArgumentException("Digite (s/n) para Sim/Não");
 						}
-					case 7:
+						break;
+					case 6:
 						cep = sc.next();
+						sc.nextLine();
 						if (!ValidarDados.validarCEP(cep)) {
 							throw new IllegalArgumentException("O valor do cep deve ter 8 dígitos");
 						}
-					case 8:
+						break;
+					case 7:
 						residencia = sc.nextShort();
 						sc.nextLine();
+						break;
 					default:
 						break;
 					}
-					
+					System.out.println();
 				}
-
-				criarProduto(tipoProduto, preco, quantidade);
 
 				// talvez fazer um vetor para percorrer
 
-				DadosProduto produto = new DadosProduto(new Cliente(nomeCliente, cpfCliente), this, categoriaProduto,
+				DadosProduto produto = new DadosProduto(new Cliente(cpfCliente), this, criarProduto(tipoProduto, preco, quantidade),
 						temDoc, new Endereco(cep, residencia));
+				produto.gerarIdRastreio();
 				Estoque.addProduto(produto);
 				fimOp = true;
 			} catch (InputMismatchException e) {
@@ -166,7 +169,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		}
 
 		// Adicionando cliente referente ao produto
-		System.out.println("Produto cadastrado no estoque");
+		System.out.println("Produto cadastrado no estoque\n");
 	}
 
 	private static Produto criarProduto(int tipoProduto, double preco, int quantidade) throws IllegalArgumentException {
@@ -229,13 +232,13 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
 					// os seus produtos fornecidos
 					System.out.println("Listando produtos: ");
+					
 					printarProdutos(
 							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
 				case 2:
-					// pagando
 					System.out.println("Cadastro de produto: \n");
 					cadastrarProduto();
 					System.out.println("Pressione Enter para voltar");
@@ -245,12 +248,10 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// pagando
 					System.out.println("Quadro de pagamento: \n");
 					pagamento();
-					System.out.println("Pressione Enter para voltar");
-					sc.nextLine();
 					break;
 				case 4:
 					// os seus produtos fornecidos
-					System.out.println("Dividas relacionadas ao fornecedor.\n");
+					System.out.println("Dívidas relacionadas ao fornecedor:\n");
 					listarDividas();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
@@ -258,7 +259,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				case 5:
 					// chamar usar o listar produtos para identificar se tem avisos canal e passar
 					// para a função.
-
+					
 					this.avisosCanal(
 							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
@@ -267,7 +268,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				case 6:
 					System.out.println("Saindo da conta...");
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 						System.out.println("Erro no sleep: " + e.getMessage());
 					}
@@ -281,7 +282,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				sc.nextLine(); // Consumir a entrada inválida
 			}
 			Estoque.atualizarSistema();
-			System.out.println();
+			AplicarMenu.clearScreen();
 		} while (valor != 6);
 	}
 
@@ -291,23 +292,30 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 		// listar do fornecedor ou fornecedor entre tal cliente
 		List<DadosProduto> listaFiltrada = new ArrayList<>();
 		System.out.println(
-				"Para encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por associação Fornecedor-Cliente");
+				"\nPara encontrar seus produtos, informe: \n1 - Listar por Fornecedor associado\n2 - Listar por associação Fornecedor-Cliente");
 		short tipoListagem = 0;
-
-		List<DadosProduto> listaEstoque = Estoque.listaProdutosEstoque();
-		List<DadosProduto> listaDespache = EstoqueDespache.listaProdutosDespache();
+		List<DadosProduto> listaEstoque = new ArrayList<>();
+		List<DadosProduto> listaDespache = new ArrayList<>();
+		if (Estoque.listaProdutosEstoque() != null) {
+			listaEstoque = Estoque.listaProdutosEstoque();
+		}
+		if (EstoqueDespache.listaProdutosDespache() != null) {
+			listaEstoque = EstoqueDespache.listaProdutosDespache();
+		}
 		try {
 			do {
 				System.out.print("\n->");
 				tipoListagem = sc.nextShort();
+				sc.nextLine();
 				if (tipoListagem == 1) {
 					listaEstoque = listaEstoque.stream().filter(x -> x.getFornecedor().equals(this))
 							.collect(Collectors.toList());
 					listaDespache = listaDespache.stream().filter(x -> x.getFornecedor().equals(this))
 							.collect(Collectors.toList());
 				} else if (tipoListagem == 2) {
-					System.out.println("Informe o CPF do cliente associado: ");
-					String cpfCliente = sc.next().replace(".", "").replace("-", "");
+					System.out.println("\nInforme o CPF do cliente associado: ");
+					String cpfCliente = sc.next().trim().replace(".", "").replace("-", "");
+					sc.nextLine();
 					if (!ValidarDados.validarCPF(cpfCliente)) {
 						throw new IllegalArgumentException("número de dígites deve ser 11");
 					}
@@ -320,16 +328,16 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 							.collect(Collectors.toList());
 				} else {
 					System.out.println("Opção inválida, tente novamente.");
-
 				}
 				listaFiltrada.addAll(listaDespache);
 				listaFiltrada.addAll(listaDespache);
 				// corrigir
 			} while (tipoListagem != 1 && tipoListagem != 2);
 		} catch (IllegalArgumentException e) {
-			System.out.printf("Erro, opção inválida, %s ,tente novamente, pressione enter.\n", e.getMessage());
+			System.out.printf("Erro, opção inválida, %s, tente novamente, pressione enter.\n", e.getMessage());
 			sc.nextLine();
 		}
+		AplicarMenu.clearScreen();
 		return (ArrayList<DadosProduto>) listaFiltrada;
 	}
 
@@ -373,14 +381,13 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	@Override
 	public void listarDividas() {
 		try {
-			System.out.println("Mostrando Dívidas relacionadas ao fornecedor.");
 			List<Dividas> dividasUtiliziador = EstoqueDivida.listaDividas().stream().filter(x -> x.getDadosProduto().getFornecedor().equals(this)).collect(Collectors.toList());
 			if (dividasUtiliziador != null)
 				dividasUtiliziador.forEach(System.out::println);
 			else
 				System.out.println("Você não possui dívidas vinculadas.");
 		} catch (Exception e) {
-	        System.out.println("A sua listagem de dívidas não é acessível." + e.getMessage());
+	        System.out.println("A sua listagem de dívidas não é acessível.");
 	    }
 		
 	}

@@ -23,7 +23,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 	private String senha;
 	private String cpf;
 
-	private static String caminhoClientesFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileClientes.txt";
+	private transient static String caminhoClientesFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileClientes.txt";
 
 	static Scanner sc = new Scanner(System.in);
 
@@ -190,7 +190,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 				case 5:
 					System.out.println("Saindo da conta...");
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 						System.out.println("Erro no sleep: " + e.getMessage());
 					}

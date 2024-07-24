@@ -15,6 +15,7 @@ public class ModelagemFile {
     public static <T> void serializar(String caminhoFile, ArrayList<T> lista) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(caminhoFile))) {
             oos.writeObject(lista);
+            oos.flush();
         } catch (FileNotFoundException e) {
             System.out.println("Arquivo não encontrado na serialização: " + e.getMessage());
         } catch (IOException e) {
@@ -37,11 +38,7 @@ public class ModelagemFile {
                 System.out.println("Exceção de Classe não encontrada na desserialização: " + e.getMessage());
             }
         } else {
-            System.out.println("Arquivo não encontrado ou está vazio.");
-            return null;
-            /*if (!file.exists()) {
-            	criarArquivo(caminhoFile);
-            }*/
+        	return null;
         }
         return listaRetorno;
     }
