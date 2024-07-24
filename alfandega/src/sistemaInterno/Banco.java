@@ -16,23 +16,23 @@ import entidades.DadosProduto;
 import utilidade.ModelagemFile;
 
 public class Banco implements Pagamento {
-	private static Impostos imposto; // static?
-	private static double saldoTotalBanco;
-	private static List<String[]> historicoPagamentos;
-	public static Map<String, Double> impostosMap = new HashMap<>();
+	private static Impostos imposto; //Objeto Impostos que gerencia as taxas de impostos
+	private static double saldoTotalBanco; // Saldo total do banco
+	private static List<String[]> historicoPagamentos;  // Histórico de pagamentos
+	public static Map<String, Double> impostosMap = new HashMap<>(); // Mapa para armazenar tipos de impostos e seus valores !
 	private transient static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
 	
 	static Scanner sc = new Scanner(System.in);
 
 	public Banco() {
 	}
-	// provavelmente irei serializar tudo em uma array genérica
 
+	   // Método para configurar as taxas de impostos
 	public void setImpostos() {
 		// alterar talvez
 		Impostos.setBaseImposto(0.11, 0.20);
 	}
-
+	// Método para salvar os dados do banco (serialização)
 	public static void saveDadosBanco() {
 		DadosBanco dadosBanco = new DadosBanco(saldoTotalBanco, historicoPagamentos, impostosMap, imposto);
 		try (FileOutputStream fileOut = new FileOutputStream(getCaminhoBanco());
@@ -43,7 +43,7 @@ public class Banco implements Pagamento {
 			i.printStackTrace();
 		}
 	}
-
+	// Método para carregar os dados do banco (desserialização)
 	public static void loadDadosBanco() {
 		try (FileInputStream fileIn = new FileInputStream(getCaminhoBanco());
 				ObjectInputStream in = new ObjectInputStream(fileIn)) {
@@ -57,7 +57,8 @@ public class Banco implements Pagamento {
 			System.out.println("Falha na desserialização dos dados do banco: " + i.getMessage());
 		}
 	}
-
+    
+	// Método para calcular o imposto total a partir do mapa de impostos
 	public static void adicionarImposto(String chave, double valor) {
 		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
 	}
@@ -82,17 +83,19 @@ public class Banco implements Pagamento {
 
 	// [pedro,2.5,8.5,2.9,somatotimposto]
 
+	// Método para adicionar o histórico de pagamentos
 	public static void addHistoricoPagamento(String[] vetorImpostosCalc) {
 		ArrayList<String[]> estoqueGeral = listaHistoricoPagamentos();
 		estoqueGeral.add(vetorImpostosCalc);
 		//
 	}
-
+	 // Método para listar o histórico de pagamentos
 	public static ArrayList<String[]> listaHistoricoPagamentos() {
 		ArrayList<String[]> listaHistoricoPagamentos = ModelagemFile.desserializar(getCaminhoBanco());
 		return listaHistoricoPagamentos;
 	}
-
+	
+	// Método para exibir o histórico de pagamentos
 	public static void exibirHistoricoPagamentos() {
 		System.out.println("\nHistórico de Pagamentos:");
 		for (String[] registro : listaHistoricoPagamentos()) {
@@ -102,7 +105,7 @@ public class Banco implements Pagamento {
 			// print do historico pagamentos);
 		}
 	}
-	
+	// Método para executar operações do funcionário
 	public static void operacaoFuncionario() {
 		loadDadosBanco();
 	    System.out.println("Selecione a operação:");
@@ -166,7 +169,7 @@ public class Banco implements Pagamento {
 	}
 
 
-	// realizar pagamento de dividas
+	// Método para liberar o pedido de um cliente após pagamento
 	public static void liberarPedido(Dividas divida) {
 		if (divida != null && !divida.dividaPendente()) {
 			System.out.println("Pedido liberado para o cliente: " + divida.getDadosProduto().getCliente().getNome());
@@ -192,8 +195,8 @@ public class Banco implements Pagamento {
 	}
 
 	@Override
+	// Método da interface Pagamento que retorna os dados do produto 
 	public DadosProduto getDadosProduto() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
