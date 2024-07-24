@@ -1,6 +1,7 @@
 package sistemaInterno;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,15 +55,21 @@ public class EstoqueDivida {
 
 	//metodo para listar todas as dividas do cliente
 	//quando o cliente quiser saber quais dividas tem
-	 public static ArrayList<Dividas> encontrarDividasPorCliente(Cliente cliente) {
-	        List<Dividas> dividas = listaDividas().stream()
-	                .filter(x -> x.getDadosProduto().getCliente().equals(cliente))
-	                .collect(Collectors.toList());
-	        if (dividas != null) {
-	            return new ArrayList<>(dividas);
-	        }
-	        return null;
+	public static List<Dividas> encontrarDividasPorCliente(Cliente cliente) {
+	    if (cliente == null) {
+	        throw new IllegalArgumentException("Cliente não pode ser null");
 	    }
+	    
+	    List<Dividas> dividas = listaDividas();
+	    if (dividas == null) {
+	        return Collections.emptyList(); // Retorna uma lista vazia se não houver dívidas
+	    }
+	    
+	    return dividas.stream()
+	                  .filter(x -> x.getDadosProduto().getCliente().equals(cliente))
+	                  .collect(Collectors.toList());
+	}
+
 	 
 	 
 	public static long getTotalDividas() {

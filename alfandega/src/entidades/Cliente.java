@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 import aplicacao.AplicarMenu;
 import reserva.Estoque;
@@ -174,7 +173,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					break;
 				case 3:
 					System.out.println("Quadro de dívidas: \n");
-					dividasCliente();
+					listarDividas();
 					System.out.println("Pressione Enter para voltar");
 					sc.nextLine();
 					break;
@@ -214,18 +213,17 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 		return "[nome=" + nomeCliente + ", cpf=" + cpf + "]";
 	}
 
-	// metodo mostrar dividas por cliente fazer !!!!
-	protected void dividasCliente() {
-		for (Dividas divCliente : EstoqueDivida.encontrarDividasPorCliente(this)) {
-			System.out.println(divCliente);
-		}
-	}
-
 	@Override
 	public void listarDividas() {
 		System.out.println("Mostrando Dívidas relacionadas ao cliente.");
-		List<Dividas> dividasUtilziador = EstoqueDivida.listaDividas().stream()
-				.filter(x -> x.getDadosProduto().getCliente().equals(this)).collect(Collectors.toList());
-		dividasUtilziador.forEach(System.out::println);
+		List<Dividas> dividas = EstoqueDivida.encontrarDividasPorCliente(this);
+		if (dividas == null || dividas.isEmpty()) {
+			System.out.println("\nVocê não possui dívidas no registro.");
+			System.out.println("Verifique se possui algum produto aguardando pagamento\n");
+		} else {
+			for (Dividas divCliente : dividas) {
+				System.out.println(divCliente);
+			}
+		}
 	}
 }

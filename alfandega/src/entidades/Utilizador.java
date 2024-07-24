@@ -84,11 +84,15 @@ public abstract class Utilizador<T> {
 	public void avisosCanal(ArrayList<DadosProduto> produtosListados) {
 		// contador para o total de produtos
 		long contador = 0;
-		for (DadosProduto produto : produtosListados) {
-			if (!(produto.getRecado().equals(null))) {
-				System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
-						produto.getRecado());
-				contador++;
+		if (produtosListados.isEmpty() || produtosListados == null) {
+			System.out.println("\nNão há registro de produtos em seu nome\n");
+		} else {
+			for (DadosProduto produto : produtosListados) {
+				if (!(produto.getRecado() == null)) {
+					System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
+							produto.getRecado());
+					contador++;
+				}
 			}
 		}
 		System.out.println("Total de avisos: " + contador);
@@ -96,9 +100,7 @@ public abstract class Utilizador<T> {
 		if (contador == 0) {
 			System.out.println("Você não possui avisos de urgência estendidos do produto.");
 		}
-		if (produtosListados.isEmpty() || produtosListados == null) {
-			System.out.println("\nNão há registro de produtos em seu nome\n");
-		}
+		
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
 	}
