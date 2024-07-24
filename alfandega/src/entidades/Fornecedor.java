@@ -375,23 +375,29 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public String toString() {
 		return "[nomeFornecedor=" + nomeFornecedor + ", emailFornecedor=" + emailFornecedor + "]";
 	}
-
-	public void verifPagamento(Cliente cliente) {
-		
-	}
 	
+	// Filtra as dívidas vinculadas ao fornecedor atual
 	@Override
 	public void listarDividas() {
-		try {
-			List<Dividas> dividasUtiliziador = EstoqueDivida.listaDividas().stream().filter(x -> x.getDadosProduto().getFornecedor().equals(this)).collect(Collectors.toList());
-			if (dividasUtiliziador != null)
-				dividasUtiliziador.forEach(System.out::println);
-			else
-				System.out.println("Você não possui dívidas vinculadas.");
-		} catch (Exception e) {
-	        System.out.println("A sua listagem de dívidas não é acessível.");
+	    try {
+	        List<Dividas> dividasUtilizador = EstoqueDivida.listaDividas();
+	        if (dividasUtilizador != null && !dividasUtilizador.isEmpty()) {
+	            List<Dividas> dividasFiltradas = dividasUtilizador.stream()
+	                .filter(x -> x.getDadosProduto().getFornecedor().equals(this))
+	                .collect(Collectors.toList());
+	            
+	            if (dividasFiltradas.isEmpty()) {
+	                System.out.println("Você não possui dívidas vinculadas.");
+	            } else {
+	                dividasFiltradas.forEach(System.out::println);
+	            }
+	        } else {
+	            System.out.println("Não há dívidas registradas no sistema.");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("A sua listagem de dívidas não é acessível: " + e.getMessage());
 	    }
-		
 	}
+
 
 }

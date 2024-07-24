@@ -78,17 +78,17 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 
 				System.out.println("Informe as condições de cadastro do funcionario: ");
 				System.out.print("Nome: ");
-				String nome = sc.nextLine();
+				String nome = sc.nextLine().trim();
 				if (!ValidarDados.validarNome(nome)) {
 					throw new OperacaoException("Erro, nome inválido");
 				}
 				System.out.print("CPF: ");
-				String cpf = sc.next();
+				String cpf = sc.next().trim().replace(".", "").replace("-", "");
 				if (!ValidarDados.validarCPF(cpf)) {
 					throw new OperacaoException("Erro, cpf não possui 11 dígitos");
 				}
 				System.out.print("E-mail: ");
-				String email = sc.nextLine();
+				String email = sc.nextLine().trim();
 				if (!ValidarDados.validarEmail(email)) {
 					throw new OperacaoException("Erro, email não possui @");
 				}
@@ -252,8 +252,6 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 								}
 							}
 						} while (desejo != 3);
-						System.out.println("Pressione Enter para voltar");
-						sc.nextLine(); // Consumir a nova linha pendente
 						break;
 					case 3:
 						System.out.println("Dados de Funcionario do registro:");
@@ -309,71 +307,77 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 						break;
 					case 6:
 						System.out.println("Listando Estoque\n");
-						for (DadosProduto produto : Estoque.listaProdutosEstoque()) {
-							System.out.println(produto);
-						}
-						System.out.println();
-						do {
-							desejo = shortQuests(4);
-							if (desejo == 1) {
-								System.out.println("Listando produtos do cliente");
-								System.out.println("Informe o cpf do cliente: ");
-								String cpfCliente = sc.next();
-								sc.nextLine(); // Consumir a nova linha pendente
-								Cliente cl = new Cliente(cpfCliente);
-								List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
-										.filter(x -> x.getArmazenamentoAtual().equals(Local.ESTOQUE))
-										.collect(Collectors.toList());
-								produtosEstqCliente.forEach(System.out::println);
-							} else if (desejo == 2) {
-								System.out.println("Listando produtos do fornecedor");
-								System.out.println("Informe o e-mail do fornecedor");
-								String emailFornecedor = sc.next();
-								sc.nextLine(); // Consumir a nova linha pendente
-								Fornecedor fornecedor = new Fornecedor(emailFornecedor);
-								List<DadosProduto> produtosEstqForn = Estoque.listaProdutosEstoque().stream()
-										.filter(x -> x.getFornecedor().equals(fornecedor)
-												&& x.getArmazenamentoAtual().equals(Local.ESTOQUE))
-										.collect(Collectors.toList());
-								produtosEstqForn.forEach(System.out::println);
+						if (Estoque.listaProdutosEstoque() == null || Estoque.listaProdutosEstoque().isEmpty()) {
+							System.out.println("O estoque está vazio!\n");
+							
+						} else {
+							
+							for (DadosProduto produto : Estoque.listaProdutosEstoque()) {
+								System.out.println(produto);
 							}
-						} while (desejo < 1 || desejo > 3);
-						System.out.println("Pressione Enter para voltar");
-						sc.nextLine(); // Consumir a nova linha pendente
+							System.out.println();
+							do {
+								desejo = shortQuests(4);
+								if (desejo == 1) {
+									System.out.println("Listando produtos do cliente");
+									System.out.println("Informe o cpf do cliente: ");
+									String cpfCliente = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									Cliente cl = new Cliente(cpfCliente);
+									List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
+											.filter(x -> x.getArmazenamentoAtual().equals(Local.ESTOQUE))
+											.collect(Collectors.toList());
+									produtosEstqCliente.forEach(System.out::println);
+								} else if (desejo == 2) {
+									System.out.println("Listando produtos do fornecedor");
+									System.out.println("Informe o e-mail do fornecedor");
+									String emailFornecedor = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									Fornecedor fornecedor = new Fornecedor(emailFornecedor);
+									List<DadosProduto> produtosEstqForn = Estoque.listaProdutosEstoque().stream()
+											.filter(x -> x.getFornecedor().equals(fornecedor)
+													&& x.getArmazenamentoAtual().equals(Local.ESTOQUE))
+											.collect(Collectors.toList());
+									produtosEstqForn.forEach(System.out::println);
+								}
+							} while (desejo < 1 || desejo > 3);
+						}
 						break;
 					case 7:
-						System.out.println("Listando produtos despachados");
-						for (DadosProduto produto : EstoqueDespache.listaProdutosDespache()) {
-							System.out.println(produto);
-						}
-						System.out.println();
-						do {
-							desejo = shortQuests(4);
-							if (desejo == 1) {
-								System.out.println("Listando produtos do cliente");
-								System.out.println("Informe o cpf do cliente: ");
-								String cpfCliente = sc.next();
-								sc.nextLine(); // Consumir a nova linha pendente
-								Cliente cl = new Cliente(cpfCliente);
-								List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
-										.filter(x -> x.getArmazenamentoAtual().equals(Local.DESPACHE))
-										.collect(Collectors.toList());
-								produtosEstqCliente.forEach(System.out::println);
-							} else if (desejo == 2) {
-								System.out.println("Listando produtos do fornecedor");
-								System.out.println("Informe o e-mail do fornecedor");
-								String emailFornecedor = sc.next();
-								sc.nextLine(); // Consumir a nova linha pendente
-								Fornecedor fornecedor = new Fornecedor(emailFornecedor);
-								List<DadosProduto> produtosEstqForn = EstoqueDespache.listaProdutosDespache().stream()
-										.filter(x -> x.getFornecedor().equals(fornecedor)
-												&& x.getArmazenamentoAtual().equals(Local.DESPACHE))
-										.collect(Collectors.toList());
-								produtosEstqForn.forEach(System.out::println);
+						System.out.println("Listando produtos despachados\n");
+						if (Estoque.listaProdutosEstoque() == null || Estoque.listaProdutosEstoque().isEmpty()) {
+							System.out.println("O estoque de despache está vazio!\n");
+						} else {
+							for (DadosProduto produto : EstoqueDespache.listaProdutosDespache()) {
+								System.out.println(produto);
 							}
-						} while (desejo != 3);
-						System.out.println("Pressione Enter para voltar");
-						sc.nextLine(); // Consumir a nova linha pendente
+							System.out.println();
+							do {
+								desejo = shortQuests(4);
+								if (desejo == 1) {
+									System.out.println("Listando produtos do cliente");
+									System.out.println("Informe o cpf do cliente: ");
+									String cpfCliente = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									Cliente cl = new Cliente(cpfCliente);
+									List<DadosProduto> produtosEstqCliente = Estoque.buscarClientEquals(cl).stream()
+											.filter(x -> x.getArmazenamentoAtual().equals(Local.DESPACHE))
+											.collect(Collectors.toList());
+									produtosEstqCliente.forEach(System.out::println);
+								} else if (desejo == 2) {
+									System.out.println("Listando produtos do fornecedor");
+									System.out.println("Informe o e-mail do fornecedor");
+									String emailFornecedor = sc.next();
+									sc.nextLine(); // Consumir a nova linha pendente
+									Fornecedor fornecedor = new Fornecedor(emailFornecedor);
+									List<DadosProduto> produtosEstqForn = EstoqueDespache.listaProdutosDespache().stream()
+											.filter(x -> x.getFornecedor().equals(fornecedor)
+													&& x.getArmazenamentoAtual().equals(Local.DESPACHE))
+											.collect(Collectors.toList());
+									produtosEstqForn.forEach(System.out::println);
+								}
+							} while (desejo != 3);
+						}
 						break;
 					case 8:
 						System.out.println("Fim das operações de usuário.");
