@@ -33,7 +33,6 @@ public class Banco implements Pagamento {
 		try (FileOutputStream fileOut = new FileOutputStream(getCaminhoBanco());
 				ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
 			out.writeObject(dadosBanco);
-			System.out.println("Dados do banco serializados com sucesso.");
 		} catch (IOException i) {
 			i.printStackTrace();
 		}

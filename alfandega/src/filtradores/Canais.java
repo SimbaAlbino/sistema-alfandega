@@ -7,7 +7,6 @@ import entidades.DadosProduto;
 import reserva.Estoque;
 import reserva.StatusProduto;
 import sistemaInterno.Dividas;
-import sistemaInterno.EstoqueDivida;
 import tiposProduto.Informatica;
 
 public class Canais {
@@ -94,11 +93,12 @@ public class Canais {
 		case CANAL_AMARELO:
 			getProduto().setStatus(StatusProduto.AGUARDANDO_PAGAMENTO);
 			getProduto().setDataDeOperacao(LocalDate.now());
-			Dividas divida = new Dividas(getProduto());
-			EstoqueDivida.addDividas(divida);
+			Dividas divida = new Dividas(produto);
+			divida.addDividas(divida);
 			break;
 		case CANAL_VERDE:
 			getProduto().setStatus(StatusProduto.ENVIADO);
+			getProduto().setRecado(null);
 			Estoque.despacharProduto(getProduto());
 			break;
 		case CANAL_VERMELHO:

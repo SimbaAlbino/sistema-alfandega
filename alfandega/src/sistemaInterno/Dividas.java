@@ -9,7 +9,7 @@ import entidades.OperacaoException;
 import reserva.Estoque;
 import reserva.StatusProduto;
 
-public class Dividas implements Pagamento, Serializable {
+public class Dividas extends EstoqueDivida implements Pagamento, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	private double montante;
@@ -113,7 +113,10 @@ public class Dividas implements Pagamento, Serializable {
 		} else {
 			Impostos.calcularImpostos(dadoProduto, 1);
 			Banco.liberarPedido(this);
+			//dados salvos no banco
+			
 			Estoque.statusPago(getDadosProduto());
+			
 			Estoque.atualizarSistema();
 			System.out.println("Pagamento confirmado.");
 		}

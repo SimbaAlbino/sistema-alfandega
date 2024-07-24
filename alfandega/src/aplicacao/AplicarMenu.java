@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class AplicarMenu {
 	
-	//
-	
 	private transient static Scanner sc = new Scanner(System.in);
 	
 	

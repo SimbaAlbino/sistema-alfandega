@@ -49,7 +49,7 @@ public class EstoqueDespache implements Serializable {
 	// Atualiza o despache, removendo produtos com mais de 30 dias
 	public static void atualizarDespache() {
 		ArrayList<DadosProduto> estoqueGeral = ModelagemFile.desserializar(getCaminhoDespacheProduto());
-		if (estoqueGeral != null) {
+		if (estoqueGeral != null && !estoqueGeral.isEmpty()) {
 			Iterator<DadosProduto> iterator = estoqueGeral.iterator();
 			while (iterator.hasNext()) {
 				DadosProduto produto = iterator.next();

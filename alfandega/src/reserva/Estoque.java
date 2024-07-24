@@ -6,13 +6,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import entidades.Cliente;
 import entidades.DadosProduto;
 import filtradores.Canais;
-import sistemaInterno.Dividas;
-import sistemaInterno.EstoqueDivida;
 import utilidade.ModelagemFile;
 
 public class Estoque implements Serializable {
@@ -78,15 +77,22 @@ public class Estoque implements Serializable {
 		    System.out.println("Erro ao despachar o produto: " + e.getMessage());
 		}
 	}
-
+	/*
+	Canais canais;
+	ArrayList<DadosProduto> att = new ArrayList<DadosProduto>();
+	for (DadosProduto produto: listaProdutosEstoque()) {
+		canais = new Canais(produto);
+		canais.moldagemProduto();
+		att.add(produto);
+	}
+	*/
 	// a att do código será no começo e final da operação
 	public static void atualizarSistema() {
 		// aplicar um design bonito de carregando
 		if (listaProdutosEstoque() != null) {
-			for (DadosProduto produto : listaProdutosEstoque()) {
-				attCanaisFiltro(produto);
-			}
-			ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutosEstoque());
+			ArrayList<DadosProduto> dp = listaProdutosEstoque();
+			attCanaisFiltro(dp);
+			ModelagemFile.serializar(getCaminhoEstoqueProduto(), dp);
 		}
 		EstoqueDespache.atualizarDespache();
 
@@ -181,50 +187,82 @@ public class Estoque implements Serializable {
 
 	// buscar produtos do fornecedor
 
-	public static void attCanaisFiltro(DadosProduto dadoProduto) {
+	public static void attCanaisFiltro(ArrayList<DadosProduto> lista) {
 		// Estoque pode ter: fiscalizando, aguardando pagamento, pago, rejeitado
 		// vencimentos no estoque
-		LocalDate dataOperacaoDeProduto = dadoProduto.getDataDeOperacao();
-		LocalDate agora = LocalDate.now();
-		Canais canais = new Canais(dadoProduto);
-		switch (dadoProduto.getStatus()) {
-		case FISCALIZANDO: {
-			canais.moldagemProduto();
-			
-			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
-			
-				// manda para canais
+		for (DadosProduto produto: lista) {
+			LocalDate dataOperacaoDeProduto = produto.getDataDeOperacao();
+			LocalDate agora = LocalDate.now();
+			Canais canais = new Canais(produto);
+			switch (produto.getStatus()) {
+			case FISCALIZANDO: {
+				canais.moldagemProduto();
+				
+				//if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
+		
+			}
+				break;
+			case PAGO:
+				canais.moldagemProduto();
+				break;
+			case REJEITADO:
+				// primeiro if significa que o fornecedor não forneceu o documento em 7 dias
+				if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 7) {
+					produto.setRecado("Vencimento do prazo para documento rejeitado");
+					despacharProduto(produto);
+				} else if (produto.isDocumentos() == true) {
+					produto.setStatus(StatusProduto.FISCALIZANDO);
+					produto.setRecado(null);
+				}
+				break;
+			case INEXISTENTE:
+				// feito
+				// Remover o produto caso a data de inexistência declarada pelo funcionario.
+				// O código deveria mostrar 3 days between, mas para uso didático, coloquei 3
+				if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 1) {
+					removerProdutoEstoque(produto);
+				}
+				break;
+			default:
+				break;
 			}
 		}
-			break;
-		case PAGO:
-			canais.moldagemProduto();
-			break;
-		case REJEITADO:
-			// primeiro if significa que o fornecedor não forneceu o documento em 7 dias
-			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 7) {
-				dadoProduto.setRecado("Vencimento do prazo para documento rejeitado");
-				despacharProduto(dadoProduto);
-			} else if (dadoProduto.isDocumentos() == true) {
-				dadoProduto.setStatus(StatusProduto.FISCALIZANDO);
-				dadoProduto.setRecado(null);
-			}
-			break;
-		case INEXISTENTE:
-			// feito
-			// Remover o produto caso a data de inexistência declarada pelo funcionario.
-			// O código deveria mostrar 3 days between, mas para uso didático, coloquei 3
-			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 1) {
-				removerProdutoEstoque(dadoProduto);
-			}
-			break;
-		default:
-			break;
-		}
+		
 	}
 
 	public static void statusPago(DadosProduto produto) {
-		produto.setStatus(StatusProduto.PAGO);
-		produto.setRecado(null);
-	}
+        if (produto == null) {
+            throw new IllegalArgumentException("Produto não pode ser nulo.");
+        }
+
+        // Carregar a lista geral de produtos
+        ArrayList<DadosProduto> listaProdutos = listaProdutosEstoque();
+
+        if (listaProdutos == null) {
+            listaProdutos = new ArrayList<>();
+        }
+
+        boolean produtoEncontrado = false;
+
+        // Procurar o produto na lista
+        Iterator<DadosProduto> iterator = listaProdutos.iterator();
+        while (iterator.hasNext()) {
+            DadosProduto p = iterator.next();
+            if (p.equals(produto)) {
+                p.setStatus(StatusProduto.PAGO);
+                p.setRecado(null);
+                produtoEncontrado = true;
+                break; // Produto encontrado e atualizado, podemos parar a busca
+            }
+        }
+
+        if (produtoEncontrado) {
+            // Salvar a lista atualizada de volta ao arquivo
+            ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutos);
+            System.out.println("Status do produto atualizado para PAGO com sucesso.");
+        } else {
+            System.out.println("Produto não encontrado na lista.");
+        }
+    }
 }
+

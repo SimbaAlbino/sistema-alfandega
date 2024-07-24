@@ -25,7 +25,7 @@ public class EstoqueDivida {
 		return listaDividas;
 	}
 
-	public static void addDividas(Dividas dividas) {
+	public void addDividas(Dividas dividas) {
 		ArrayList<Dividas> estoqueGeral = listaDividas();
 		estoqueGeral.add(dividas);
 		ModelagemFile.serializar(getCaminhoBanco(), estoqueGeral);
