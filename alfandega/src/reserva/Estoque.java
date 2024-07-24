@@ -11,6 +11,8 @@ import java.util.List;
 import entidades.Cliente;
 import entidades.DadosProduto;
 import filtradores.Canais;
+import sistemaInterno.Dividas;
+import sistemaInterno.EstoqueDivida;
 import utilidade.ModelagemFile;
 
 public class Estoque implements Serializable {
@@ -50,9 +52,19 @@ public class Estoque implements Serializable {
 
 	// o código já está atualizado
 	public static void despacharProduto(DadosProduto produto) {
-		EstoqueDespache.addProduto(produto);
-		produto.setArmazenamentoAtual(Local.DESPACHE);
-		removerProdutoEstoque(produto);
+		try {
+		    EstoqueDespache.addProduto(produto);
+		    produto.setArmazenamentoAtual(Local.DESPACHE);
+
+		    Dividas divida = EstoqueDivida.encontrarDividaProduto(produto);
+		    if (divida != null) {
+		        EstoqueDivida.removerDivida(divida);
+		    }
+
+		    removerProdutoEstoque(produto);
+		} catch (Exception e) {
+		    System.out.println("Erro ao despachar o produto: " + e.getMessage());
+		}
 	}
 
 	// a att do código será no começo e final da operação
@@ -89,7 +101,7 @@ public class Estoque implements Serializable {
 		if (listaProdutos != null)
 			totalProdutos = listaProdutos.size();
 		else
-			return null;
+			return new ArrayList<>();
 		return listaProdutos;
 	}
 
@@ -163,16 +175,6 @@ public class Estoque implements Serializable {
 		LocalDate agora = LocalDate.now();
 		Canais canais = new Canais(dadoProduto);
 		switch (dadoProduto.getStatus()) {
-		case AGUARDANDO_PAGAMENTO:
-			// feito
-			if (ChronoUnit.DAYS.between(dadoProduto.getDataDeOperacao(), LocalDate.now()) > 30) {
-				dadoProduto.setStatus(StatusProduto.RETORNADO);
-				dadoProduto.setDataDeOperacao(agora);
-				dadoProduto.setRecado("Nota de pirangagem"); // pense
-				// REMOVER PRODUTO DO ESTOQUE DE DIVIDA ADD EstoqueDividas.removeDivida
-				despacharProduto(dadoProduto);
-			}
-			break;
 		case FISCALIZANDO: {
 			if (ChronoUnit.DAYS.between(dataOperacaoDeProduto, agora) > 2) {
 				canais.moldagemProduto();

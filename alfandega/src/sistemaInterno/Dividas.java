@@ -1,5 +1,6 @@
 package sistemaInterno;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -8,7 +9,9 @@ import entidades.OperacaoException;
 import reserva.Estoque;
 import reserva.StatusProduto;
 
-public class Dividas implements Pagamento {
+public class Dividas implements Pagamento, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	private double montante;
 	private DadosProduto dadoProduto;
 	private static final int SIZE = 21; // Tamanho do "QR code"
@@ -38,6 +41,8 @@ public class Dividas implements Pagamento {
 	public DadosProduto getDadosProduto() {
 		return dadoProduto;
 	}
+	
+	
 
 	public void pagar() {
 		Banco.loadDadosBanco();
@@ -56,13 +61,15 @@ public class Dividas implements Pagamento {
 		boolean fimOp = false;
 		// Chama o método que especifica o imposto pago e o imposto total (se existir)
 		do {
-			
 			try {
+				System.out.print("Dados de pagamento: ");
 				Pagamento.printarDivida(Impostos.calcularImpostos(getDadosProduto(), 0));
-				System.out.println("Escolha o método de pagamento: ");
+				System.out.println();
+				System.out.println("\nEscolha o método de pagamento: ");
 				System.out.println("1. PIX");
 				System.out.println("2. Boleto");
 				
+				System.out.print("\n-> ");
 				int metodo = sc.nextInt();
 				sc.nextLine(); // Consumir a nova linha
 				
@@ -82,6 +89,7 @@ public class Dividas implements Pagamento {
 				}
 				
 				System.out.println("Deseja realizar o pagamento? (s/n)");
+				System.out.println("\n-> ");
 				char confirmacao = sc.next().toLowerCase().charAt(0);
 				sc.nextLine();
 				if (confirmacao == 's') {

@@ -42,14 +42,15 @@ public class Canais {
 
 	public CanalCor coloracaoStatusObj() {
 		if (getProduto().isDocumentos() == false && getProduto().getStatus() == StatusProduto.FISCALIZANDO) {
-			this.cor = CanalCor.valueOf("CINZA");
-			getProduto().setRecado("Produto rejeitado... entre em contato com um funcionario tals tals");
+			this.cor = CanalCor.CANAL_CINZA;
+			getProduto().setRecado("• Produto rejeitado, entre em contato com um funcionário para fornecer documentos.");
 			// status vai ser definido como rejeitado
 			
-		} else if (getProduto().getStatus() == StatusProduto.FISCALIZANDO
+		} else if (getProduto().getStatus() == StatusProduto.AGUARDANDO_PAGAMENTO
 				&& ChronoUnit.DAYS.between(getProduto().getDataDeOperacao(), LocalDate.now()) > 30) {
-			this.cor = CanalCor.valueOf("VERMELHO");
-			getProduto().setRecado("Produto retornado... prazo de 30 dias expirou.");
+			this.cor = CanalCor.CANAL_VERMELHO;
+			getProduto().setDataDeOperacao(LocalDate.now());
+			getProduto().setRecado("• Produto retornado, prazo de 30 dias expirou.");
 
 			// produto terá status como retornado e será enviado imediatamente ao despache
 
@@ -60,11 +61,10 @@ public class Canais {
 				|| getProduto().getStatus() == StatusProduto.PAGO) {
 			// libera se for produto de informática, ou preço unico do produto for menor que
 			// 250 reais, ou status do produto for pago
-			this.cor = CanalCor.valueOf("VERDE");
-			getProduto().setRecado("Produto aprovado pela alfândega, liberado para envio");
+			this.cor = CanalCor.CANAL_VERDE;
 		} else if (getProduto().getStatus() == StatusProduto.FISCALIZANDO) {
-			this.cor = CanalCor.valueOf("AMARELO");
-			getProduto().setRecado("Produto aguardando pagamento");
+			this.cor = CanalCor.CANAL_AMARELO;
+			getProduto().setRecado("Pague para despachar o produto.");
 		}
 
 		// ou se o produto tiver o status
@@ -86,32 +86,18 @@ public class Canais {
 			getProduto().setStatus(StatusProduto.AGUARDANDO_PAGAMENTO);
 			getProduto().setDataDeOperacao(LocalDate.now());
 			Dividas divida = new Dividas(getProduto());
-			divida.setMontante();
 			EstoqueDivida.addDividas(divida);
-			// chamar a operação de adicionar dívida
 			break;
 		case CANAL_VERDE:
 			getProduto().setStatus(StatusProduto.ENVIADO);
-			//getProduto().setNotaFiscal(null); CHAMAR OPERAÇÂO DE NOTA FISCAL talvez para um ou para todos
 			Estoque.despacharProduto(getProduto());
 			break;
 		case CANAL_VERMELHO:
+			getProduto().setStatus(StatusProduto.RETORNADO);
 			Estoque.despacharProduto(getProduto());
 			break;
 		default:
 			break;
 		}
 	}
-
-	/*
-	 * public String notaFiscal() {
-	 * System.out.println("O produto %s de id %s foi revisado e está no canal %s%s."
-	 * ); // afirmar imposto, como foi calculado, quantidade e }
-	 * 
-	 * public String emitirAviso() { StringBuilder sb = new StringBuilder();
-	 * sb.append("O produto %s de id %s não foi repassado por motivos de : %s%s.")
-	 * if (this.cor == "")
-	 * 
-	 * produto.setRecado() }
-	 */
 }

@@ -109,14 +109,14 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					case 3:
 						valorString = sc.next();
 						sc.nextLine();
-                        // Substituir a vírgula por ponto
-                        valorString = valorString.replace(',', '.');
-                        try {
-                            preco = Double.parseDouble(valorString);
-                        } catch (NumberFormatException e) {
-                            throw new IllegalArgumentException("Formato de preço inválido");
-                        }
-                        break;
+						// Substituir a vírgula por ponto
+						valorString = valorString.replace(',', '.');
+						try {
+							preco = Double.parseDouble(valorString);
+						} catch (NumberFormatException e) {
+							throw new IllegalArgumentException("Formato de preço inválido");
+						}
+						break;
 					case 4:
 						quantidade = sc.nextInt();
 						sc.nextLine();
@@ -151,10 +151,9 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 
 				// talvez fazer um vetor para percorrer
 
-				DadosProduto produto = new DadosProduto(new Cliente(cpfCliente), this, criarProduto(tipoProduto, preco, quantidade),
-						temDoc, new Endereco(cep, residencia));
-				
-				System.out.println(produto.getCliente().getCpf());
+				DadosProduto produto = new DadosProduto(new Cliente(cpfCliente), this,
+						criarProduto(tipoProduto, preco, quantidade), temDoc, new Endereco(cep, residencia));
+
 				produto.gerarIdRastreio();
 				Estoque.addProduto(produto);
 				fimOp = true;
@@ -234,7 +233,6 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					// Fornecedor escolhe entre escolher com um determinado cliente e ele ou todos
 					// os seus produtos fornecidos
 					System.out.println("Listando produtos: ");
-					
 					printarProdutos(
 							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
@@ -261,7 +259,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 				case 5:
 					// chamar usar o listar produtos para identificar se tem avisos canal e passar
 					// para a função.
-					
+
 					this.avisosCanal(
 							listarProdutos(Estoque.listaProdutosEstoque(), EstoqueDespache.listaProdutosDespache()));
 					System.out.println("Pressione Enter para voltar");
@@ -279,12 +277,12 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					System.out.println("Opção inválida. Tente novamente.");
 					break;
 				}
+				AplicarMenu.clearScreen();
 			} else {
 				System.out.println("Entrada inválida. Por favor, insira um número.");
 				sc.nextLine(); // Consumir a entrada inválida
 			}
 			Estoque.atualizarSistema();
-			AplicarMenu.clearScreen();
 		} while (valor != 6);
 	}
 
@@ -302,7 +300,7 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 			listaEstoque = Estoque.listaProdutosEstoque();
 		}
 		if (EstoqueDespache.listaProdutosDespache() != null) {
-			listaEstoque = EstoqueDespache.listaProdutosDespache();
+			listaDespache = EstoqueDespache.listaProdutosDespache();
 		}
 		try {
 			do {
@@ -325,16 +323,20 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 					listaEstoque = listaEstoque.stream()
 							.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
 							.collect(Collectors.toList());
-					listaEstoque = listaDespache.stream()
+					listaDespache = listaDespache.stream()
 							.filter(x -> x.getFornecedor().equals(this) && x.getCliente().equals(cliente))
 							.collect(Collectors.toList());
 				} else {
 					System.out.println("Opção inválida, tente novamente.");
 				}
-				listaFiltrada.addAll(listaDespache);
+				listaFiltrada.addAll(listaEstoque);
 				listaFiltrada.addAll(listaDespache);
 				// corrigir
 			} while (tipoListagem != 1 && tipoListagem != 2);
+		} catch (InputMismatchException e) {
+			    System.out.println("Entrada inválida. Por favor, insira um número válido.");
+			    sc.next(); // Consumir a entrada inválida para evitar um loop infinito
+			
 		} catch (IllegalArgumentException e) {
 			System.out.printf("Erro, opção inválida, %s, tente novamente, pressione enter.\n", e.getMessage());
 			sc.nextLine();
@@ -375,29 +377,27 @@ public class Fornecedor extends Utilizador<Fornecedor> implements Usuario<Fornec
 	public String toString() {
 		return "[nomeFornecedor=" + nomeFornecedor + ", emailFornecedor=" + emailFornecedor + "]";
 	}
-	
+
 	// Filtra as dívidas vinculadas ao fornecedor atual
 	@Override
 	public void listarDividas() {
-	    try {
-	        List<Dividas> dividasUtilizador = EstoqueDivida.listaDividas();
-	        if (dividasUtilizador != null && !dividasUtilizador.isEmpty()) {
-	            List<Dividas> dividasFiltradas = dividasUtilizador.stream()
-	                .filter(x -> x.getDadosProduto().getFornecedor().equals(this))
-	                .collect(Collectors.toList());
-	            
-	            if (dividasFiltradas.isEmpty()) {
-	                System.out.println("Você não possui dívidas vinculadas.");
-	            } else {
-	                dividasFiltradas.forEach(System.out::println);
-	            }
-	        } else {
-	            System.out.println("Não há dívidas registradas no sistema.");
-	        }
-	    } catch (Exception e) {
-	        System.out.println("A sua listagem de dívidas não é acessível: " + e.getMessage());
-	    }
-	}
+		try {
+			List<Dividas> dividasUtilizador = EstoqueDivida.listaDividas();
+			if (dividasUtilizador != null && !dividasUtilizador.isEmpty()) {
+				List<Dividas> dividasFiltradas = dividasUtilizador.stream()
+						.filter(x -> x.getDadosProduto().getFornecedor().equals(this)).collect(Collectors.toList());
 
+				if (dividasFiltradas.isEmpty()) {
+					System.out.println("Você não possui dívidas vinculadas.");
+				} else {
+					dividasFiltradas.forEach(System.out::println);
+				}
+			} else {
+				System.out.println("Não há dívidas registradas no sistema.");
+			}
+		} catch (Exception e) {
+			System.out.println("A sua listagem de dívidas não é acessível: " + e.getMessage());
+		}
+	}
 
 }

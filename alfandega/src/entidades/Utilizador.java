@@ -2,6 +2,7 @@ package entidades;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import aplicacao.MenuUser;
@@ -18,9 +19,9 @@ public abstract class Utilizador<T> {
 	public abstract void cadastro();
 
 	public abstract void listarDividas();
-	
+
 	public abstract boolean equals(Object obj);
-	
+
 	public abstract int hashCode();
 
 	public static void rastrearProdutos() {
@@ -89,18 +90,19 @@ public abstract class Utilizador<T> {
 		} else {
 			for (DadosProduto produto : produtosListados) {
 				if (!(produto.getRecado() == null)) {
-					System.out.printf("O produto: %s está %s - %s", produto.getTipoProduto(), produto.getStatus(),
+					System.out.printf("O produto: %s está %s - %s\n",
+							produto.getTipoProduto().getClass().getSimpleName(), produto.getStatus(),
 							produto.getRecado());
 					contador++;
 				}
 			}
 		}
-		System.out.println("Total de avisos: " + contador);
+		System.out.println("\n\nTotal de avisos: " + contador);
 		System.out.println();
 		if (contador == 0) {
 			System.out.println("Você não possui avisos de urgência estendidos do produto.");
 		}
-		
+
 		// Se o produto tiver no estoque e com a coloção amarela, verificar com o
 		// funcionario, mensagem;
 	}
@@ -150,8 +152,8 @@ public abstract class Utilizador<T> {
 
 	protected void pagamento() {
 		boolean continuar = true;
-		while (continuar) {
-			System.out.println("Informe o código do produto ou pressione Enter para sair: ");
+		do {
+			System.out.print("Informe o código do produto ou pressione Enter para sair: ");
 			try {
 				String input = sc.nextLine();
 
@@ -170,6 +172,7 @@ public abstract class Utilizador<T> {
 						if (EstoqueDivida.encontrarDivida(produto)) {
 							Dividas div = new Dividas(produto);
 							div.pagar();
+							continuar = false;
 						} else {
 							System.out.println("O produto informado não está no estoque de dívidas.");
 						}
@@ -180,13 +183,17 @@ public abstract class Utilizador<T> {
 				} else {
 					System.out.println("Código de produto inválido. O id deve ter 6 dígitos.");
 				}
+			} catch (NoSuchElementException e) {
+				System.out.println("Entrada inválida. Por favor, pressione enter para tentar novamente.");
+				sc.nextLine();
 			} catch (NumberFormatException e) {
 				System.out.println("Entrada inválida. Por favor, informe um número.");
 			} catch (Exception e) {
 				System.out.println("Erro geral: " + e.getMessage());
 				e.printStackTrace();
 			}
-		}
+
+		} while (continuar);
 	}
 
 }

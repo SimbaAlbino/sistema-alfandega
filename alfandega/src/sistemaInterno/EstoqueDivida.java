@@ -19,6 +19,8 @@ public class EstoqueDivida {
 		ArrayList<Dividas> listaDividas = ModelagemFile.desserializar(getCaminhoBanco());
 		if (listaDividas != null) {
 			totalDividas = listaDividas.size();
+		} else {
+			return new ArrayList<>();			
 		}
 		return listaDividas;
 	}
@@ -28,6 +30,8 @@ public class EstoqueDivida {
 		estoqueGeral.add(dividas);
 		ModelagemFile.serializar(getCaminhoBanco(), estoqueGeral);
 		//
+		
+		
 	}
 
 	public synchronized static void removerDivida(Dividas dividas) {
@@ -52,6 +56,15 @@ public class EstoqueDivida {
         }
         return false;
     }
+	
+	public static Dividas encontrarDividaProduto(DadosProduto produto) {
+        for (Dividas divida : listaDividas()) {
+            if (divida.getDadosProduto().equals(produto)) {
+                return divida;
+            }
+        }
+        return null;
+    }	
 
 	//metodo para listar todas as dividas do cliente
 	//quando o cliente quiser saber quais dividas tem

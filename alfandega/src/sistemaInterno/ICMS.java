@@ -1,26 +1,22 @@
 package sistemaInterno;
 
 public class ICMS extends Impostos {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	
 	public static String TIPO_IMPOSTO = "ICMS";
-	private static double taxaIcms;
+	private static double taxaIcms = 0.2;
 	private double precoUnico;
 	// private static double taxaIcms = 0.20;
 
 	public ICMS() {
-
 	}
 
 	public ICMS(double precoUnico) {
-		super(precoUnico);
+		this.precoUnico = precoUnico;
 	}
 
 	@Override
-	public void receberImpostos() {
-		Banco.adicionarImposto(getTIPO_IMPOSTO(), impostoProduto()); // adicionando para o valor total.
+	public void receberImpostos(int qnt) {
+		Banco.adicionarImposto(getTIPO_IMPOSTO(), impostoProduto() * qnt); // adicionando para o valor total.
 	}
 
 	public double impostoProduto() {

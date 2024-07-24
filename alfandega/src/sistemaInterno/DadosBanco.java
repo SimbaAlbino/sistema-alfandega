@@ -10,14 +10,11 @@ public class DadosBanco implements Serializable {
 	private double saldoTotalBanco;
 	private List<String[]> historicoPagamentos;
 	private Map<String, Double> impostosMap;
-	private Impostos imposto;
 
-	public DadosBanco(double saldoTotalBanco, List<String[]> historicoPagamentos, Map<String, Double> impostosMap,
-			Impostos imposto) {
+	public DadosBanco(double saldoTotalBanco, List<String[]> historicoPagamentos, Map<String, Double> impostosMap) {
 		this.saldoTotalBanco = saldoTotalBanco;
 		this.historicoPagamentos = historicoPagamentos;
 		this.impostosMap = impostosMap;
-		this.imposto = imposto;
 	}
 
 	public static long getSerialversionuid() {
@@ -34,10 +31,6 @@ public class DadosBanco implements Serializable {
 
 	public Map<String, Double> getImpostosMap() {
 		return impostosMap;
-	}
-
-	public Impostos getImposto() {
-		return imposto;
 	}
 
 }

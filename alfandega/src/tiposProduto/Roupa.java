@@ -3,7 +3,7 @@ package tiposProduto;
 public class Roupa extends Produto {
 	
 	private static final long serialVersionUID = 1L;
-	private static final float TAXA_UNICA = 0.20f; 
+	private static final float TAXA_UNICA = 0.02f; 
 
 	public Roupa(double precoUnico, int quantidade) {
 		super(precoUnico, quantidade);

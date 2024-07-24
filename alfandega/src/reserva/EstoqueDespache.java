@@ -37,7 +37,7 @@ public class EstoqueDespache implements Serializable {
 		if (listaProdutos != null)
 			totalProdutosDespache = listaProdutos.size();
 		else
-			return null;
+			return new ArrayList<>();
 		return listaProdutos;
 	}
 
@@ -56,6 +56,8 @@ public class EstoqueDespache implements Serializable {
 			ModelagemFile.serializar(caminhoDespacheProduto, estoqueGeral);
 		}
 	}
+	
+	
 	
 	
 }

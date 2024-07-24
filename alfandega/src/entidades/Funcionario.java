@@ -391,6 +391,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 					System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 7.");
 					sc.nextLine(); // Consumir a entrada inválida
 				}
+				AplicarMenu.clearScreen();
 				Estoque.atualizarSistema();
 				System.out.println();
 			} catch (InterruptedException e) {

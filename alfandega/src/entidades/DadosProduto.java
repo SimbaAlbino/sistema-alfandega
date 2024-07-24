@@ -25,7 +25,6 @@ public class DadosProduto implements Serializable {
 	private LocalDate dataDeOperacao = LocalDate.now();
 	private StatusProduto status = StatusProduto.valueOf("FISCALIZANDO"); // VALOR INICIAL
 	private String recado = null;
-	private String notaFiscal; // implementar
 	private Local armazenamentoAtual;
 	// add construtor e getters
 
@@ -96,14 +95,6 @@ public class DadosProduto implements Serializable {
 	// metodo abaixo usado pelo próprio sistema para adicionar status de produto.
 	public void setRecado(String msg) {
 		this.recado = msg;
-	}
-
-	public String getNotaFiscal() {
-		return notaFiscal;
-	}
-
-	public void setNotaFiscal(String notaFiscal) {
-		this.notaFiscal = notaFiscal;
 	}
 
 	public Local getArmazenamentoAtual() {

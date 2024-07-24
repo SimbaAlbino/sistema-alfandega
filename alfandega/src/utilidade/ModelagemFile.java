@@ -38,7 +38,7 @@ public class ModelagemFile {
                 System.out.println("Exceção de Classe não encontrada na desserialização: " + e.getMessage());
             }
         } else {
-        	return null;
+        	return new ArrayList<T>();
         }
         return listaRetorno;
     }

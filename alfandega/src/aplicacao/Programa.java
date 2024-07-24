@@ -1,15 +1,21 @@
 package aplicacao;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import entidades.Cliente;
+import entidades.DadosProduto;
 import entidades.Fornecedor;
 import entidades.Funcionario;
 import entidades.Usuario;
 import entidades.Utilizador;
+import filtradores.Canais;
 import reserva.Estoque;
+import reserva.StatusProduto;
+import sistemaInterno.Banco;
+import utilidade.ModelagemFile;
 
 public class Programa {
 
@@ -19,12 +25,20 @@ public class Programa {
 
 	public static void main(String[] args) {
 		
+		/*
+		ArrayList<DadosProduto> dp = Estoque.listaProdutosEstoque();
+		Canais canais = new Canais(dp.get(0));
+		canais.moldagemProduto();
+		ModelagemFile.serializar("C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\estocar\\estoqueDadosProduto.txt", dp);
+		*/
 		Locale.setDefault(Locale.US);
 
 		Estoque.atualizarSistema();
 		AplicarMenu.titulo();
 
 		Scanner sc = new Scanner(System.in);
+		
+		Banco.exibirHistoricoPagamentos();
 
 		try {
 

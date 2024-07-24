@@ -3,7 +3,7 @@ package tiposProduto;
 public class Acessorios extends Produto {
 
 	private static final long serialVersionUID = 1L; // Identificador para a serialização.
-	private static final float TAXA_UNICA = 0.12f; // Taxa única de imposto para acessórios.
+	private static final float TAXA_UNICA = 0.012f; // Taxa única de imposto para acessórios.
 
 	// Construtor da classe Acessorios que chama o construtor da classe pai
 	// (Produto)

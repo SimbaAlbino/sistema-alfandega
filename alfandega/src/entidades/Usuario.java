@@ -10,10 +10,11 @@ public interface Usuario<T> {
 
 	static Scanner sc = new Scanner(System.in);
 
-	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque, ArrayList<DadosProduto> produtosDespache );
+	ArrayList<DadosProduto> listarProdutos(ArrayList<DadosProduto> produtosEstoque,
+			ArrayList<DadosProduto> produtosDespache);
 
 	void operacoesUser();
-	
+
 	void removerUser(T pessoa);
 
 	// cada usuario terá seu confirmarUser dentro de sua classe para a senha e email
@@ -61,11 +62,9 @@ public interface Usuario<T> {
 			}
 		} catch (IllegalArgumentException e) {
 			System.out.println("Erro por um argumento ilegal: " + e.getMessage());
-		} 
+		}
 		return dados;
 	}
-
-	
 
 	// O método abaixo recebe uma lista atualizada para ser serializada, ele
 	// verifica se pode adicionar e assim o faz
@@ -109,6 +108,8 @@ public interface Usuario<T> {
 		} catch (NullPointerException e) {
 			System.out.printf("Não há %ss na lista.", getClass().getSimpleName());
 		}
+		if (listaPessoas == null)
+			return new ArrayList<>();
 		return listaPessoas;
 	}
 }

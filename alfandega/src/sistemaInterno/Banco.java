@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,25 +17,21 @@ import entidades.DadosProduto;
 import utilidade.ModelagemFile;
 
 public class Banco implements Pagamento {
-	private static Impostos imposto; //Objeto Impostos que gerencia as taxas de impostos
+	private static Impostos imposto; // Objeto Impostos que gerencia as taxas de impostos
 	private static double saldoTotalBanco; // Saldo total do banco
-	private static List<String[]> historicoPagamentos;  // Histórico de pagamentos
-	public static Map<String, Double> impostosMap = new HashMap<>(); // Mapa para armazenar tipos de impostos e seus valores !
-	private transient static String caminhoBanco = "C:\\Users\\All members\\OneDrive\\Documentos\\clone\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
-	
+	private static List<String[]> historicoPagamentos; // Histórico de pagamentos
+	public static Map<String, Double> impostosMap = new HashMap<>(); // Mapa para armazenar tipos de impostos e seus
+																		// valores !
+	private transient static String caminhoBanco = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\sistemaBanco\\banco.txt";
+
 	static Scanner sc = new Scanner(System.in);
 
 	public Banco() {
 	}
 
-	   // Método para configurar as taxas de impostos
-	public void setImpostos() {
-		// alterar talvez
-		Impostos.setBaseImposto(0.11, 0.20);
-	}
 	// Método para salvar os dados do banco (serialização)
 	public static void saveDadosBanco() {
-		DadosBanco dadosBanco = new DadosBanco(saldoTotalBanco, historicoPagamentos, impostosMap, imposto);
+		DadosBanco dadosBanco = new DadosBanco(saldoTotalBanco, historicoPagamentos, impostosMap);
 		try (FileOutputStream fileOut = new FileOutputStream(getCaminhoBanco());
 				ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
 			out.writeObject(dadosBanco);
@@ -43,21 +40,41 @@ public class Banco implements Pagamento {
 			i.printStackTrace();
 		}
 	}
+
 	// Método para carregar os dados do banco (desserialização)
 	public static void loadDadosBanco() {
-		try (FileInputStream fileIn = new FileInputStream(getCaminhoBanco());
-				ObjectInputStream in = new ObjectInputStream(fileIn)) {
-			DadosBanco dadosBanco = (DadosBanco) in.readObject();
-			saldoTotalBanco = dadosBanco.getSaldoTotalBanco();
-			historicoPagamentos = dadosBanco.getHistoricoPagamentos();
-			impostosMap = dadosBanco.getImpostosMap();
-			imposto = dadosBanco.getImposto();
-			System.out.println("Dados do banco deserializados com sucesso.");
-		} catch (IOException | ClassNotFoundException i) {
-			System.out.println("Falha na desserialização dos dados do banco: " + i.getMessage());
-		}
+	    try (FileInputStream fileIn = new FileInputStream(getCaminhoBanco());
+	         ObjectInputStream in = new ObjectInputStream(fileIn)) {
+	        
+	        DadosBanco dadosBanco = (DadosBanco) in.readObject();
+	        
+	        if (dadosBanco != null) {
+	            saldoTotalBanco = dadosBanco.getSaldoTotalBanco();
+	            historicoPagamentos = dadosBanco.getHistoricoPagamentos();
+	            impostosMap = dadosBanco.getImpostosMap();
+	        } else {
+	            inicializarValoresPadrao();
+	        }
+	        
+	    } catch (IOException e) {
+	        inicializarValoresPadrao();
+	    } catch (ClassNotFoundException e) {
+	        System.out.println("Classe não encontrada durante a desserialização: " + e.getMessage());
+	        inicializarValoresPadrao();
+	    } catch (Exception e) {
+	        System.out.println("Erro inesperado: " + e.getMessage());
+	        inicializarValoresPadrao();
+	    }
 	}
-    
+
+	private static void inicializarValoresPadrao() {
+	    saldoTotalBanco = 0.0;  // Defina o valor padrão desejado
+	    historicoPagamentos = new ArrayList<>();  // Supondo que seja uma lista
+	    impostosMap = new HashMap<>();  // Supondo que seja um mapa
+
+	}
+
+
 	// Método para calcular o imposto total a partir do mapa de impostos
 	public static void adicionarImposto(String chave, double valor) {
 		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
@@ -89,12 +106,18 @@ public class Banco implements Pagamento {
 		estoqueGeral.add(vetorImpostosCalc);
 		//
 	}
-	 // Método para listar o histórico de pagamentos
+
+	// Método para listar o histórico de pagamentos
 	public static ArrayList<String[]> listaHistoricoPagamentos() {
-		ArrayList<String[]> listaHistoricoPagamentos = ModelagemFile.desserializar(getCaminhoBanco());
+		loadDadosBanco();
+		ArrayList<String[]> listaHistoricoPagamentos = (ArrayList<String[]>) getHistoricoPagamentos();
+		if (listaHistoricoPagamentos == null || listaHistoricoPagamentos.isEmpty()) {
+			System.out.println("Não há pagamento no histórico.");
+			return new ArrayList<>();
+		}
 		return listaHistoricoPagamentos;
 	}
-	
+
 	// Método para exibir o histórico de pagamentos
 	public static void exibirHistoricoPagamentos() {
 		System.out.println("\nHistórico de Pagamentos:");
@@ -105,74 +128,74 @@ public class Banco implements Pagamento {
 			// print do historico pagamentos);
 		}
 	}
+
 	// Método para executar operações do funcionário
 	public static void operacaoFuncionario() {
 		loadDadosBanco();
-	    System.out.println("Selecione a operação:");
+		System.out.println("Selecione a operação:");
 
-	    int operacao = AplicarMenu.getRequest(8);
+		int operacao = AplicarMenu.getRequest(8);
 
-	    try {
-	        switch (operacao) {
-	            case 1:
-	            	try {
-	                    System.out.println("Saldo total do banco: " + getSaldoTotalBanco());
-	                } catch (Exception e) {
-	                    System.out.println("Erro ao obter saldo total do banco: " + e.getMessage());
-	                    e.printStackTrace();
-	                }
-	                break;
+		try {
+			switch (operacao) {
+			case 1:
+				try {
+					System.out.println("Saldo total do banco: " + getSaldoTotalBanco());
+				} catch (Exception e) {
+					System.out.println("Erro ao obter saldo total do banco: " + e.getMessage());
+					e.printStackTrace();
+				}
+				break;
 
-	            case 2:
-	                try {
-	                    exibirHistoricoPagamentos();
-	                } catch (Exception e) {
-	                    System.out.println("Erro ao exibir histórico de pagamentos: " + e.getMessage());
-	                    e.printStackTrace();
-	                }
-	                break;
+			case 2:
+				try {
+					exibirHistoricoPagamentos();
+				} catch (Exception e) {
+					System.out.println("Erro ao exibir histórico de pagamentos: " + e.getMessage());
+					e.printStackTrace();
+				}
+				break;
 
-	            case 3:
-	                try {
-	                    Banco.valoresImpostosGerais();
-	                } catch (Exception e) {
-	                    System.out.println("Erro ao exibir valores gerais de impostos: " + e.getMessage());
-	                    e.printStackTrace();
-	                }
-	                break;
+			case 3:
+				try {
+					Banco.valoresImpostosGerais();
+				} catch (Exception e) {
+					System.out.println("Erro ao exibir valores gerais de impostos: " + e.getMessage());
+					e.printStackTrace();
+				}
+				break;
 
-	            case 4:
-	                try {
-	                    EstoqueDivida.lerEstoqueDividas();
-	                } catch (Exception e) {
-	                    System.out.println("Erro ao ler estoque de dívidas: " + e.getMessage());
-	                    e.printStackTrace();
-	                }
-	                break;
+			case 4:
+				try {
+					EstoqueDivida.lerEstoqueDividas();
+				} catch (Exception e) {
+					System.out.println("Erro ao ler estoque de dívidas: " + e.getMessage());
+					e.printStackTrace();
+				}
+				break;
 
-	            case 5:
-	                try {
-	                    System.out.println("Impostos: " + getImposto());
-	                } catch (Exception e) {
-	                    System.out.println("Erro ao obter impostos: " + e.getMessage());
-	                    e.printStackTrace();
-	                }
-	                break;
-	            default:
-	                System.out.println("Operação inválida.");
-	                break;
-	        }
-	    } catch (Exception e) {
-	        System.out.println("Erro geral: " + e.getMessage());
-	        e.printStackTrace();
-	    }
+			case 5:
+				try {
+					System.out.println("Impostos: " + getImposto());
+				} catch (Exception e) {
+					System.out.println("Erro ao obter impostos: " + e.getMessage());
+					e.printStackTrace();
+				}
+				break;
+			default:
+				System.out.println("Operação inválida.");
+				break;
+			}
+		} catch (Exception e) {
+			System.out.println("Erro geral: " + e.getMessage());
+			e.printStackTrace();
+		}
 	}
-
 
 	// Método para liberar o pedido de um cliente após pagamento
 	public static void liberarPedido(Dividas divida) {
 		if (divida != null && !divida.dividaPendente()) {
-			System.out.println("Pedido liberado para o cliente: " + divida.getDadosProduto().getCliente().getNome());
+			System.out.println("Pedido liberado para o cliente: " + divida.getDadosProduto().getCliente().getCpf());
 			EstoqueDivida.removerDivida(divida);
 			saveDadosBanco();
 		} else {
@@ -193,11 +216,16 @@ public class Banco implements Pagamento {
 	public static Impostos getImposto() {
 		return imposto;
 	}
+	
+	
+
+	public static List<String[]> getHistoricoPagamentos() {
+		return historicoPagamentos;
+	}
 
 	@Override
-	// Método da interface Pagamento que retorna os dados do produto 
+	// Método da interface Pagamento que retorna os dados do produto
 	public DadosProduto getDadosProduto() {
 		return null;
 	}
-
 }

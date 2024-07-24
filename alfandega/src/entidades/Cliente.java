@@ -168,8 +168,6 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					// pagando
 					System.out.println("Quadro de pagamento: \n");
 					pagamento();
-					System.out.println("Pressione Enter para voltar");
-					sc.nextLine();
 					break;
 				case 3:
 					System.out.println("Quadro de dívidas: \n");
@@ -199,6 +197,7 @@ public class Cliente extends Utilizador<Cliente> implements Usuario<Cliente>, Se
 					sc.nextLine();
 					break;
 				}
+				AplicarMenu.clearScreen();
 			} else {
 				System.out.println("Entrada inválida. Por favor, insira um número.");
 				sc.nextLine(); // Consumir a entrada inválida
