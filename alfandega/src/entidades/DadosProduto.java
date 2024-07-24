@@ -258,14 +258,22 @@ public class DadosProduto implements Serializable {
 
 	}
 
+	
+
+	// Método toString para retornar uma string representando o objeto DadosProduto
+	@Override
+	public String toString() {
+		return String.format("%d %s %s %s", getIdRastreio(), getCliente().getCpf(), getStatus(), getDataDeOperacao());
+	}
+	
+	
 	// Método hashCode para geração de hash baseado em cliente, documentos,
-	// fornecedor e ID de rastreio
+		// fornecedor e ID de rastreio
 	@Override
 	public int hashCode() {
-		return Objects.hash(cliente, documentos, fornecedor, idRastreio);
+		return Objects.hash(idRastreio);
 	}
 
-	// Método equals para comparação de objetos DadosProduto
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -275,14 +283,7 @@ public class DadosProduto implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DadosProduto other = (DadosProduto) obj;
-		return Objects.equals(cliente, other.cliente) && documentos == other.documentos
-				&& Objects.equals(fornecedor, other.fornecedor) && Objects.equals(idRastreio, other.idRastreio);
-	}
-
-	// Método toString para retornar uma string representando o objeto DadosProduto
-	@Override
-	public String toString() {
-		return String.format("%d %s %s %s", getIdRastreio(), getCliente().getCpf(), getStatus(), getDataDeOperacao());
+		return Objects.equals(idRastreio, other.idRastreio);
 	}
 
 	// usar o equals e hashCode de acordo com a necessidade no futuro. em listar

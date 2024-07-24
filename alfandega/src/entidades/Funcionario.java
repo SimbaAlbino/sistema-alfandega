@@ -348,6 +348,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 								}
 							} while (desejo < 1 || desejo > 3);
 						}
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine();
 						break;
 					case 7:
 						System.out.println("Listando produtos despachados\n");
@@ -384,6 +386,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 								}
 							} while (desejo != 3);
 						}
+						System.out.println("Pressione Enter para voltar");
+						sc.nextLine();
 						break;
 					case 8:
 						System.out.println("Fim das operações de usuário.");

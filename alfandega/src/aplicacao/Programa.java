@@ -17,7 +17,7 @@ public class Programa {
     final static MenuInicial[] choices = MenuInicial.values();
     final static MenuUser[] choicesUser = MenuUser.values();
 
-    public static void main(String[] args) {    
+    public static void main(String[] args) {   
     	
         // Configurar o Locale para US
         Locale.setDefault(Locale.US);

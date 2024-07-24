@@ -47,17 +47,29 @@ public class Estoque implements Serializable {
 		}
 	}
 	
-	// Remove um produto do estoque
 	public synchronized static void removerProdutoEstoque(DadosProduto produto) {
+	    if (produto == null) {
+	        System.out.println("Produto não pode ser nulo.");
+	        return;
+	    }
+
 	    ArrayList<DadosProduto> estoqueGeral = listaProdutosEstoque();
+	    if (estoqueGeral == null) {
+	        System.out.println("A lista de estoque está vazia ou não pôde ser carregada.");
+	        return;
+	    }
+
 	    try {
 	        // Verifica se o produto está na lista antes de tentar removê-lo
 	        if (estoqueGeral.contains(produto)) {
-	            estoqueGeral.remove(produto);
+	            // Remove o produto da lista
+	            estoqueGeral.removeIf(x -> x.equals(produto));
+
+	            // Atualiza o status do produto antes da serialização
 	            produto.setArmazenamentoAtual(Local.DESPACHE);
+
 	            // Serializa a lista atualizada
 	            ModelagemFile.serializar(getCaminhoEstoqueProduto(), estoqueGeral);
-	            System.out.println("Produto removido do estoque com sucesso.");
 	        } else {
 	            System.out.println("Produto não encontrado no estoque.");
 	        }
