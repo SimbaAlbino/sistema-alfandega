@@ -44,7 +44,7 @@ public class AplicarMenu {
 			break;
 		case 8:
 			// Menu para operações de banco
-			opcoes = Arrays.asList("Exibir saldo total do banco","Exibir histórico de pagamentos","Exibir valores gerais de impostos","Ler estoque de dívidas","Exibir impostos");
+			opcoes = Arrays.asList("Exibir saldo total do banco","Exibir histórico de pagamentos","Exibir valores gerais de impostos","Ler estoque de dívidas", "Voltar");
 			break;
 		default:
 			// Lança uma exceção se a opção for inválida

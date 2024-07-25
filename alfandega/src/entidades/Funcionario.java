@@ -201,7 +201,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		do {
 			valor = AplicarMenu.getRequest(5);
 			try {
-				if (valor >= 0 && valor <= 7) {
+				if (valor >= 0 && valor <= 8) {
 					byte desejo;
 					switch (valor) {
 					case 1:
@@ -301,7 +301,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 						break;
 					case 4:
 						System.out.println("Operações de Banco e Pagamentos: ");
-						Banco.operacaoFuncionario();
+						Banco banco = new Banco();
+						banco.operacaoFuncionario();
 						System.out.println("Pressione Enter para voltar");
 						sc.nextLine(); // Consumir a nova linha pendente
 						break;
@@ -398,7 +399,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 						break;
 					}
 				} else {
-					System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 7.");
+					System.out.println("Entrada inválida. Por favor, insira um número entre 0 e 8.");
 					sc.nextLine(); // Consumir a entrada inválida
 				}
 				AplicarMenu.clearScreen();

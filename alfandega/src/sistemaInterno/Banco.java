@@ -75,6 +75,7 @@ public class Banco implements Pagamento {
 	// Método para calcular o imposto total a partir do mapa de impostos
 	public static void adicionarImposto(String chave, double valor) {
 		loadDadosBanco();
+		
 		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
 		saveDadosBanco();
 	}
@@ -131,7 +132,7 @@ public class Banco implements Pagamento {
 	}
 
 	// Método para executar operações do funcionário
-	public static void operacaoFuncionario() {
+	public void operacaoFuncionario() {
 		loadDadosBanco();
 		System.out.println("Selecione a operação:");
 
@@ -174,14 +175,9 @@ public class Banco implements Pagamento {
 					e.printStackTrace();
 				}
 				break;
-
 			case 5:
-				try {
-					System.out.println("Impostos: " + getImposto());
-				} catch (Exception e) {
-					System.out.println("Erro ao obter impostos: " + e.getMessage());
-					e.printStackTrace();
-				}
+				System.out.println("\nVoltando...");
+				Thread.sleep(3000);
 				break;
 			default:
 				System.out.println("Operação inválida.");
