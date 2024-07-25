@@ -40,17 +40,12 @@ public class ImpostoFixo extends Impostos {
 
 	// Método getter para obter a taxa de imposto fixo
 	public double getTaxaImpostoFixo() {
-		return taxaImpostoFixo;
+		return getProduto().getTipoProduto().getTaxaUnica();
 	}
 
 	// Método getter para obter o tipo de imposto
 	public static String getTipoImposto() {
 		return TIPO_IMPOSTO;
-	}
-
-	// Método setter para definir a taxa de imposto fixo baseada no produto
-	public void setTaxaImpostoFixo(DadosProduto produto) {
-		this.taxaImpostoFixo = produto.getTipoProduto().getTaxaUnica();
 	}
 
 	// Método getter para obter o produto relacionado ao imposto

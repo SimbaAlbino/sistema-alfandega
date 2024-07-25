@@ -42,9 +42,13 @@ public class EstoqueDivida {
 	}
 
 	 public static void lerEstoqueDividas() {
-	        for (Dividas divida : listaDividas()) {
-	            System.out.println("Dívida de " + divida.getDadosProduto().getCliente().getNome() + ": " + divida.getMontante());
-	        }
+		 if (! listaDividas().isEmpty()) {
+			 for (Dividas divida : listaDividas()) {
+				 System.out.println("Dívida de " + divida.getDadosProduto().getCliente().getNome() + ": " + divida.getMontante());
+			 }
+		 } else {
+			 System.out.println("Estoque de dívidas vazio.");
+		 }
 	    }
 	
 	//metodo para encontrar uma divida a partir de um produto

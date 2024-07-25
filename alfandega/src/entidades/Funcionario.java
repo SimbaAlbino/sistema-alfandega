@@ -266,7 +266,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 							desejo = shortQuests(3);
 							if (desejo == 1) {
 								System.out.println("Listar funcionarios");
-								listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
+								Funcionario funcionario = new Funcionario();
+								funcionario.listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
 								fimOpCase = true;
 							} else if (desejo == 2) {
 								System.out.println("Apagar funcionario do registro");

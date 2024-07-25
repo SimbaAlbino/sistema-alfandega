@@ -44,7 +44,7 @@ public class Dividas extends EstoqueDivida implements Pagamento, Serializable {
 	
 	
 
-	public void pagar() {
+	public void pagar() throws InterruptedException {
 		Banco.loadDadosBanco();
 		// lá em cima eu instancio a divida no metodo pagar
 		if (getDadosProduto().getStatus() == StatusProduto.AGUARDANDO_PAGAMENTO) {
@@ -57,7 +57,7 @@ public class Dividas extends EstoqueDivida implements Pagamento, Serializable {
 
 	// Método para pagar produto chamado pelo cliente ou fornecedor
 
-	public void metodoPagamento() {
+	public void metodoPagamento() throws InterruptedException {
 		boolean fimOp = false;
 		// Chama o método que especifica o imposto pago e o imposto total (se existir)
 		do {
@@ -96,6 +96,7 @@ public class Dividas extends EstoqueDivida implements Pagamento, Serializable {
 					confirmarPagamento(true);
 				} else {
 					System.out.println("Pagamento não autorizado.");
+					Thread.sleep(1000);
 				}
 				fimOp = true;
 			} catch (OperacaoException e) {

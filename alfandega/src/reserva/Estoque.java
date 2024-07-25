@@ -272,6 +272,11 @@ public class Estoque implements Serializable {
             // Salvar a lista atualizada de volta ao arquivo
             ModelagemFile.serializar(getCaminhoEstoqueProduto(), listaProdutos);
             System.out.println("Status do produto atualizado para PAGO com sucesso.");
+            try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				System.out.println("Erro no operador de sleep");
+			}
         } else {
             System.out.println("Produto não encontrado na lista.");
         }

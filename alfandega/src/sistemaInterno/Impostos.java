@@ -16,7 +16,7 @@ public abstract class Impostos {
 			throw new IllegalArgumentException("Produto ou informações do produto são inválidos.");
 		}
 		try {
-			String[] historicoImposto;
+			String[] historicoImposto = null;
 
 			ICMS icms = new ICMS(produto.getTipoProduto().getPrecoUnico());
 			double valorICMS = icms.impostoProduto();
@@ -34,12 +34,12 @@ public abstract class Impostos {
 				historicoImposto = new String[] { produto.getCliente().getCpf(), String.format("%.2f", valorICMS),
 						String.format("%.2f", valorIPI), String.format("%.2f", valorImpostoFixo),
 						String.format("%.2f", valorTotal) };
-				// historicoImpostos.add(registro); verificar
 				return historicoImposto;
 			} else if (code == 1) {
 				icms.receberImpostos(produto.getTipoProduto().getQuantidade());
 				ipi.receberImpostos(produto.getTipoProduto().getQuantidade());
 				impostoFixo.receberImpostos(produto.getTipoProduto().getQuantidade());
+				Banco.addHistoricoPagamento(historicoImposto);
 				return null;
 			} else {
 				throw new IllegalArgumentException("Código de operação inválido.");
