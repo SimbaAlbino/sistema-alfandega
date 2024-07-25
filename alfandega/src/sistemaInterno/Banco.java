@@ -31,8 +31,6 @@ public class Banco {
 		DadosBanco dadosBanco = new DadosBanco(historicoPagamentos, impostosMap);
 		try (FileOutputStream fileOut = new FileOutputStream(getCaminhoBanco());
 				ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-			System.out.println("Histórico de Pagamentos: " + historicoPagamentos);
-			System.out.println("Impostos Map: " + impostosMap);
 			out.writeObject(dadosBanco);
 		} catch (IOException i) {
 			i.printStackTrace();
@@ -49,9 +47,6 @@ public class Banco {
 			if (dadosBanco != null) {
 				historicoPagamentos = dadosBanco.getHistoricoPagamentos();
 				impostosMap = dadosBanco.getImpostosMap();
-				System.out.println("Dados carregados com sucesso:");
-				System.out.println("Histórico de Pagamentos: " + historicoPagamentos);
-				System.out.println("Impostos Map: " + impostosMap);
 			} else {
 				inicializarValoresPadrao();
 			}
@@ -76,7 +71,6 @@ public class Banco {
 	// Método para calcular o imposto total a partir do mapa de impostos
 	public static void adicionarImposto(String chave, double valor) {
 		loadDadosBanco();
-		System.out.println("Adicionando imposto: " + chave + " = " + valor);
 		impostosMap.put(chave, impostosMap.getOrDefault(chave, 0.0) + valor);
 		saveDadosBanco();
 	}
@@ -105,8 +99,6 @@ public class Banco {
 		loadDadosBanco();
 		ArrayList<String[]> estoqueGeral = listaHistoricoPagamentos();
 		estoqueGeral.add(vetorImpostosCalc);
-		System.out.println("Adicionando ao histórico de pagamentos: " + Arrays.toString(vetorImpostosCalc));
-		System.out.println("Estoque Geral + IMposto no método add HistoricoPagamento");
 		saveDadosBanco();
 		//
 	}
