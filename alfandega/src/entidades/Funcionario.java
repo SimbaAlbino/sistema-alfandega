@@ -27,7 +27,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 	private String cpf;
 
 	// Caminho do arquivo onde os dados dos funcionários são armazenados
-	private transient String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
+	private transient static String caminhoFuncionariosFile = "C:\\Users\\pedro\\Desktop\\Study\\sistema-alfandega\\files\\login\\fileFuncionarios.txt";
 
 	// Construtor para o menu
 	public Funcionario() {
@@ -56,7 +56,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 		return nomeAdm;
 	}
 
-	public String getCaminhoFileUser() {
+	public static String getCaminhoFileUser() {
 		return caminhoFuncionariosFile;
 	}
 
@@ -265,9 +265,8 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 						while (!fimOpCase) {
 							desejo = shortQuests(3);
 							if (desejo == 1) {
-								System.out.println("Listar funcionarios");
-								Funcionario funcionario = new Funcionario();
-								funcionario.listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
+								System.out.println("Listar funcionarios: \n");
+								listarUsuarios(getCaminhoFileUser()).forEach(System.out::println);
 								fimOpCase = true;
 							} else if (desejo == 2) {
 								System.out.println("Apagar funcionario do registro");
@@ -297,7 +296,7 @@ public class Funcionario implements Usuario<Funcionario>, Serializable {
 								System.out.println("Opcao inválida");
 							}
 						}
-						System.out.println("Pressione Enter para voltar");
+						System.out.println("\nPressione Enter para voltar");
 						sc.nextLine(); // Consumir a nova linha pendente
 						break;
 					case 4:

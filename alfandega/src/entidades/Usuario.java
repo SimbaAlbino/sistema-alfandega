@@ -114,7 +114,7 @@ public interface Usuario<T> {
 		try {
 			listaPessoas = ModelagemFile.desserializar(caminho);
 		} catch (NullPointerException e) {
-			System.out.printf("Não há %ss na lista.", getClass().getSimpleName());
+			System.out.printf("Não há %ss na lista.\n", getClass().getSimpleName());
 		}
 		if (listaPessoas == null)
 			return new ArrayList<>();

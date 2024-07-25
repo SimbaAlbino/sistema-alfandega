@@ -10,9 +10,6 @@ public class ImpostoFixo extends Impostos {
 	// Tipo de imposto específico para Imposto Fixo
 	public static final String TIPO_IMPOSTO = "Imposto Fixo";
 
-	// Taxa fixa do imposto
-	private double taxaImpostoFixo;
-
 	// Produto relacionado ao imposto
 	private DadosProduto produto;
 
