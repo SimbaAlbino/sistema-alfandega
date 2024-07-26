@@ -44,33 +44,35 @@ e administradores de empresas alfandegárias, que são gestores que precisam de 
 Método de Instalação do Code:
 
 1 - Clonagem do Repositório:
-Utilize o GitHub Desktop para clonar o repositório do código.
 
+Utilize o GitHub Desktop para clonar o repositório do código.
 Isso dará acesso ao código localmente.
 
 2 - Caso de erro da Clonagem:
-Após clonar o repositório, você pode executar o código.
 
+Após clonar o repositório, você pode executar o código.
 Se o código não aparecer imediatamente, vá para o passo 3.
 
 
 3 - Importação do Arquivo:
+
 No GitHub Desktop, vá para a opção de importação.
-
 Escolha "General" e selecione "Existing Projects into Workspace".
-
 Selecione o arquivo que está localizado na sua máquina.
-
 Clique em "Finish" para concluir a importação.
 
 4 - Execução do Código:
+
 Após importar o arquivo, você poderá executar o código para realizar testes.
 
 
-Link - Protótipo do projeto (via Figma): https://www.figma.com/design/WnIlrUaF6v7HIbuNQtAZVa/SDE-Processos-de-Software?node-id=1669-162202&t=Yy0Xc7EmtZl5FwZf-0
+Link - Protótipo do projeto (via Figma): 
+https://www.figma.com/design/WnIlrUaF6v7HIbuNQtAZVa/SDE-Processos-de-Software?node-id=1669-162202&t=Yy0Xc7EmtZl5FwZf-0
 
-Link - Introdução Conceitual (Slide): file:///C:/Users/All%20members/OneDrive/Imagens/Sistema%20alfandegario.pdf
+Link - Introdução Conceitual (Slide): 
+file:///C:/Users/All%20members/OneDrive/Imagens/Sistema%20alfandegario.pdf
 https://www.canva.com/join/zjz-thh-rxm
 
-Link - UML do Sistema Alfandegário:  https://miro.com/welcomeonboard/cWVVbm5NRUhGZVU0Y01CTzdFYUMzUGNZVHJ0cFlmTUY0SVNQQ1hWQTdORkQ0TWhTWnc4SEVTV3lGZXFOa2hHMHwzNDU4NzY0NTk1MTcwNDM2MjE3fDI=?share_link_id=899231797687    
-*/
+Link - UML do Sistema Alfandegário:  
+https://miro.com/welcomeonboard/cWVVbm5NRUhGZVU0Y01CTzdFYUMzUGNZVHJ0cFlmTUY0SVNQQ1hWQTdORkQ0TWhTWnc4SEVTV3lGZXFOa2hHMHwzNDU4NzY0NTk1MTcwNDM2MjE3fDI=?share_link_id=899231797687    
+
