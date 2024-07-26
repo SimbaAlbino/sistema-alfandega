@@ -1,4 +1,4 @@
-/*Descrição Textual do Sistema Alfandegário
+Descrição Textual do Sistema Alfandegário
 
 Visão Geral do Sistema Alfandegário:
 
@@ -45,16 +45,22 @@ Método de Instalação do Code:
 
 1 - Clonagem do Repositório:
 Utilize o GitHub Desktop para clonar o repositório do código.
+
 Isso dará acesso ao código localmente.
 
 2 - Caso de erro da Clonagem:
 Após clonar o repositório, você pode executar o código.
-Se o código não aparecer imediatamente, vá para o passo 3.:
+
+Se o código não aparecer imediatamente, vá para o passo 3.
+
 
 3 - Importação do Arquivo:
 No GitHub Desktop, vá para a opção de importação.
+
 Escolha "General" e selecione "Existing Projects into Workspace".
+
 Selecione o arquivo que está localizado na sua máquina.
+
 Clique em "Finish" para concluir a importação.
 
 4 - Execução do Código:
